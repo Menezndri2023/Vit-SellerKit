@@ -242,8 +242,8 @@ I18N.en.pack = {
     real: 'Orders × profit per order − ad spend. This is what ROAS alone hides.',
   },
   verdict: { win: '✅ Profitable', lose: '❌ Losing money' },
-  sampleAds: [[60, 0, 'Serum — broad', 1, 120, 9], [45, 1, 'T-shirt UGC', 0, 80, 6], [30, 0, 'Watch retargeting', 2, 90, 2],
-    [20, 1, 'Serum — hook v2', 1, 60, 7], [10, 0, 'Tote bag test', 4, 40, 1], [5, 1, 'Case promo', 3, 30, 4]],
+  sampleAds: [[60, 0, 'Serum — broad', 1, 30, 4], [45, 1, 'T-shirt UGC', 0, 20, 3], [30, 0, 'Watch retargeting', 2, 25, 1],
+    [20, 1, 'Serum — hook v2', 1, 20, 3], [10, 0, 'Tote bag test', 4, 25, 1], [5, 1, 'Case promo', 3, 10, 2]],
 
   content: ['Date', 'Platform', 'Format', 'Hook / idea', 'Product', 'Status', 'Link', 'Views', 'Likes', 'Comments', 'Shares', 'Saves', 'DMs / clicks', 'Orders'],
   contentCalc: ['Engagement', 'Day'],
@@ -269,7 +269,7 @@ I18N.en.pack = {
   types: ['Income', 'Expense'],
   scope: ['Pro', 'Personal'],
   sampleCash: [
-    [28, 0, 0, 'Payout — delivery company (COD)', 420, 1, 0], [27, 1, 1, 'Supplier order — serums', 160, 1, 0],
+    [30, 0, 9, 'Opening balance', 500, 1, 0], [28, 0, 0, 'Payout — delivery company (COD)', 420, 1, 0], [27, 1, 1, 'Supplier order — serums', 160, 1, 0],
     [25, 1, 2, 'Meta Ads top-up', 120, 2, 0], [22, 1, 3, 'Shipping labels', 45, 0, 0], [20, 1, 6, 'Groceries', 85, 0, 1],
     [18, 1, 5, 'Canva Pro', 12, 2, 0], [15, 0, 0, 'Payout — delivery company (COD)', 380, 1, 0], [14, 1, 2, 'TikTok Ads top-up', 80, 2, 0],
     [12, 1, 7, 'Rent', 300, 1, 1], [10, 1, 4, 'Boxes & stickers', 30, 0, 0], [7, 1, 1, 'Supplier order — tote bags', 90, 1, 0],
@@ -332,8 +332,8 @@ I18N.fr.pack = {
     real: 'Commandes × bénéfice par commande − dépense pub. C’est ce que le ROAS seul ne montre pas.',
   },
   verdict: { win: '✅ Rentable', lose: '❌ Perd de l’argent' },
-  sampleAds: [[60, 0, 'Sérum — large', 1, 120, 9], [45, 1, 'T-shirt UGC', 0, 80, 6], [30, 0, 'Montre retargeting', 2, 90, 2],
-    [20, 1, 'Sérum — accroche v2', 1, 60, 7], [10, 0, 'Test sac cabas', 4, 40, 1], [5, 1, 'Promo coque', 3, 30, 4]],
+  sampleAds: [[60, 0, 'Sérum — large', 1, 30, 4], [45, 1, 'T-shirt UGC', 0, 20, 3], [30, 0, 'Montre retargeting', 2, 25, 1],
+    [20, 1, 'Sérum — accroche v2', 1, 20, 3], [10, 0, 'Test sac cabas', 4, 25, 1], [5, 1, 'Promo coque', 3, 10, 2]],
 
   content: ['Date', 'Réseau', 'Format', 'Accroche / idée', 'Produit', 'Statut', 'Lien', 'Vues', 'J’aime', 'Commentaires', 'Partages', 'Enregistrements', 'DM / clics', 'Commandes'],
   contentCalc: ['Engagement', 'Jour'],
@@ -359,7 +359,7 @@ I18N.fr.pack = {
   types: ['Entrée', 'Sortie'],
   scope: ['Pro', 'Perso'],
   sampleCash: [
-    [28, 0, 0, 'Versement société de livraison (COD)', 420, 1, 0], [27, 1, 1, 'Commande fournisseur — sérums', 160, 1, 0],
+    [30, 0, 9, 'Solde d’ouverture', 500, 1, 0], [28, 0, 0, 'Versement société de livraison (COD)', 420, 1, 0], [27, 1, 1, 'Commande fournisseur — sérums', 160, 1, 0],
     [25, 1, 2, 'Recharge Meta Ads', 120, 2, 0], [22, 1, 3, 'Étiquettes d’expédition', 45, 0, 0], [20, 1, 6, 'Courses', 85, 0, 1],
     [18, 1, 5, 'Canva Pro', 12, 2, 0], [15, 0, 0, 'Versement société de livraison (COD)', 380, 1, 0], [14, 1, 2, 'Recharge TikTok Ads', 80, 2, 0],
     [12, 1, 7, 'Loyer', 300, 1, 1], [10, 1, 4, 'Boîtes & stickers', 30, 0, 0], [7, 1, 1, 'Commande fournisseur — sacs', 90, 1, 0],
