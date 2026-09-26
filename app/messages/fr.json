@@ -95,7 +95,8 @@
     "signOut": "Se déconnecter",
     "switchLabel": "English",
     "switchLocale": "en",
-    "home": "Accueil"
+    "home": "Accueil",
+    "plan": "Abonnement"
   },
   "landing": {
     "title": "Découvre combien tu gagnes VRAIMENT sur chaque vente",
@@ -636,5 +637,39 @@
     "error": "Impossible de créer l’image. Réessaie.",
     "copyLink": "Copier le lien",
     "copied": "Lien copié !"
+  },
+  "plan": {
+    "freeUsage": "Plan gratuit : {used} sur {limit} documents émis ce mois-ci.",
+    "upgrade": "Passer à Pro",
+    "limitReached": "Tu as utilisé tes {limit} documents gratuits ce mois-ci. Passe à Pro pour continuer à facturer — ou attends le mois prochain.",
+    "expiring": "Ton accès Pro se termine le {date}.",
+    "renew": "Renouveler",
+    "title": "Ton plan",
+    "free": "Gratuit",
+    "pro": "Pro",
+    "monthly": "Pro mensuel — renouvelé automatiquement",
+    "monthlyCancelled": "Pro mensuel — annulé, accès jusqu’au {date}",
+    "lifetime": "Pro à vie",
+    "manualUntil": "Pro — jusqu’au {date}",
+    "manualLifetime": "Pro — à vie",
+    "activateTitle": "Activer Pro",
+    "activateText": "Colle la clé de licence de ton reçu Gumroad, ou le code d’activation reçu sur WhatsApp (MK-…).",
+    "keyLabel": "Clé de licence ou code d’activation",
+    "activate": "Activer",
+    "success": "Pro est activé. Merci ! 🎉",
+    "buyTitle": "Pas encore de clé ?",
+    "buyMonthly": "Pro mensuel — 5 $/mois",
+    "buyLifetime": "Pro à vie — 39 $ une fois",
+    "whatsapp": "Carte refusée ? Paie localement sur WhatsApp",
+    "errors": {
+      "invalid": "Cette clé ou ce code n’est pas valide. Vérifie et réessaie.",
+      "refunded": "Cet achat a été remboursé.",
+      "ended": "Cet abonnement est terminé.",
+      "payment_failed": "Le dernier paiement de cet abonnement a échoué. Mets à jour ta carte sur Gumroad.",
+      "already_used": "Cette clé ou ce code est déjà utilisé par un autre compte.",
+      "unavailable": "Impossible de joindre Gumroad pour le moment. Réessaie dans quelques minutes.",
+      "rateLimited": "Trop de tentatives. Attends 15 minutes."
+    },
+    "backToApp": "Retour à l’app"
   }
 }

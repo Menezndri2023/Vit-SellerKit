@@ -95,7 +95,8 @@
     "signOut": "Sign out",
     "switchLabel": "Français",
     "switchLocale": "fr",
-    "home": "Home"
+    "home": "Home",
+    "plan": "Plan"
   },
   "landing": {
     "title": "Find out how much you REALLY make on every sale",
@@ -636,5 +637,39 @@
     "error": "Couldn’t create the image. Try again.",
     "copyLink": "Copy link",
     "copied": "Link copied!"
+  },
+  "plan": {
+    "freeUsage": "Free plan: {used} of {limit} documents issued this month.",
+    "upgrade": "Go Pro",
+    "limitReached": "You’ve used your {limit} free documents this month. Go Pro to keep invoicing — or wait until next month.",
+    "expiring": "Your Pro access ends on {date}.",
+    "renew": "Renew",
+    "title": "Your plan",
+    "free": "Free",
+    "pro": "Pro",
+    "monthly": "Pro monthly — renews automatically",
+    "monthlyCancelled": "Pro monthly — cancelled, access until {date}",
+    "lifetime": "Pro lifetime",
+    "manualUntil": "Pro — until {date}",
+    "manualLifetime": "Pro — lifetime",
+    "activateTitle": "Activate Pro",
+    "activateText": "Paste the license key from your Gumroad receipt, or the activation code you received on WhatsApp (MK-…).",
+    "keyLabel": "License key or activation code",
+    "activate": "Activate",
+    "success": "Pro is active. Thank you! 🎉",
+    "buyTitle": "Don’t have a key yet?",
+    "buyMonthly": "Pro monthly — $5/month",
+    "buyLifetime": "Pro lifetime — $39 once",
+    "whatsapp": "Card declined? Pay locally on WhatsApp",
+    "errors": {
+      "invalid": "This key or code isn’t valid. Check it and try again.",
+      "refunded": "This purchase was refunded.",
+      "ended": "This subscription has ended.",
+      "payment_failed": "The last payment of this subscription failed. Update your card on Gumroad.",
+      "already_used": "This key or code is already used by another account.",
+      "unavailable": "We can’t reach Gumroad right now. Try again in a few minutes.",
+      "rateLimited": "Too many attempts. Wait 15 minutes."
+    },
+    "backToApp": "Back to the app"
   }
 }

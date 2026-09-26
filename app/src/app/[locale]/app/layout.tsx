@@ -3,6 +3,9 @@ import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import AppNav from '@/components/app/AppNav';
 import Logo from '@/components/Logo';
+import PlanBanner from '@/components/plan/PlanBanner';
+import { connectDb } from '@/lib/db';
+import { getPlan } from '@/lib/plan';
 import { requireUser } from '@/lib/session';
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
@@ -11,6 +14,8 @@ export default async function AppLayout({ children, params }: LayoutProps<'/[loc
   const { locale } = await params;
   const user = await requireUser(locale);
   const t = await getTranslations('nav');
+  await connectDb();
+  const plan = await getPlan(user.id);
 
   return (
     <div className="flex min-h-dvh flex-col">
@@ -20,6 +25,7 @@ export default async function AppLayout({ children, params }: LayoutProps<'/[loc
           {t('switchLabel')}
         </Link>
       </header>
+      <PlanBanner plan={plan} locale={locale} />
       <div className="flex flex-1">
         <AppNav isAdmin={user.role === 'admin'} userName={user.name} />
         <main className="min-w-0 flex-1 px-4 pb-24 pt-6 sm:px-8 lg:pb-10">{children}</main>

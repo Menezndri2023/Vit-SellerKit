@@ -65,3 +65,27 @@ export function authEmail(kind: 'verify' | 'reset', locale: string | null | unde
     text: `${k.title}\n\n${k.body}\n\n${url}\n\n${c.footer}`,
   };
 }
+
+const planCopy = {
+  en: {
+    j7: { subject: 'Your Margokit Pro access ends in 7 days', body: 'Your Pro access ends on {date}. Renew now to keep unlimited invoices without watermark.' },
+    j1: { subject: 'Your Margokit Pro access ends tomorrow', body: 'Your Pro access ends on {date}. Renew now so your next invoices stay unlimited and without watermark.' },
+    expired: { subject: 'Your Margokit Pro access has ended', body: 'Your Pro access ended on {date}. Your documents are safe; you are back on the free plan (3 documents per month).' },
+    button: 'Renew Pro',
+    footer: 'You receive this email because you have a Margokit account.',
+  },
+  fr: {
+    j7: { subject: 'Ton accès Margokit Pro se termine dans 7 jours', body: 'Ton accès Pro se termine le {date}. Renouvelle-le pour garder des factures illimitées et sans filigrane.' },
+    j1: { subject: 'Ton accès Margokit Pro se termine demain', body: 'Ton accès Pro se termine le {date}. Renouvelle-le pour que tes prochaines factures restent illimitées et sans filigrane.' },
+    expired: { subject: 'Ton accès Margokit Pro est terminé', body: 'Ton accès Pro s’est terminé le {date}. Tes documents sont conservés ; tu repasses au plan gratuit (3 documents par mois).' },
+    button: 'Renouveler Pro',
+    footer: 'Tu reçois cet e-mail car tu as un compte Margokit.',
+  },
+} as const;
+
+export function planEmail(kind: 'j7' | 'j1' | 'expired', locale: string | null | undefined, to: string, date: Date, url: string): Email {
+  const lang = locale === 'fr' ? 'fr' : 'en';
+  const c = planCopy[lang];
+  const body = c[kind].body.replace('{date}', new Intl.DateTimeFormat(lang, { dateStyle: 'long' }).format(date));
+  return { to, subject: c[kind].subject, html: layout(c[kind].subject, body, { label: c.button, url }, c.footer), text: `${body}\n\n${url}` };
+}
