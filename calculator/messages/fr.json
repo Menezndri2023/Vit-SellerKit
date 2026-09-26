@@ -1,0 +1,115 @@
+{
+  "meta": {
+    "title": "Calculateur de bénéfice gratuit pour vendeurs en ligne — Margokit",
+    "description": "Découvre combien tu gagnes VRAIMENT sur chaque vente : livraison, frais, pub et colis refusés inclus. Prix minimum, prix pour 30 % et 50 % de marge, ROAS minimum. Gratuit, sans inscription."
+  },
+  "header": {
+    "switchLabel": "English",
+    "switchLocale": "en"
+  },
+  "hero": {
+    "title": "Découvre combien tu gagnes VRAIMENT sur chaque vente",
+    "subtitle": "Livraison, frais de plateforme, pub et colis refusés inclus. Gratuit, sans inscription, résultats en direct."
+  },
+  "form": {
+    "product": "Ton produit",
+    "selling": "Où tu vends",
+    "adsReturns": "Pub & retours",
+    "currency": "Devise",
+    "price": "Prix de vente",
+    "productCost": "Coût du produit",
+    "productCostHint": "Ce que tu paies à ton fournisseur par unité",
+    "packaging": "Emballage",
+    "shipping": "Coût de livraison (payé par toi)",
+    "platform": "Plateforme",
+    "platforms": {
+      "direct": "Vente directe (Instagram, WhatsApp…)",
+      "shopify": "Shopify",
+      "etsy": "Etsy",
+      "tiktok": "TikTok Shop",
+      "custom": "Personnalisé"
+    },
+    "platformPct": "Frais de plateforme (%)",
+    "platformFixed": "Frais fixes par commande",
+    "paymentPct": "Frais de paiement (%)",
+    "feesNote": "Les frais préréglés sont approximatifs et changent souvent. Vérifie les frais actuels de ta plateforme.",
+    "adCost": "Coût pub par commande",
+    "adCostHint": "Dépense pub ÷ commandes. 0 si tu ne fais pas de pub.",
+    "returnRate": "Taux de retour / colis refusés (%)",
+    "returnRateHint": "Sur 100 colis expédiés, combien reviennent sans être payés ?",
+    "returnCost": "Coût de retour par colis",
+    "returnCostHint": "Frais en plus quand un colis revient",
+    "adBudget": "Budget pub à rentabiliser"
+  },
+  "results": {
+    "title": "Tes vrais chiffres",
+    "headline": "Sur une vente à {price}, tu gardes vraiment",
+    "perDelivered": "par commande livrée",
+    "margin": "Marge nette",
+    "realCost": "Coût réel par commande livrée",
+    "realCostHint": "Retours inclus",
+    "breakEven": "Prix minimum (sans perte)",
+    "price30": "Prix pour 30 % de marge",
+    "price50": "Prix pour 50 % de marge",
+    "maxAdCost": "Coût pub max par commande",
+    "breakEvenRoas": "ROAS minimum rentable",
+    "ordersToRecoup": "Ventes pour rentabiliser ton budget pub",
+    "orders": "{count, plural, one {# commande} other {# commandes}}",
+    "none": "—",
+    "status": {
+      "loss": "Tu perds de l’argent sur chaque commande livrée. Augmente ton prix ou baisse tes coûts.",
+      "thin": "Marge fine : une mauvaise semaine de retours et tu perds de l’argent.",
+      "ok": "Marge saine. Tu peux accélérer."
+    },
+    "invalid": "Indique un prix de vente supérieur à 0 et un taux de retour inférieur à 100 %."
+  },
+  "share": {
+    "button": "Partager mon résultat",
+    "working": "Création de ton image…",
+    "error": "Impossible de créer l’image. Réessaie.",
+    "copyLink": "Copier le lien",
+    "copied": "Lien copié !"
+  },
+  "cta": {
+    "packTitle": "Suis ça sur chaque commande, automatiquement",
+    "packText": "Le Pack Vendeur (Google Sheets) calcule ton vrai bénéfice sur chaque commande, te dit quelles pubs rapportent, et suit ton stock, ton contenu et ta trésorerie.",
+    "packButton": "Voir le Pack Vendeur",
+    "trackerButton": "Juste le Tracker de commandes",
+    "proTitle": "Bientôt : Margokit Pro",
+    "proText": "Des devis et factures pro en une minute, en français et en anglais. Inscris-toi à la liste d’attente ci-dessous."
+  },
+  "subscribe": {
+    "title": "Conseils de vendeur & accès en avant-première",
+    "text": "Un e-mail court par semaine : astuces de marge, templates gratuits et accès en avant-première à Margokit Pro.",
+    "placeholder": "ton@email.com",
+    "button": "Je m’inscris",
+    "success": "C’est noté ! Regarde ta boîte mail.",
+    "invalid": "Entre une adresse e-mail valide.",
+    "error": "Un problème est survenu. Réessaie plus tard.",
+    "privacy": "Pas de spam. Désinscription en un clic."
+  },
+  "faq": {
+    "title": "Questions",
+    "q1": "Pourquoi le taux de retour change autant mon bénéfice ?",
+    "a1": "Chaque colis refusé te coûte la livraison, l’emballage et la pub — sans rapporter de vente. Ces pertes sont payées par tes commandes livrées. Avec 30 % de refus, chaque commande livrée porte presque la moitié d’une commande perdue.",
+    "q2": "C’est quoi le ROAS minimum rentable ?",
+    "a2": "Le ROAS minimum que ton gestionnaire de pub doit afficher pour que ta pub ne te coûte pas d’argent, une fois comptés le coût du produit, les frais et les retours. En dessous, la campagne te fait perdre de l’argent même si elle a « l’air » rentable.",
+    "q3": "Mes chiffres sont-ils enregistrés ou envoyés quelque part ?",
+    "a3": "Non. Tout est calculé dans ton navigateur. Tes chiffres n’apparaissent dans le lien que si tu choisis de le partager.",
+    "q4": "C’est vraiment gratuit ?",
+    "a4": "Oui, le calculateur est gratuit, pour toujours. Nous vendons aussi des templates Google Sheets pour les vendeurs qui veulent suivre chaque commande."
+  },
+  "footer": {
+    "tagline": "Sache ce que tu gardes vraiment.",
+    "rights": "© {year} Margokit"
+  },
+  "image": {
+    "headline": "Sur une vente à {price},",
+    "keep": "je garde vraiment",
+    "margin": "Marge nette",
+    "breakEven": "Prix minimum",
+    "roas": "ROAS minimum",
+    "returns": "Retours",
+    "cta": "Calcule le tien gratuitement"
+  }
+}

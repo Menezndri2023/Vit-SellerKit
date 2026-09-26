@@ -1,0 +1,115 @@
+{
+  "meta": {
+    "title": "Free Profit Calculator for Online Sellers — Margokit",
+    "description": "Find out how much you REALLY make on every sale: shipping, fees, ads and returned parcels included. Minimum price, prices for 30% and 50% margin, break-even ROAS. Free, no sign-up."
+  },
+  "header": {
+    "switchLabel": "Français",
+    "switchLocale": "fr"
+  },
+  "hero": {
+    "title": "Find out how much you REALLY make on every sale",
+    "subtitle": "Shipping, platform fees, ads and refused parcels included. Free, no sign-up, results as you type."
+  },
+  "form": {
+    "product": "Your product",
+    "selling": "Where you sell",
+    "adsReturns": "Ads & returns",
+    "currency": "Currency",
+    "price": "Sale price",
+    "productCost": "Product cost",
+    "productCostHint": "What you pay your supplier per unit",
+    "packaging": "Packaging",
+    "shipping": "Shipping cost (you pay)",
+    "platform": "Platform",
+    "platforms": {
+      "direct": "Direct (Instagram, WhatsApp…)",
+      "shopify": "Shopify",
+      "etsy": "Etsy",
+      "tiktok": "TikTok Shop",
+      "custom": "Custom"
+    },
+    "platformPct": "Platform fee (%)",
+    "platformFixed": "Fixed fee per order",
+    "paymentPct": "Payment fee (%)",
+    "feesNote": "Preset fees are approximate and change often. Check your platform’s current fees.",
+    "adCost": "Ad cost per order",
+    "adCostHint": "Ad spend ÷ orders. 0 if you don’t run ads.",
+    "returnRate": "Return / refused parcel rate (%)",
+    "returnRateHint": "Out of 100 parcels shipped, how many come back unpaid?",
+    "returnCost": "Return cost per parcel",
+    "returnCostHint": "Extra fee you pay when a parcel comes back",
+    "adBudget": "Ad budget to earn back"
+  },
+  "results": {
+    "title": "Your real numbers",
+    "headline": "On a {price} sale, you really keep",
+    "perDelivered": "per delivered order",
+    "margin": "Net margin",
+    "realCost": "Real cost per delivered order",
+    "realCostHint": "Returns included",
+    "breakEven": "Minimum price (no loss)",
+    "price30": "Price for 30% margin",
+    "price50": "Price for 50% margin",
+    "maxAdCost": "Max ad cost per order",
+    "breakEvenRoas": "Break-even ROAS",
+    "ordersToRecoup": "Orders to earn back your ad budget",
+    "orders": "{count, plural, one {# order} other {# orders}}",
+    "none": "—",
+    "status": {
+      "loss": "You lose money on every delivered order. Raise your price or cut your costs.",
+      "thin": "Thin margin: one bad week of returns and you’re losing money.",
+      "ok": "Healthy margin. Now scale it."
+    },
+    "invalid": "Enter a sale price above 0 and a return rate below 100%."
+  },
+  "share": {
+    "button": "Share my result",
+    "working": "Creating your image…",
+    "error": "Couldn’t create the image. Try again.",
+    "copyLink": "Copy link",
+    "copied": "Link copied!"
+  },
+  "cta": {
+    "packTitle": "Track this on every order, automatically",
+    "packText": "The Seller Pack (Google Sheets) calculates your real profit on every order, tells you which ads make money, and tracks your stock, content and cash.",
+    "packButton": "Get the Seller Pack",
+    "trackerButton": "Just the Order Tracker",
+    "proTitle": "Coming soon: Margokit Pro",
+    "proText": "Professional quotes and invoices in one minute, in English and French. Join the waitlist below."
+  },
+  "subscribe": {
+    "title": "Get seller tips & early access",
+    "text": "One short email a week: margin tips, free templates, and early access to Margokit Pro.",
+    "placeholder": "your@email.com",
+    "button": "Join",
+    "success": "You’re in! Check your inbox.",
+    "invalid": "Enter a valid email address.",
+    "error": "Something went wrong. Try again later.",
+    "privacy": "No spam. Unsubscribe anytime."
+  },
+  "faq": {
+    "title": "Questions",
+    "q1": "Why does the return rate change my profit so much?",
+    "a1": "Every refused parcel costs you shipping, packaging and ad money — but brings no sale. Those losses are paid by your delivered orders. With 30% refused parcels, each delivered order carries almost half of a lost one.",
+    "q2": "What is break-even ROAS?",
+    "a2": "The minimum ROAS your ads manager must show so your ads don’t lose money, once product costs, fees and returns are counted. Below it, the campaign costs you money even if it “looks” profitable.",
+    "q3": "Are my numbers saved or sent anywhere?",
+    "a3": "No. Everything is calculated in your browser. Your numbers only appear in the link if you choose to share it.",
+    "q4": "Is it really free?",
+    "a4": "Yes. The calculator is free, forever. We also sell Google Sheets templates for sellers who want to track every order."
+  },
+  "footer": {
+    "tagline": "Know what you really keep.",
+    "rights": "© {year} Margokit"
+  },
+  "image": {
+    "headline": "On a {price} sale,",
+    "keep": "I really keep",
+    "margin": "Net margin",
+    "breakEven": "Minimum price",
+    "roas": "Break-even ROAS",
+    "returns": "Returns",
+    "cta": "Calculate yours for free"
+  }
+}
