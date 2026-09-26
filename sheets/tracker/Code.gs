@@ -1,9 +1,11 @@
 /**
- * Margokit — Order & Inventory Tracker (générateur Google Sheets)
+ * Margokit — générateur Google Sheets (Order & Inventory Tracker + Seller Pack)
  *
  * Utilisation :
  *   1. https://script.google.com → Nouveau projet → coller ce fichier à la place de Code.gs
- *   2. Choisir la fonction buildTrackerEN / buildTrackerFR / buildTrackerMA (ou buildAll) → Exécuter
+ *   2. Choisir une fonction → Exécuter :
+ *        buildTrackerEN / buildTrackerFR / buildTrackerMA  (ou buildAll pour les 3)
+ *        buildSellerPackEN / buildSellerPackFR / buildSellerPackMA  (ou buildAllPacks pour les 3)
  *   3. Autoriser l'accès → l'URL du fichier créé s'affiche dans le journal d'exécution
  *
  * Le fichier généré ne contient AUCUN script : il fonctionne uniquement avec des formules
@@ -15,7 +17,12 @@ const WITH_SAMPLE_DATA = true;
 function buildTrackerEN() { buildTracker_('en'); }
 function buildTrackerFR() { buildTracker_('fr'); }
 function buildTrackerMA() { buildTracker_('ma'); }
-function buildAll() { ['en', 'fr', 'ma'].forEach(buildTracker_); }
+function buildAll() { ['en', 'fr', 'ma'].forEach(k => buildTracker_(k)); }
+
+function buildSellerPackEN() { buildTracker_('en', true); }
+function buildSellerPackFR() { buildTracker_('fr', true); }
+function buildSellerPackMA() { buildTracker_('ma', true); }
+function buildAllPacks() { ['en', 'fr', 'ma'].forEach(k => buildTracker_(k, true)); }
 
 // ---------------------------------------------------------------------------
 // Marque
@@ -213,50 +220,249 @@ const SAMPLE_ORDERS = [
 ];
 
 // ---------------------------------------------------------------------------
+// Seller Pack — textes et données d'exemple
+// ---------------------------------------------------------------------------
+
+I18N.en.pack = {
+  file: 'Margokit — Seller Pack',
+  guideTitle: '📖 How to use your Margokit Seller Pack',
+  sheets: { ads: 'Ads', content: 'Content', cash: 'Cash', budget: 'Budget', pricing: 'Price calculator' },
+  settings: { adPlatforms: 'Ad platform', contentPlatforms: 'Content platform', categories: ['Budget category', 'Monthly budget'], accounts: 'Account' },
+  adPlatforms: ['Meta Ads', 'TikTok Ads', 'Google Ads', 'Snapchat Ads', 'Influencer', 'Other'],
+  contentPlatforms: ['TikTok', 'Instagram Reels', 'Instagram Post', 'Instagram Story', 'Facebook', 'YouTube Shorts', 'Pinterest', 'WhatsApp Status'],
+  categories: [['Sales payout', 0], ['Supplier / stock', 500], ['Ads', 300], ['Shipping', 150], ['Packaging', 50],
+    ['Tools & subscriptions', 30], ['Personal', 400], ['Rent & bills', 0], ['Taxes', 0], ['Other', 50]],
+  accounts: ['Cash', 'Bank', 'Card / wallet'],
+
+  ads: ['Start date', 'Platform', 'Campaign', 'Product', 'Ad spend', 'Orders (ads manager)', 'Revenue (ads manager)'],
+  adsCalc: ['Revenue used', 'Cost per order', 'ROAS', 'Profit / order before ads', 'Real profit', 'Verdict', 'Month'],
+  adsNotes: {
+    revenue: 'Optional. Empty = orders × product sale price.',
+    profit: 'Average REAL profit per order for this product, from your Orders history (returns included). If no history yet: sale price − cost − packaging − first carrier cost.',
+    real: 'Orders × profit per order − ad spend. This is what ROAS alone hides.',
+  },
+  verdict: { win: '✅ Profitable', lose: '❌ Losing money' },
+  sampleAds: [[60, 0, 'Serum — broad', 1, 120, 9], [45, 1, 'T-shirt UGC', 0, 80, 6], [30, 0, 'Watch retargeting', 2, 90, 2],
+    [20, 1, 'Serum — hook v2', 1, 60, 7], [10, 0, 'Tote bag test', 4, 40, 1], [5, 1, 'Case promo', 3, 30, 4]],
+
+  content: ['Date', 'Platform', 'Format', 'Hook / idea', 'Product', 'Status', 'Link', 'Views', 'Likes', 'Comments', 'Shares', 'Saves', 'DMs / clicks', 'Orders'],
+  contentCalc: ['Engagement', 'Day'],
+  formats: ['Video', 'Carousel', 'Photo', 'Story', 'Live'],
+  contentStatuses: ['Idea', 'Script', 'Filmed', 'Edited', 'Scheduled', 'Published'],
+  contentNote: 'Engagement = (likes + comments + shares + saves) ÷ views.',
+  sampleContent: [
+    [-3, 0, 0, 'You sell at {P}… here’s what you ACTUALLY keep', -1, 0],
+    [-1, 1, 0, '3 mistakes that kill your margin', -1, 1],
+    [0, 0, 0, 'Unboxing the Vitamin C serum', 1, 4],
+    [2, 0, 0, 'POV: your cash-on-delivery parcel gets refused', -1, 5, 12400, 890, 64, 120, 210, 35, 6],
+    [4, 1, 1, '5 ways to style the oversized tee', 0, 5, 3100, 240, 18, 22, 95, 12, 3],
+    [6, 3, 3, 'Behind the scenes: packing 30 orders', -1, 5, 1800, 95, 6, 4, 10, 5, 1],
+    [9, 0, 0, 'Cheap watch vs. luxury watch — can you tell?', 2, 5, 25600, 1900, 210, 340, 420, 60, 8],
+    [12, 4, 2, 'New tote bag drop', 4, 5, 900, 40, 3, 1, 4, 2, 0],
+    [15, 6, 2, 'Summer tote outfit', 4, 5, 2200, 30, 0, 12, 85, 9, 1],
+    [20, 0, 0, 'How I track 100 orders a day with one Google Sheet', -1, 5, 8900, 610, 48, 75, 390, 22, 0],
+  ],
+
+  cash: ['Date', 'Type', 'Category', 'Description', 'Amount', 'Account', 'Pro / Personal'],
+  cashCalc: ['Signed amount', 'Month', 'Balance'],
+  cashNote: 'Amount is always positive: the Type decides + or −. Balance follows the row order.',
+  types: ['Income', 'Expense'],
+  scope: ['Pro', 'Personal'],
+  sampleCash: [
+    [28, 0, 0, 'Payout — delivery company (COD)', 420, 1, 0], [27, 1, 1, 'Supplier order — serums', 160, 1, 0],
+    [25, 1, 2, 'Meta Ads top-up', 120, 2, 0], [22, 1, 3, 'Shipping labels', 45, 0, 0], [20, 1, 6, 'Groceries', 85, 0, 1],
+    [18, 1, 5, 'Canva Pro', 12, 2, 0], [15, 0, 0, 'Payout — delivery company (COD)', 380, 1, 0], [14, 1, 2, 'TikTok Ads top-up', 80, 2, 0],
+    [12, 1, 7, 'Rent', 300, 1, 1], [10, 1, 4, 'Boxes & stickers', 30, 0, 0], [7, 1, 1, 'Supplier order — tote bags', 90, 1, 0],
+    [5, 0, 0, 'Payout — Etsy', 145, 1, 0], [3, 1, 2, 'Meta Ads top-up', 60, 2, 0], [1, 1, 6, 'Phone plan', 20, 1, 1],
+  ],
+
+  budget: {
+    title: '💰 Budget & cash', month: 'Month', monthHint: 'Empty = current month',
+    kpis: ['Income', 'Expenses', 'Net', 'Cash balance (all time)', 'Pro expenses', 'Personal expenses'],
+    table: ['Category', 'Monthly budget', 'Spent', 'Remaining', 'Used'],
+    history: ['Month', 'Income', 'Expenses', 'Net'],
+    chart: 'Income vs expenses — last 6 months',
+  },
+
+  pricing: {
+    title: '🧮 Price calculator', subtitle: 'Find the right price BEFORE you sell. Change the green cells.',
+    inputsHeader: 'Your numbers', outputsHeader: 'Results', currencyLabel: 'Amounts in',
+    inputs: ['Sale price', 'Product cost', 'Packaging', 'Shipping cost (you pay)', 'Return cost per refused parcel',
+      'Platform fee %', 'Platform fixed fee', 'Payment fee %', 'Ad cost per order', 'Delivery rate %', 'Target margin %', 'Ad budget to recoup'],
+    outputs: ['Profit per delivered order', 'Net margin', 'Real cost per delivered order', 'Break-even price (no loss)',
+      'Price for 30% margin', 'Price for 50% margin', 'Price for your target margin', 'Max ad cost per order', 'Break-even ROAS', 'Orders to recoup ad budget'],
+    scenarios: ['Price', 'Profit / delivered order', 'Margin'],
+    scenariosTitle: 'What if I change my price?',
+    status: { loss: '❌ You lose money on every delivered order. Raise the price or cut costs.', thin: '⚠️ Thin margin: one bad week of returns and you lose money.', ok: '✅ Healthy margin.' },
+    notes: {
+      delivery: 'Share of shipped orders actually delivered and paid. 100% if customers pay online.',
+      ads: 'What one order costs you in ads (ad spend ÷ orders). 0 if you sell organically.',
+      roas: 'Minimum ROAS shown in your ads manager to break even.',
+    },
+  },
+
+  dash: { adSpend: 'Ad spend', roas: 'Ad ROAS', afterAds: 'Profit after ads', cpa: 'Cost per order (ads)',
+    cashBalance: 'Cash balance', cashNet: 'Cash net (period)', posts: 'Posts published', views: 'Total views' },
+
+  guide: [
+    ['6. Ads', 'One line per campaign (or per week of a campaign). Copy spend and orders from your ads manager. "Real profit" uses your REAL profit per order from Orders (returns included) — that is what ROAS alone hides. ❌ = stop or fix the campaign.'],
+    ['7. Content', 'Plan your posts (Idea → Published), then fill views and results 2–3 days after posting. Today’s posts are highlighted. Re-use the hooks with the most views.'],
+    ['8. Cash', 'Every money movement, business AND personal: payouts, supplier, ads, rent… Amount always positive, the Type decides + or −. Add lines in date order (the balance follows the row order).'],
+    ['9. Budget', 'Set a monthly budget per category in Settings. The Budget tab shows what you spent this month (or the month you pick), what is left, and 6 months of history.'],
+    ['10. Price calculator', 'Before launching a product: enter its costs, fees, ad cost and delivery rate. You get the minimum price, the price for 30% / 50% margin and the max you can pay per order in ads.'],
+  ],
+};
+
+I18N.fr.pack = {
+  file: 'Margokit — Pack Vendeur',
+  guideTitle: '📖 Mode d’emploi de ton Pack Vendeur Margokit',
+  sheets: { ads: 'Publicité', content: 'Contenu', cash: 'Trésorerie', budget: 'Budget', pricing: 'Calculateur de prix' },
+  settings: { adPlatforms: 'Plateforme pub', contentPlatforms: 'Réseau (contenu)', categories: ['Catégorie de budget', 'Budget mensuel'], accounts: 'Compte' },
+  adPlatforms: ['Meta Ads', 'TikTok Ads', 'Google Ads', 'Snapchat Ads', 'Influenceur', 'Autre'],
+  contentPlatforms: ['TikTok', 'Instagram Reels', 'Instagram Post', 'Instagram Story', 'Facebook', 'YouTube Shorts', 'Pinterest', 'Statut WhatsApp'],
+  categories: [['Encaissement ventes', 0], ['Fournisseur / stock', 500], ['Publicité', 300], ['Livraison', 150], ['Emballage', 50],
+    ['Outils & abonnements', 30], ['Personnel', 400], ['Loyer & factures', 0], ['Impôts', 0], ['Autre', 50]],
+  accounts: ['Espèces', 'Banque', 'Carte / portefeuille'],
+
+  ads: ['Date de début', 'Plateforme', 'Campagne', 'Produit', 'Dépense pub', 'Commandes (gestionnaire pub)', 'CA (gestionnaire pub)'],
+  adsCalc: ['CA retenu', 'Coût par commande', 'ROAS', 'Bénéfice / commande avant pub', 'Bénéfice réel', 'Verdict', 'Mois'],
+  adsNotes: {
+    revenue: 'Facultatif. Vide = commandes × prix de vente du produit.',
+    profit: 'Bénéfice RÉEL moyen par commande pour ce produit, calculé depuis tes Commandes (retours inclus). Sans historique : prix − coût − emballage − coût du 1er transporteur.',
+    real: 'Commandes × bénéfice par commande − dépense pub. C’est ce que le ROAS seul ne montre pas.',
+  },
+  verdict: { win: '✅ Rentable', lose: '❌ Perd de l’argent' },
+  sampleAds: [[60, 0, 'Sérum — large', 1, 120, 9], [45, 1, 'T-shirt UGC', 0, 80, 6], [30, 0, 'Montre retargeting', 2, 90, 2],
+    [20, 1, 'Sérum — accroche v2', 1, 60, 7], [10, 0, 'Test sac cabas', 4, 40, 1], [5, 1, 'Promo coque', 3, 30, 4]],
+
+  content: ['Date', 'Réseau', 'Format', 'Accroche / idée', 'Produit', 'Statut', 'Lien', 'Vues', 'J’aime', 'Commentaires', 'Partages', 'Enregistrements', 'DM / clics', 'Commandes'],
+  contentCalc: ['Engagement', 'Jour'],
+  formats: ['Vidéo', 'Carrousel', 'Photo', 'Story', 'Live'],
+  contentStatuses: ['Idée', 'Script', 'Tourné', 'Monté', 'Programmé', 'Publié'],
+  contentNote: 'Engagement = (j’aime + commentaires + partages + enregistrements) ÷ vues.',
+  sampleContent: [
+    [-3, 0, 0, 'Tu vends à {P}… voilà ce que tu gardes VRAIMENT', -1, 0],
+    [-1, 1, 0, '3 erreurs qui tuent ta marge', -1, 1],
+    [0, 0, 0, 'Déballage du sérum vitamine C', 1, 4],
+    [2, 0, 0, 'POV : ton colis en paiement à la livraison est refusé', -1, 5, 12400, 890, 64, 120, 210, 35, 6],
+    [4, 1, 1, '5 façons de porter le t-shirt oversize', 0, 5, 3100, 240, 18, 22, 95, 12, 3],
+    [6, 3, 3, 'Coulisses : j’emballe 30 commandes', -1, 5, 1800, 95, 6, 4, 10, 5, 1],
+    [9, 0, 0, 'Montre pas chère vs montre de luxe : tu vois la différence ?', 2, 5, 25600, 1900, 210, 340, 420, 60, 8],
+    [12, 4, 2, 'Nouveau : le sac cabas', 4, 5, 900, 40, 3, 1, 4, 2, 0],
+    [15, 6, 2, 'Tenue d’été avec le sac cabas', 4, 5, 2200, 30, 0, 12, 85, 9, 1],
+    [20, 0, 0, 'Comment je gère 100 commandes par jour avec un seul Google Sheet', -1, 5, 8900, 610, 48, 75, 390, 22, 0],
+  ],
+
+  cash: ['Date', 'Type', 'Catégorie', 'Description', 'Montant', 'Compte', 'Pro / Perso'],
+  cashCalc: ['Montant signé', 'Mois', 'Solde'],
+  cashNote: 'Le montant est toujours positif : le Type décide + ou −. Le solde suit l’ordre des lignes.',
+  types: ['Entrée', 'Sortie'],
+  scope: ['Pro', 'Perso'],
+  sampleCash: [
+    [28, 0, 0, 'Versement société de livraison (COD)', 420, 1, 0], [27, 1, 1, 'Commande fournisseur — sérums', 160, 1, 0],
+    [25, 1, 2, 'Recharge Meta Ads', 120, 2, 0], [22, 1, 3, 'Étiquettes d’expédition', 45, 0, 0], [20, 1, 6, 'Courses', 85, 0, 1],
+    [18, 1, 5, 'Canva Pro', 12, 2, 0], [15, 0, 0, 'Versement société de livraison (COD)', 380, 1, 0], [14, 1, 2, 'Recharge TikTok Ads', 80, 2, 0],
+    [12, 1, 7, 'Loyer', 300, 1, 1], [10, 1, 4, 'Boîtes & stickers', 30, 0, 0], [7, 1, 1, 'Commande fournisseur — sacs', 90, 1, 0],
+    [5, 0, 0, 'Versement Etsy', 145, 1, 0], [3, 1, 2, 'Recharge Meta Ads', 60, 2, 0], [1, 1, 6, 'Forfait téléphone', 20, 1, 1],
+  ],
+
+  budget: {
+    title: '💰 Budget & trésorerie', month: 'Mois', monthHint: 'Vide = mois en cours',
+    kpis: ['Entrées', 'Sorties', 'Net', 'Solde de trésorerie (total)', 'Dépenses pro', 'Dépenses perso'],
+    table: ['Catégorie', 'Budget mensuel', 'Dépensé', 'Reste', 'Utilisé'],
+    history: ['Mois', 'Entrées', 'Sorties', 'Net'],
+    chart: 'Entrées vs sorties — 6 derniers mois',
+  },
+
+  pricing: {
+    title: '🧮 Calculateur de prix', subtitle: 'Trouve le bon prix AVANT de vendre. Modifie les cellules vertes.',
+    inputsHeader: 'Tes chiffres', outputsHeader: 'Résultats', currencyLabel: 'Montants en',
+    inputs: ['Prix de vente', 'Coût du produit', 'Emballage', 'Coût de livraison (payé par toi)', 'Coût de retour par colis refusé',
+      'Frais plateforme %', 'Frais plateforme fixes', 'Frais de paiement %', 'Coût pub par commande', 'Taux de livraison %', 'Marge visée %', 'Budget pub à rentabiliser'],
+    outputs: ['Bénéfice par commande livrée', 'Marge nette', 'Coût réel par commande livrée', 'Prix minimum (sans perte)',
+      'Prix pour 30 % de marge', 'Prix pour 50 % de marge', 'Prix pour ta marge visée', 'Coût pub max par commande', 'ROAS minimum rentable', 'Commandes pour rentabiliser le budget pub'],
+    scenarios: ['Prix', 'Bénéfice / commande livrée', 'Marge'],
+    scenariosTitle: 'Et si je change mon prix ?',
+    status: { loss: '❌ Tu perds de l’argent sur chaque commande livrée. Augmente le prix ou baisse les coûts.', thin: '⚠️ Marge fine : une mauvaise semaine de retours et tu perds de l’argent.', ok: '✅ Marge saine.' },
+    notes: {
+      delivery: 'Part des colis expédiés réellement livrés et payés. 100 % si le client paie en ligne.',
+      ads: 'Ce qu’une commande te coûte en pub (dépense ÷ commandes). 0 si tu vends sans pub.',
+      roas: 'ROAS minimum affiché dans ton gestionnaire de pub pour ne pas perdre d’argent.',
+    },
+  },
+
+  dash: { adSpend: 'Dépense pub', roas: 'ROAS pub', afterAds: 'Bénéfice après pub', cpa: 'Coût par commande (pub)',
+    cashBalance: 'Solde de trésorerie', cashNet: 'Trésorerie nette (période)', posts: 'Posts publiés', views: 'Vues totales' },
+
+  guide: [
+    ['6. Publicité', 'Une ligne par campagne (ou par semaine de campagne). Recopie la dépense et les commandes depuis ton gestionnaire de pub. « Bénéfice réel » utilise ton VRAI bénéfice par commande (retours inclus) — c’est ce que le ROAS seul ne montre pas. ❌ = arrête ou corrige la campagne.'],
+    ['7. Contenu', 'Planifie tes posts (Idée → Publié), puis remplis les vues et résultats 2–3 jours après publication. Les posts du jour sont surlignés. Réutilise les accroches qui font le plus de vues.'],
+    ['8. Trésorerie', 'Chaque mouvement d’argent, pro ET perso : versements reçus, fournisseur, pub, loyer… Montant toujours positif, le Type décide + ou −. Ajoute les lignes dans l’ordre des dates (le solde suit l’ordre des lignes).'],
+    ['9. Budget', 'Fixe un budget mensuel par catégorie dans Paramètres. L’onglet Budget montre ce que tu as dépensé ce mois-ci (ou le mois choisi), ce qu’il reste, et 6 mois d’historique.'],
+    ['10. Calculateur de prix', 'Avant de lancer un produit : saisis ses coûts, frais, coût pub et taux de livraison. Tu obtiens le prix minimum, le prix pour 30 % / 50 % de marge et le maximum que tu peux payer en pub par commande.'],
+  ],
+};
+
+// Valeurs par défaut du calculateur de prix (les montants sont multipliés par variant.money)
+const PRICING_DEFAULTS = [25, 6, 0.5, 5, 3, 0, 0, 0.029, 4, 0.8, 0.3, 300];
+const PRICING_MONEY_ROWS = [0, 1, 2, 3, 4, 6, 8, 11];
+const PRICING_PCT_ROWS = [5, 7, 9, 10];
+
+// ---------------------------------------------------------------------------
 // Construction
 // ---------------------------------------------------------------------------
 
-function buildTracker_(variantKey) {
+function buildTracker_(variantKey, pack) {
   const v = VARIANTS[variantKey];
   const t = I18N[v.lang];
-  const ss = SpreadsheetApp.create(t.file + v.suffix);
+  const fileName = (pack ? t.pack.file : t.file) + v.suffix;
+  const ss = SpreadsheetApp.create(fileName);
   // Les formules sont écrites avec la syntaxe en_US (virgules) : on garde cette locale
   // pendant la construction et on applique la locale finale tout à la fin (Sheets convertit).
   ss.setSpreadsheetLocale('en_US');
 
-  const keys = ['dashboard', 'orders', 'products', 'customers', 'settings', 'guide'];
+  const keys = pack
+    ? ['dashboard', 'orders', 'products', 'customers', 'ads', 'content', 'cash', 'budget', 'pricing', 'settings', 'guide']
+    : ['dashboard', 'orders', 'products', 'customers', 'settings', 'guide'];
+  const names = Object.assign({}, t.sheets, pack ? t.pack.sheets : {});
   const sh = {};
   const N = {};
   keys.forEach((k, i) => {
-    sh[k] = i === 0 ? ss.getSheets()[0].setName(t.sheets[k]) : ss.insertSheet(t.sheets[k]);
+    sh[k] = i === 0 ? ss.getSheets()[0].setName(names[k]) : ss.insertSheet(names[k]);
     sh[k].getRange(1, 1, sh[k].getMaxRows(), sh[k].getMaxColumns()).setFontFamily(FONT).setFontColor(C.ink);
-    N[k] = "'" + t.sheets[k].replace(/'/g, "''") + "'";
+    N[k] = "'" + names[k].replace(/'/g, "''") + "'";
   });
 
-  buildSettings_(ss, sh.settings, t, v);
+  buildSettings_(ss, sh.settings, t, v, pack);
   buildProducts_(sh.products, t, v, N);
   buildOrders_(sh.orders, t, v, N, sh.products);
   buildCustomers_(sh.customers, t, N);
-  buildDashboard_(ss, sh.dashboard, t, N);
-  buildGuide_(sh.guide, t);
+  if (pack) {
+    buildAds_(sh.ads, t, v, N, sh.products);
+    buildContent_(sh.content, t, v, sh.products);
+    buildCash_(sh.cash, t, v);
+    buildBudget_(ss, sh.budget, t, N);
+    buildPricing_(sh.pricing, t, v);
+  }
+  buildDashboard_(ss, sh.dashboard, t, N, pack);
+  buildGuide_(sh.guide, t, pack);
 
-  sh.dashboard.setTabColor(C.primary);
-  sh.orders.setTabColor(C.ink);
-  sh.products.setTabColor(C.ink);
-  sh.customers.setTabColor(C.ink);
-  sh.settings.setTabColor(C.muted);
-  sh.guide.setTabColor(C.muted);
+  keys.forEach(k => {
+    const color = k === 'dashboard' ? C.primary : (k === 'settings' || k === 'guide') ? C.muted
+      : k === 'pricing' ? C.primaryInk : C.ink;
+    sh[k].setTabColor(color);
+  });
   ss.setActiveSheet(sh.dashboard);
 
   SpreadsheetApp.flush();
   ss.setSpreadsheetLocale(v.locale);
   SpreadsheetApp.flush();
-  Logger.log(`${t.file}${v.suffix} → ${ss.getUrl()}`);
+  Logger.log(`${fileName} → ${ss.getUrl()}`);
 }
 
 // ---- Paramètres -----------------------------------------------------------
 
-function buildSettings_(ss, sh, t, v) {
+function buildSettings_(ss, sh, t, v, pack) {
   const st = t.settings;
   sh.getRange('A1').setValue(st.title).setFontSize(16).setFontWeight('bold');
 
@@ -312,6 +518,29 @@ function buildSettings_(ss, sh, t, v) {
     MK_PAYMENTS: 'E18:G47', MK_LIST_PAYMENT: 'E18:E47',
     MK_CARRIERS: 'I18:K47', MK_LIST_CARRIER: 'I18:I47',
   };
+  if (pack) {
+    const k = t.pack.settings;
+    const packLists = [
+      { col: 13, header: [k.adPlatforms], rows: t.pack.adPlatforms.map(x => [x]) },
+      { col: 15, header: [k.contentPlatforms], rows: t.pack.contentPlatforms.map(x => [x]) },
+      { col: 17, header: k.categories, rows: t.pack.categories.map(r => [r[0], r[1] * v.money]) },
+      { col: 20, header: [k.accounts], rows: t.pack.accounts.map(x => [x]) },
+    ];
+    packLists.forEach(l => {
+      const w = l.header.length;
+      styleHeader_(sh.getRange(17, l.col, 1, w).setValues([l.header]), false);
+      sh.getRange(18, l.col, l.rows.length, w).setValues(l.rows);
+      sh.getRange(18, l.col, LIST_ROWS, w).setBorder(true, true, true, true, true, true, C.border, SpreadsheetApp.BorderStyle.SOLID);
+    });
+    sh.getRange('R18:R47').setNumberFormat(MONEY);
+    [13, 15, 17, 20].forEach(c => sh.setColumnWidth(c, 180));
+    [14, 16, 19].forEach(c => sh.setColumnWidth(c, 24));
+    sh.setColumnWidth(18, 120);
+    Object.assign(named, {
+      MK_LIST_ADPLAT: 'M18:M47', MK_LIST_CONTENTPLAT: 'O18:O47',
+      MK_CATEGORIES: 'Q18:R47', MK_LIST_CATEGORY: 'Q18:Q47', MK_LIST_ACCOUNT: 'T18:T47',
+    });
+  }
   Object.keys(named).forEach(n => ss.setNamedRange(n, sh.getRange(named[n])));
 }
 
@@ -502,14 +731,14 @@ function buildCustomers_(sh, t, N) {
 
 // ---- Tableau de bord ------------------------------------------------------
 
-function buildDashboard_(ss, sh, t, N) {
+function buildDashboard_(ss, sh, t, N, pack) {
   const O = N.orders;
   const P = N.products;
   const d = t.dash;
   const DR = `${O}!A2:A, ">="&MK_FROM, ${O}!A2:A, "<="&MK_TO`;
 
   sh.setHiddenGridlines(true);
-  sh.getRange('A1:J60').setBackground(C.bg);
+  sh.getRange('A1:J80').setBackground(C.bg);
   sh.setColumnWidth(1, 24);
   for (let c = 2; c <= 9; c++) sh.setColumnWidth(c, 118);
   sh.setColumnWidth(10, 24);
@@ -554,12 +783,32 @@ function buildDashboard_(ss, sh, t, N) {
   tile_(sh, 12, 8, d.bestProduct, false, '=IFERROR(IF(MAX(L51:L55)<=0, "—", K51), "—")', '@');
   sh.getRangeList(['F13:G13', 'H13:I13']).setFontSize(13);
 
-  sh.setConditionalFormatRules([
+  const dashRules = [
     rule_(sh.getRange('D7')).whenNumberLessThan(0).setFontColor(C.loss).build(),
     rule_(sh.getRange('D7')).whenNumberGreaterThan(0).setFontColor(C.profit).build(),
     rule_(sh.getRange('D10')).whenNumberGreaterThan(0.2).setFontColor(C.loss).build(),
     rule_(sh.getRange('D13')).whenNumberGreaterThan(0).setFontColor(C.warn).build(),
-  ]);
+  ];
+
+  // Seller Pack : pub, trésorerie, contenu
+  if (pack) {
+    const k = t.pack.dash;
+    const A = N.ads, CO = N.content, CA = N.cash;
+    const range = (sheet) => `${sheet}!A2:A, ">="&MK_FROM, ${sheet}!A2:A, "<="&MK_TO`;
+    tile_(sh, 15, 2, k.adSpend, true, `=SUMIFS(${A}!E2:E, ${range(A)})`, MONEY);
+    tile_(sh, 15, 4, k.roas, false, `=IFERROR(SUMIFS(${A}!H2:H, ${range(A)})/B16, 0)`, '0.00"x"');
+    tile_(sh, 15, 6, k.afterAds, true, '=D7 - B16', MONEY);
+    tile_(sh, 15, 8, k.cpa, true, `=IFERROR(B16/SUMIFS(${A}!F2:F, ${range(A)}), 0)`, MONEY);
+    tile_(sh, 18, 2, k.cashBalance, true, `=SUM(${CA}!H2:H)`, MONEY);
+    tile_(sh, 18, 4, k.cashNet, true, `=SUMIFS(${CA}!H2:H, ${range(CA)})`, MONEY);
+    tile_(sh, 18, 6, k.posts, false, `=COUNTIFS(${CO}!F2:F, ${s(t.pack.contentStatuses[5])}, ${range(CO)})`, '0');
+    tile_(sh, 18, 8, k.views, false, `=SUMIFS(${CO}!H2:H, ${range(CO)})`, '#,##0');
+    ['F16', 'B19', 'D19'].forEach(a => {
+      dashRules.push(rule_(sh.getRange(a)).whenNumberLessThan(0).setFontColor(C.loss).build());
+      dashRules.push(rule_(sh.getRange(a)).whenNumberGreaterThan(0).setFontColor(C.profit).build());
+    });
+  }
+  sh.setConditionalFormatRules(dashRules);
 
   // Données des graphiques (colonnes K à M, N masquée)
   sh.getRange('K2').setValue(d.data).setFontColor(C.muted).setFontWeight('bold');
@@ -589,23 +838,344 @@ function buildDashboard_(ss, sh, t, N) {
   // Graphiques
   const W = 450;
   const H = 290;
-  chart_(sh, Charts.ChartType.COLUMN, 'K3:M15', 16, 2, d.chartMonthly, W, H, { colors: [C.ink, '#84CC16'] });
-  chart_(sh, Charts.ChartType.PIE, 'K41:L47', 16, 6, d.chartStatus, W, H,
+  const r1 = pack ? 22 : 16;
+  const r2 = r1 + 16;
+  chart_(sh, Charts.ChartType.COLUMN, 'K3:M15', r1, 2, d.chartMonthly, W, H, { colors: [C.ink, '#84CC16'] });
+  chart_(sh, Charts.ChartType.PIE, 'K41:L47', r1, 6, d.chartStatus, W, H,
     { pieHole: 0.5, colors: ['#3B82F6', '#8B5CF6', '#F59E0B', '#16A34A', '#DC2626', '#94A3B8'] });
-  chart_(sh, Charts.ChartType.BAR, 'K18:L38', 32, 2, d.chartChannel, W, H, { colors: [C.ink], legend: { position: 'none' } });
-  chart_(sh, Charts.ChartType.BAR, 'K50:L55', 32, 6, d.chartTop, W, H, { colors: ['#84CC16'], legend: { position: 'none' } });
+  chart_(sh, Charts.ChartType.BAR, 'K18:L38', r2, 2, d.chartChannel, W, H, { colors: [C.ink], legend: { position: 'none' } });
+  chart_(sh, Charts.ChartType.BAR, 'K50:L55', r2, 6, d.chartTop, W, H, { colors: ['#84CC16'], legend: { position: 'none' } });
+}
+
+// ---- Seller Pack : Publicité / ROAS ----------------------------------------
+
+function buildAds_(sh, t, v, N, productsSheet) {
+  const k = t.pack;
+  const O = N.orders;
+  const P = N.products;
+  const h = k.adsCalc;
+  styleHeader_(sh.getRange(1, 1, 1, 7).setValues([k.ads]), false);
+
+  sh.getRange('H1').setFormula(`={${s(h[0])}; MAP(D2:D, E2:E, F2:F, G2:G, LAMBDA(p_prod, p_sp, p_ord, p_rev, IF(p_sp="", , IF(p_rev<>"", p_rev, p_ord*IFERROR(VLOOKUP(p_prod, ${P}!B2:F, 5, FALSE), 0)))))}`);
+  sh.getRange('I1').setFormula(`={${s(h[1])}; ARRAYFORMULA(IF(E2:E="", , IFERROR(E2:E/F2:F, "")))}`);
+  sh.getRange('J1').setFormula(`={${s(h[2])}; ARRAYFORMULA(IF(E2:E="", , IFERROR(H2:H/E2:E, "")))}`);
+  // Bénéfice réel moyen par commande (livrées + retournées) tiré de l'historique ; sinon estimation depuis Produits
+  sh.getRange('K1').setFormula(`={${s(h[3])}; MAP(D2:D, E2:E, LAMBDA(p_prod, p_sp, IF(p_sp="", , ` +
+    `LET(v_n, COUNTIFS(${O}!G2:G, p_prod, ${O}!M2:M, MK_ST_DELIVERED) + COUNTIFS(${O}!G2:G, p_prod, ${O}!M2:M, MK_ST_RETURNED), ` +
+    `IF(v_n>0, SUMIFS(${O}!S2:S, ${O}!G2:G, p_prod)/v_n, ` +
+    `IFERROR(VLOOKUP(p_prod, ${P}!B2:F, 5, FALSE) - VLOOKUP(p_prod, ${P}!B2:F, 3, FALSE) - VLOOKUP(p_prod, ${P}!B2:F, 4, FALSE) - IFERROR(INDEX(MK_CARRIERS, 1, 2), 0), ""))))))}`);
+  sh.getRange('L1').setFormula(`={${s(h[4])}; ARRAYFORMULA(IF(E2:E="", , IFERROR(F2:F*K2:K - E2:E, "")))}`);
+  sh.getRange('M1').setFormula(`={${s(h[5])}; ARRAYFORMULA(IF(ISNUMBER(L2:L), IF(L2:L>0, ${s(k.verdict.win)}, ${s(k.verdict.lose)}), ""))}`);
+  sh.getRange('N1').setFormula(`={${s(h[6])}; ARRAYFORMULA(IF(A2:A="", , IFERROR(DATE(YEAR(A2:A), MONTH(A2:A), 1), "")))}`);
+
+  styleHeader_(sh.getRange('H1:N1'), true);
+  sh.getRange('G1').setNote(k.adsNotes.revenue);
+  sh.getRange('K1').setNote(k.adsNotes.profit);
+  sh.getRange('L1').setNote(k.adsNotes.real);
+  sh.getRange('H1:N').protect().setWarningOnly(true).setDescription('Automatic columns');
+
+  sh.getRange('A2:A').setNumberFormat(t.dateFormat);
+  sh.getRange('E2:E').setNumberFormat(MONEY);
+  sh.getRange('F2:F').setNumberFormat('0');
+  sh.getRange('G2:I').setNumberFormat(MONEY);
+  sh.getRange('J2:J').setNumberFormat('0.00"x"');
+  sh.getRange('K2:L').setNumberFormat(MONEY);
+  sh.getRange('N2:N').setNumberFormat('mmm yyyy');
+
+  const ss = sh.getParent();
+  const nonNeg = SpreadsheetApp.newDataValidation().requireNumberGreaterThanOrEqualTo(0).setAllowInvalid(false).build();
+  sh.getRange('A2:A').setDataValidation(SpreadsheetApp.newDataValidation().requireDate().setAllowInvalid(false).build());
+  sh.getRange('B2:B').setDataValidation(SpreadsheetApp.newDataValidation()
+    .requireValueInRange(ss.getRangeByName('MK_LIST_ADPLAT'), true).setAllowInvalid(true).build());
+  sh.getRange('D2:D').setDataValidation(SpreadsheetApp.newDataValidation()
+    .requireValueInRange(productsSheet.getRange('B2:B'), true).setAllowInvalid(true).build());
+  sh.getRange('E2:G').setDataValidation(nonNeg);
+
+  sh.setConditionalFormatRules([
+    rule_(sh.getRange('L2:L')).whenNumberLessThan(0).setFontColor(C.loss).setBold(true).build(),
+    rule_(sh.getRange('L2:L')).whenNumberGreaterThan(0).setFontColor(C.profit).setBold(true).build(),
+    rule_(sh.getRange('M2:M')).whenTextEqualTo(k.verdict.win).setBackground('#DCFCE7').setFontColor(C.profit).build(),
+    rule_(sh.getRange('M2:M')).whenTextEqualTo(k.verdict.lose).setBackground('#FEE2E2').setFontColor(C.loss).build(),
+  ]);
+
+  sh.setFrozenRows(1);
+  sh.setRowHeight(1, 40);
+  [95, 120, 180, 170, 100, 110, 110, 100, 100, 70, 120, 110, 140, 90].forEach((w, i) => sh.setColumnWidth(i + 1, w));
+  sh.hideColumns(14);
+
+  if (WITH_SAMPLE_DATA) {
+    const today = new Date();
+    const rows = k.sampleAds.map(a => [daysAgo_(today, a[0]), k.adPlatforms[a[1]], a[2], t.sampleProducts[a[3]][1], a[4] * v.money, a[5], '']);
+    sh.getRange(2, 1, rows.length, 7).setValues(rows);
+  }
+}
+
+// ---- Seller Pack : Planning de contenu ------------------------------------
+
+function buildContent_(sh, t, v, productsSheet) {
+  const k = t.pack;
+  const h = k.contentCalc;
+  styleHeader_(sh.getRange(1, 1, 1, 14).setValues([k.content]), false);
+
+  sh.getRange('O1').setFormula(`={${s(h[0])}; ARRAYFORMULA(IF(H2:H="", , IFERROR((I2:I + J2:J + K2:K + L2:L)/H2:H, "")))}`);
+  sh.getRange('P1').setFormula(`={${s(h[1])}; ARRAYFORMULA(IF(A2:A="", , TEXT(A2:A, "ddd")))}`);
+  styleHeader_(sh.getRange('O1:P1'), true);
+  sh.getRange('O1').setNote(k.contentNote);
+  sh.getRange('O1:P').protect().setWarningOnly(true).setDescription('Automatic columns');
+
+  sh.getRange('A2:A').setNumberFormat(t.dateFormat);
+  sh.getRange('H2:N').setNumberFormat('#,##0');
+  sh.getRange('O2:O').setNumberFormat(PCT);
+  sh.getRange('D2:D').setWrap(true);
+
+  const ss = sh.getParent();
+  sh.getRange('A2:A').setDataValidation(SpreadsheetApp.newDataValidation().requireDate().setAllowInvalid(false).build());
+  sh.getRange('B2:B').setDataValidation(SpreadsheetApp.newDataValidation()
+    .requireValueInRange(ss.getRangeByName('MK_LIST_CONTENTPLAT'), true).setAllowInvalid(true).build());
+  sh.getRange('C2:C').setDataValidation(SpreadsheetApp.newDataValidation().requireValueInList(k.formats, true).setAllowInvalid(true).build());
+  sh.getRange('E2:E').setDataValidation(SpreadsheetApp.newDataValidation()
+    .requireValueInRange(productsSheet.getRange('B2:B'), true).setAllowInvalid(true).build());
+  sh.getRange('F2:F').setDataValidation(SpreadsheetApp.newDataValidation().requireValueInList(k.contentStatuses, true).setAllowInvalid(false).build());
+  sh.getRange('H2:N').setDataValidation(SpreadsheetApp.newDataValidation().requireNumberGreaterThanOrEqualTo(0).setAllowInvalid(false).build());
+
+  const st = k.contentStatuses;
+  sh.setConditionalFormatRules([
+    rule_(sh.getRange('A2:N')).whenFormulaSatisfied('=AND($A2<>"", $A2=TODAY())').setBackground(C.primarySoft).setBold(true).build(),
+    rule_(sh.getRange('F2:F')).whenTextEqualTo(st[5]).setBackground('#DCFCE7').setFontColor(C.profit).build(),
+    rule_(sh.getRange('F2:F')).whenTextEqualTo(st[4]).setBackground('#DBEAFE').setFontColor('#1D4ED8').build(),
+    rule_(sh.getRange('F2:F')).whenTextEqualTo(st[0]).setBackground('#F1F5F9').setFontColor(C.muted).build(),
+    rule_(sh.getRange('F2:F')).whenFormulaSatisfied(`=OR($F2=${s(st[1])}, $F2=${s(st[2])}, $F2=${s(st[3])})`).setBackground('#FEF3C7').setFontColor(C.warn).build(),
+    SpreadsheetApp.newConditionalFormatRule().setRanges([sh.getRange('H2:H')])
+      .setGradientMinpoint('#FFFFFF').setGradientMaxpoint('#BEF264').build(),
+  ]);
+
+  sh.setFrozenRows(1);
+  sh.setRowHeight(1, 40);
+  [95, 130, 95, 320, 150, 100, 140, 80, 70, 90, 80, 110, 90, 90, 95, 60].forEach((w, i) => sh.setColumnWidth(i + 1, w));
+
+  if (WITH_SAMPLE_DATA) {
+    const price = v.currency === '$' ? '$25' : `${25 * v.money} ${v.currency}`;
+    const today = new Date();
+    const rows = k.sampleContent.map(c => {
+      const metrics = c.length > 6 ? c.slice(6) : ['', '', '', '', '', '', ''];
+      return [daysAgo_(today, c[0]), k.contentPlatforms[c[1]], k.formats[c[2]], c[3].replace('{P}', price),
+        c[4] >= 0 ? t.sampleProducts[c[4]][1] : '', st[c[5]], ''].concat(metrics);
+    });
+    sh.getRange(2, 1, rows.length, 14).setValues(rows);
+  }
+}
+
+// ---- Seller Pack : Trésorerie (journal des mouvements) --------------------
+
+function buildCash_(sh, t, v) {
+  const k = t.pack;
+  const h = k.cashCalc;
+  styleHeader_(sh.getRange(1, 1, 1, 7).setValues([k.cash]), false);
+
+  sh.getRange('H1').setFormula(`={${s(h[0])}; ARRAYFORMULA(IF(E2:E="", , IF(B2:B=${s(k.types[0])}, E2:E, -E2:E)))}`);
+  sh.getRange('I1').setFormula(`={${s(h[1])}; ARRAYFORMULA(IF(A2:A="", , IFERROR(DATE(YEAR(A2:A), MONTH(A2:A), 1), "")))}`);
+  sh.getRange('J1').setFormula(`={${s(h[2])}; MAP(E2:E, SCAN(0, H2:H, LAMBDA(v_acc, v_x, v_acc + N(v_x))), LAMBDA(p_amt, p_bal, IF(p_amt="", , p_bal)))}`);
+  styleHeader_(sh.getRange('H1:J1'), true);
+  sh.getRange('E1').setNote(k.cashNote);
+  sh.getRange('H1:J').protect().setWarningOnly(true).setDescription('Automatic columns');
+
+  sh.getRange('A2:A').setNumberFormat(t.dateFormat);
+  sh.getRange('E2:E').setNumberFormat(MONEY);
+  sh.getRange('H2:H').setNumberFormat(MONEY);
+  sh.getRange('I2:I').setNumberFormat('mmm yyyy');
+  sh.getRange('J2:J').setNumberFormat(MONEY);
+
+  const ss = sh.getParent();
+  const list = (values, strict) => SpreadsheetApp.newDataValidation().requireValueInList(values, true).setAllowInvalid(!strict).build();
+  const named = (name) => SpreadsheetApp.newDataValidation().requireValueInRange(ss.getRangeByName(name), true).setAllowInvalid(true).build();
+  sh.getRange('A2:A').setDataValidation(SpreadsheetApp.newDataValidation().requireDate().setAllowInvalid(false).build());
+  sh.getRange('B2:B').setDataValidation(list(k.types, true));
+  sh.getRange('C2:C').setDataValidation(named('MK_LIST_CATEGORY'));
+  sh.getRange('E2:E').setDataValidation(SpreadsheetApp.newDataValidation().requireNumberGreaterThanOrEqualTo(0).setAllowInvalid(false).build());
+  sh.getRange('F2:F').setDataValidation(named('MK_LIST_ACCOUNT'));
+  sh.getRange('G2:G').setDataValidation(list(k.scope, true));
+
+  sh.setConditionalFormatRules([
+    rule_(sh.getRange('H2:H')).whenNumberLessThan(0).setFontColor(C.loss).build(),
+    rule_(sh.getRange('H2:H')).whenNumberGreaterThan(0).setFontColor(C.profit).build(),
+    rule_(sh.getRange('J2:J')).whenNumberLessThan(0).setFontColor(C.loss).setBold(true).build(),
+  ]);
+
+  sh.setFrozenRows(1);
+  sh.setRowHeight(1, 40);
+  [95, 90, 180, 260, 100, 140, 100, 110, 90, 110].forEach((w, i) => sh.setColumnWidth(i + 1, w));
+  sh.hideColumns(9);
+
+  if (WITH_SAMPLE_DATA) {
+    const today = new Date();
+    const rows = k.sampleCash.map(c => [daysAgo_(today, c[0]), k.types[c[1]], k.categories[c[2]][0], c[3], c[4] * v.money, k.accounts[c[5]], k.scope[c[6]]]);
+    sh.getRange(2, 1, rows.length, 7).setValues(rows);
+  }
+}
+
+// ---- Seller Pack : Budget (100 % automatique sauf le mois) -----------------
+
+function buildBudget_(ss, sh, t, N) {
+  const k = t.pack;
+  const b = k.budget;
+  const CA = N.cash;
+  const INC = s(k.types[0]);
+  const EXP = s(k.types[1]);
+
+  sh.setHiddenGridlines(true);
+  sh.getRange('A1:E1').merge().setValue(b.title).setFontSize(18).setFontWeight('bold');
+  sh.setRowHeight(1, 44);
+
+  sh.getRange('A3').setValue(b.month).setFontWeight('bold');
+  sh.getRange('B3').setNumberFormat('mmmm yyyy').setBackground(C.primarySoft)
+    .setBorder(true, true, true, true, false, false, C.primary, SpreadsheetApp.BorderStyle.SOLID)
+    .setDataValidation(SpreadsheetApp.newDataValidation().requireDate().setAllowInvalid(false).build());
+  sh.getRange('C3:E3').merge().setValue(b.monthHint).setFontColor(C.muted).setFontStyle('italic');
+  sh.getRange('J1').setFormula('=IF(B3="", DATE(YEAR(TODAY()), MONTH(TODAY()), 1), DATE(YEAR(B3), MONTH(B3), 1))');
+  ss.setNamedRange('MK_BMONTH', sh.getRange('J1'));
+
+  const inMonth = `${CA}!I2:I, MK_BMONTH`;
+  sh.getRange('A5:A10').setValues(b.kpis.map(x => [x])).setFontColor(C.muted);
+  sh.getRange('B5:B10').setFormulas([
+    [`=SUMIFS(${CA}!E2:E, ${CA}!B2:B, ${INC}, ${inMonth})`],
+    [`=SUMIFS(${CA}!E2:E, ${CA}!B2:B, ${EXP}, ${inMonth})`],
+    ['=B5 - B6'],
+    [`=SUM(${CA}!H2:H)`],
+    [`=SUMIFS(${CA}!E2:E, ${CA}!B2:B, ${EXP}, ${inMonth}, ${CA}!G2:G, ${s(k.scope[0])})`],
+    [`=SUMIFS(${CA}!E2:E, ${CA}!B2:B, ${EXP}, ${inMonth}, ${CA}!G2:G, ${s(k.scope[1])})`],
+  ]).setNumberFormat(MONEY).setFontWeight('bold').setFontSize(12);
+  sh.getRange('A5:B10').setBorder(true, true, true, true, false, true, C.border, SpreadsheetApp.BorderStyle.SOLID).setBackground('#FFFFFF');
+
+  styleHeader_(sh.getRange('A12:E12').setValues([b.table]), true);
+  sh.getRange('A13').setFormula('=IFERROR(FILTER(MK_CATEGORIES, INDEX(MK_CATEGORIES, 0, 1)<>""), "")');
+  sh.getRange('C13').setFormula(`=MAP(A13:A42, LAMBDA(k_c, IF(k_c="", , SUMIFS(${CA}!E2:E, ${CA}!C2:C, k_c, ${CA}!B2:B, ${EXP}, ${inMonth}))))`);
+  sh.getRange('D13').setFormula('=ARRAYFORMULA(IF(A13:A42="", , IF(B13:B42>0, B13:B42 - C13:C42, "")))');
+  sh.getRange('E13').setFormula('=ARRAYFORMULA(IF(A13:A42="", , IF(B13:B42>0, C13:C42/B13:B42, "")))');
+  sh.getRange('B13:D42').setNumberFormat(MONEY);
+  sh.getRange('E13:E42').setNumberFormat('0%');
+
+  styleHeader_(sh.getRange('A45:D45').setValues([b.history]), true);
+  sh.getRange('J46').setFormula('=ARRAYFORMULA(DATE(YEAR(MK_BMONTH), MONTH(MK_BMONTH) + SEQUENCE(6, 1, -5, 1), 1))');
+  sh.getRange('A46').setFormula('=ARRAYFORMULA(TEXT(J46:J51, "mmm yy"))');
+  sh.getRange('B46').setFormula(`=MAP(J46:J51, LAMBDA(k_m, SUMIFS(${CA}!E2:E, ${CA}!B2:B, ${INC}, ${CA}!I2:I, k_m)))`);
+  sh.getRange('C46').setFormula(`=MAP(J46:J51, LAMBDA(k_m, SUMIFS(${CA}!E2:E, ${CA}!B2:B, ${EXP}, ${CA}!I2:I, k_m)))`);
+  sh.getRange('D46').setFormula('=ARRAYFORMULA(B46:B51 - C46:C51)');
+  sh.getRange('B46:D51').setNumberFormat(MONEY);
+  sh.hideColumns(10);
+
+  sh.setConditionalFormatRules([
+    rule_(sh.getRange('B7')).whenNumberLessThan(0).setFontColor(C.loss).build(),
+    rule_(sh.getRange('B7')).whenNumberGreaterThan(0).setFontColor(C.profit).build(),
+    rule_(sh.getRange('E13:E42')).whenNumberGreaterThan(1).setBackground('#FEE2E2').setFontColor(C.loss).setBold(true).build(),
+    rule_(sh.getRange('E13:E42')).whenNumberGreaterThan(0.8).setBackground('#FEF3C7').setFontColor(C.warn).build(),
+    rule_(sh.getRange('D13:D42')).whenNumberLessThan(0).setFontColor(C.loss).setBold(true).build(),
+    rule_(sh.getRange('D46:D51')).whenNumberLessThan(0).setFontColor(C.loss).build(),
+    rule_(sh.getRange('D46:D51')).whenNumberGreaterThan(0).setFontColor(C.profit).build(),
+  ]);
+  sh.getRange('A5:E60').protect().setWarningOnly(true).setDescription('Automatic');
+
+  sh.setColumnWidth(1, 240);
+  for (let c = 2; c <= 5; c++) sh.setColumnWidth(c, 130);
+
+  chart_(sh, Charts.ChartType.COLUMN, 'A45:C51', 53, 1, b.chart, 560, 280, { colors: [C.profit, C.loss] });
+}
+
+// ---- Seller Pack : Calculateur de prix ------------------------------------
+
+function buildPricing_(sh, t, v) {
+  const p = t.pack.pricing;
+  sh.setHiddenGridlines(true);
+  sh.getRange('A1:E1').merge().setValue(p.title).setFontSize(18).setFontWeight('bold');
+  sh.setRowHeight(1, 44);
+  sh.getRange('A2:C2').merge().setValue(p.subtitle).setFontColor(C.muted);
+  sh.getRange('D2:E2').merge().setFormula(`=${s(p.currencyLabel)}&" "&MK_CURRENCY`).setFontColor(C.muted).setHorizontalAlignment('right');
+
+  styleHeader_(sh.getRange('A3:B3').merge().setValue(p.inputsHeader), false);
+  styleHeader_(sh.getRange('D3:E3').merge().setValue(p.outputsHeader), true);
+
+  const values = PRICING_DEFAULTS.map((x, i) => [PRICING_MONEY_ROWS.indexOf(i) >= 0 ? x * v.money : x]);
+  sh.getRange('A4:A15').setValues(p.inputs.map(x => [x]));
+  sh.getRange('B4:B15').setValues(values).setBackground(C.primarySoft).setFontWeight('bold')
+    .setBorder(true, true, true, true, false, true, C.primary, SpreadsheetApp.BorderStyle.SOLID);
+  PRICING_MONEY_ROWS.forEach(i => sh.getRange(4 + i, 2).setNumberFormat(MONEY)
+    .setDataValidation(SpreadsheetApp.newDataValidation().requireNumberGreaterThanOrEqualTo(0).setAllowInvalid(false).build()));
+  PRICING_PCT_ROWS.forEach(i => sh.getRange(4 + i, 2).setNumberFormat(PCT)
+    .setDataValidation(SpreadsheetApp.newDataValidation().requireNumberBetween(i === 9 ? 0.01 : 0, 1).setAllowInvalid(false).setHelpText('0% – 100%').build()));
+  sh.getRange('B12').setNote(p.notes.ads);
+  sh.getRange('B13').setNote(p.notes.delivery);
+
+  // K = coûts fixes par colis expédié ; NET = part du prix qui reste après frais en % ; BASE = coûts par commande livrée hors frais %
+  const K = '(B6 + B7 + (1 - B13)*B8 + B12)';
+  const NET = '(1 - B9 - B11)';
+  const BASE = `(B10 + B5 + ${K}/B13)`;
+  sh.getRange('D4:D13').setValues(p.outputs.map(x => [x]));
+  sh.getRange('E4:E13').setFormulas([
+    [`=IFERROR(B4*${NET} - ${BASE}, "—")`],
+    ['=IFERROR(E4/B4, "—")'],
+    ['=IFERROR(B4 - E4, "—")'],
+    [`=IFERROR(${BASE}/${NET}, "—")`],
+    [`=IFERROR(IF(${NET} - 0.3<=0, "—", ${BASE}/(${NET} - 0.3)), "—")`],
+    [`=IFERROR(IF(${NET} - 0.5<=0, "—", ${BASE}/(${NET} - 0.5)), "—")`],
+    [`=IFERROR(IF(${NET} - B14<=0, "—", ${BASE}/(${NET} - B14)), "—")`],
+    [`=IFERROR(B13*(B4*${NET} - B10 - B5) - B6 - B7 - (1 - B13)*B8, "—")`],
+    ['=IFERROR(IF(E11<=0, "—", B4/E11), "—")'],
+    ['=IFERROR(IF(E11<=0, "—", ROUNDUP(B15/E11, 0)), "—")'],
+  ]).setFontWeight('bold').setHorizontalAlignment('right');
+  sh.getRange('E4:E13').setNumberFormat(MONEY);
+  sh.getRange('E5').setNumberFormat(PCT);
+  sh.getRange('E12').setNumberFormat('0.00"x"').setNote(p.notes.roas);
+  sh.getRange('E13').setNumberFormat('0');
+  sh.getRange('D4:E4').setFontSize(14);
+  sh.getRange('D4:E13').setBackground('#FFFFFF')
+    .setBorder(true, true, true, true, false, true, C.border, SpreadsheetApp.BorderStyle.SOLID);
+
+  sh.getRange('A17:E17').merge().setFormula(`=IF(NOT(ISNUMBER(E4)), "", IF(E4<0, ${s(p.status.loss)}, IF(E5<0.2, ${s(p.status.thin)}, ${s(p.status.ok)})))`)
+    .setFontWeight('bold').setFontSize(12).setWrap(true);
+  sh.setRowHeight(17, 36);
+
+  sh.getRange('A19').setValue(p.scenariosTitle).setFontWeight('bold').setFontSize(12);
+  styleHeader_(sh.getRange('A20:C20').setValues([p.scenarios]), true);
+  sh.getRange('A21').setFormula('=ARRAYFORMULA(ROUND(B4*{0.8; 0.9; 1; 1.1; 1.2; 1.3; 1.5}, 2))');
+  sh.getRange('B21').setFormula(`=ARRAYFORMULA(IFERROR(A21:A27*${NET} - ${BASE}, ""))`);
+  sh.getRange('C21').setFormula('=ARRAYFORMULA(IFERROR(B21:B27/A21:A27, ""))');
+  sh.getRange('A21:B27').setNumberFormat(MONEY);
+  sh.getRange('C21:C27').setNumberFormat(PCT);
+  sh.getRange('A21:C27').setBorder(true, true, true, true, false, true, C.border, SpreadsheetApp.BorderStyle.SOLID);
+
+  const signRules = (a1) => [
+    rule_(sh.getRange(a1)).whenNumberLessThan(0).setFontColor(C.loss).build(),
+    rule_(sh.getRange(a1)).whenNumberGreaterThan(0).setFontColor(C.profit).build(),
+  ];
+  sh.setConditionalFormatRules([
+    rule_(sh.getRange('A21:C27')).whenFormulaSatisfied('=$A21=ROUND($B$4, 2)').setBackground(C.primarySoft).setBold(true).build(),
+    rule_(sh.getRange('A17')).whenTextStartsWith('❌').setBackground('#FEE2E2').setFontColor(C.loss).build(),
+    rule_(sh.getRange('A17')).whenTextStartsWith('⚠️').setBackground('#FEF3C7').setFontColor(C.warn).build(),
+    rule_(sh.getRange('A17')).whenTextStartsWith('✅').setBackground('#DCFCE7').setFontColor(C.profit).build(),
+  ].concat(signRules('E4'), signRules('E11'), signRules('B21:B27')));
+  sh.getRangeList(['D4:E13', 'A21:C27']).getRanges().forEach(r => r.protect().setWarningOnly(true).setDescription('Automatic'));
+
+  sh.setColumnWidth(1, 280);
+  sh.setColumnWidth(2, 130);
+  sh.setColumnWidth(3, 110);
+  sh.setColumnWidth(4, 300);
+  sh.setColumnWidth(5, 140);
+}
+
+function daysAgo_(today, n) {
+  return new Date(today.getFullYear(), today.getMonth(), today.getDate() - n);
 }
 
 // ---- Mode d'emploi --------------------------------------------------------
 
-function buildGuide_(sh, t) {
+function buildGuide_(sh, t, pack) {
   sh.setHiddenGridlines(true);
   sh.setColumnWidth(1, 24);
   sh.setColumnWidth(2, 190);
   sh.setColumnWidth(3, 720);
-  sh.getRange('B1:C1').merge().setValue(t.guideTitle).setFontSize(18).setFontWeight('bold');
+  sh.getRange('B1:C1').merge().setValue(pack ? t.pack.guideTitle : t.guideTitle).setFontSize(18).setFontWeight('bold');
   sh.setRowHeight(1, 48);
-  const rows = t.guide;
+  // Les étapes du Pack s'insèrent avant les conseils généraux (« On your phone » et suivants)
+  const rows = pack ? t.guide.slice(0, 10).concat(t.pack.guide, t.guide.slice(10)) : t.guide;
   sh.getRange(3, 2, rows.length, 2).setValues(rows).setWrap(true).setVerticalAlignment('top');
   sh.getRange(3, 2, rows.length, 1).setFontWeight('bold').setFontColor(C.primaryInk);
   sh.getRange(3, 2, rows.length, 2).setBorder(null, null, true, null, null, true, C.border, SpreadsheetApp.BorderStyle.SOLID);

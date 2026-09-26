@@ -1,8 +1,13 @@
 # Margokit — Google Sheets
 
-## Order & Inventory Tracker (`tracker/Code.gs`)
+Un seul script Google Apps Script ([tracker/Code.gs](tracker/Code.gs)) génère les deux produits, en 3 versions chacun (EN, FR, Maroc). Les fichiers générés **ne contiennent aucun script** : l'acheteur n'a aucun écran d'autorisation.
 
-Script Google Apps Script qui génère le fichier complet (6 onglets, formules, menus déroulants, couleurs, graphiques, données d'exemple). Le fichier généré **ne contient aucun script** : l'acheteur n'a aucun écran d'autorisation.
+| Produit | Onglets | Fonctions |
+|---|---|---|
+| **Order & Inventory Tracker** | Tableau de bord, Commandes, Produits, Clients, Paramètres, Mode d'emploi | `buildTrackerEN/FR/MA`, `buildAll` |
+| **Seller Pack** | Tracker + Publicité (ROAS), Contenu, Trésorerie, Budget, Calculateur de prix, et 8 indicateurs de plus sur le tableau de bord | `buildSellerPackEN/FR/MA`, `buildAllPacks` |
+
+Durée : environ 25 s par Tracker et environ 60 s par Pack. Google coupe un script au bout de 6 min : lance `buildAll` et `buildAllPacks` séparément.
 
 ### Générer les fichiers (5 min)
 
@@ -12,7 +17,8 @@ Script Google Apps Script qui génère le fichier complet (6 onglets, formules, 
    - `buildTrackerEN` : anglais, `$`, transporteurs US/UK
    - `buildTrackerFR` : français, `€`, Colissimo / Mondial Relay…
    - `buildTrackerMA` : français, `MAD`, Amana / Cathedis / Ozon Express (pour la vente directe au Maroc)
-   - `buildAll` : les trois d'un coup
+   - `buildAll` : les trois Trackers d'un coup
+   - `buildSellerPackEN` / `FR` / `MA` ou `buildAllPacks` : le Seller Pack
 4. **Exécuter** → autorise l'accès à ton compte (« Paramètres avancés → Accéder à… », c'est ton propre script).
 5. L'URL de chaque fichier s'affiche dans le **Journal d'exécution**. Les fichiers sont aussi dans ton Google Drive.
 
@@ -26,6 +32,9 @@ Script Google Apps Script qui génère le fichier complet (6 onglets, formules, 
 - [ ] Clients : un client est marqué ⚠️ (2 retours) et un autre ⭐ (3 livraisons).
 - [ ] Produits : « Sac cabas » apparaît en orange (stock bas).
 - [ ] Ouvre le fichier sur l'application mobile Google Sheets : les menus déroulants fonctionnent.
+- [ ] **Pack** : onglet Publicité, la campagne « Tote bag test » est ❌ et les campagnes Sérum sont ✅.
+- [ ] **Pack** : onglet Calculateur de prix, change le prix de vente → tous les résultats et le tableau « Et si je change mon prix ? » bougent.
+- [ ] **Pack** : onglet Budget, le mois en cours affiche des dépenses par catégorie et le graphique sur 6 mois.
 - [ ] Fais des captures d'écran du tableau de bord pour Gumroad.
 
 Si une cellule affiche `#ERROR!` ou `#NAME?`, envoie-moi le nom de l'onglet, la cellule et le message.
