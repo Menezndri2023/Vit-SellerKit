@@ -49,6 +49,8 @@ function createAuth() {
 
     // Stored in MongoDB so limits hold across all serverless instances
     rateLimit: {
+      // Automated tests create many accounts; the switch is ignored on Vercel production
+      enabled: !(process.env.E2E_DISABLE_RATE_LIMIT === '1' && process.env.VERCEL_ENV !== 'production'),
       storage: 'database',
       window: 60,
       max: 100,

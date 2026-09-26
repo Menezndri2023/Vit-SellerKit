@@ -21,3 +21,10 @@ export async function requireAdmin(locale: string): Promise<SessionUser> {
   if (user.role !== 'admin') redirect({ href: '/app', locale });
   return user;
 }
+
+/** For Server Actions and route handlers: the signed-in user, or throws (never trust the client). */
+export async function actionUser(): Promise<SessionUser> {
+  const session = await getSession();
+  if (!session) throw new Error('UNAUTHORIZED');
+  return session.user;
+}

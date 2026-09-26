@@ -72,7 +72,7 @@ export default function AppNav({ isAdmin, userName }: { isAdmin: boolean; userNa
             className={`flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] font-medium ${active(i.href) ? 'text-primary-ink' : 'text-muted'}`}
           >
             <Icon name={i.key} />
-            {t(i.key)}
+            <span className="max-w-full truncate px-1">{t(i.key === 'dashboard' ? 'home' : i.key)}</span>
           </Link>
         ))}
       </nav>
