@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+/* Margokit brand tokens — light */
+:root {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --ink: #0f172a;
+  --muted: #475569;
+  --border: #e2e8f0;
+  --primary: #a3e635;
+  --primary-ink: #4d7c0f;
+  --primary-soft: #f7fee7;
+  --profit: #16a34a;
+  --loss: #dc2626;
+  --warn: #b45309;
+}
+
+/* Dark */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b0f14;
+    --surface: #151b23;
+    --ink: #e6edf3;
+    --muted: #94a3b8;
+    --border: #263040;
+    --primary-ink: #bef264;
+    --primary-soft: #1a2410;
+    --profit: #4ade80;
+    --loss: #f87171;
+    --warn: #fbbf24;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-ink: var(--primary-ink);
+  --color-primary-soft: var(--primary-soft);
+  --color-profit: var(--profit);
+  --color-loss: var(--loss);
+  --color-warn: var(--warn);
+  --color-on-primary: #0f172a;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-jakarta), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  color-scheme: light dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
