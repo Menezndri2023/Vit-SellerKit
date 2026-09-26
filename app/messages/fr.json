@@ -671,5 +671,81 @@
       "rateLimited": "Trop de tentatives. Attends 15 minutes."
     },
     "backToApp": "Retour à l’app"
+  },
+  "admin": {
+    "title": "Admin",
+    "tabs": {
+      "stats": "Statistiques",
+      "users": "Utilisateurs",
+      "codes": "Codes",
+      "sales": "Ventes"
+    },
+    "stats": {
+      "users": "Utilisateurs",
+      "verified": "vérifiés",
+      "pro": "Utilisateurs Pro",
+      "conversion": "Conversion gratuit → Pro",
+      "signups": "Inscriptions par mois",
+      "revenue": "Revenus par mois (Gumroad)",
+      "countries": "Ventes par pays (90 jours)",
+      "month": "Mois",
+      "count": "Nombre",
+      "amount": "Montant",
+      "country": "Pays",
+      "sales": "Ventes",
+      "none": "Pas encore de données.",
+      "testExcluded": "Les achats de test sont exclus."
+    },
+    "users": {
+      "search": "Rechercher par e-mail ou nom",
+      "email": "E-mail",
+      "name": "Nom",
+      "created": "Inscrit le",
+      "plan": "Plan",
+      "until": "Jusqu’au",
+      "source": "Source",
+      "free": "Gratuit",
+      "lifetime": "À vie",
+      "renews": "Renouvelé",
+      "grant30": "+30 jours",
+      "grant365": "+1 an",
+      "grantLifetime": "À vie",
+      "revoke": "Retirer Pro",
+      "confirmRevoke": "Retirer tous les accès Pro de cet utilisateur ?",
+      "unverified": "e-mail non vérifié",
+      "admin": "admin"
+    },
+    "codes": {
+      "generate": "Générer des codes",
+      "count": "Combien",
+      "duration": "Durée",
+      "days30": "30 jours",
+      "days365": "1 an",
+      "lifetime": "À vie",
+      "note": "Note (qui, comment payé)",
+      "create": "Générer",
+      "newCodes": "Copie ces codes maintenant — ils ne seront plus affichés :",
+      "list": "Codes",
+      "hint": "Code",
+      "batch": "Lot",
+      "status": "Statut",
+      "available": "Disponible",
+      "used": "Utilisé",
+      "revoked": "Révoqué",
+      "revoke": "Révoquer",
+      "by": "par {email}"
+    },
+    "sales": {
+      "date": "Date",
+      "type": "Événement",
+      "product": "Produit",
+      "email": "E-mail",
+      "amount": "Montant",
+      "country": "Pays",
+      "verified": "Vérifiée",
+      "linked": "Compte lié",
+      "test": "test",
+      "none": "Aucune vente reçue. Configure le Ping Gumroad (voir README)."
+    }
   }
 }

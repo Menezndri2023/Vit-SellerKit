@@ -28,3 +28,10 @@ export async function actionUser(): Promise<SessionUser> {
   if (!session) throw new Error('UNAUTHORIZED');
   return session.user;
 }
+
+/** For admin Server Actions: throws unless the signed-in user is an admin. */
+export async function actionAdmin(): Promise<SessionUser> {
+  const user = await actionUser();
+  if (user.role !== 'admin') throw new Error('FORBIDDEN');
+  return user;
+}
