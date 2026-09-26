@@ -55,13 +55,6 @@
     },
     "invalid": "Enter a sale price above 0 and a return rate below 100%."
   },
-  "share": {
-    "button": "Share my result",
-    "working": "Creating your image…",
-    "error": "Couldn’t create the image. Try again.",
-    "copyLink": "Copy link",
-    "copied": "Link copied!"
-  },
   "subscribe": {
     "title": "Get seller tips & early access",
     "text": "One short email a week: margin tips, free templates, and early access to Margokit Pro.",
@@ -269,13 +262,14 @@
     "tooLong": "Too long.",
     "numberingSeq": "The pattern must contain '{SEQ}' (or '{SEQ:3}').",
     "fileTooLarge": "The file is too large (200 KB max).",
-    "fileType": "Use a PNG, JPEG or WebP image.",
+    "fileType": "Use a PNG or JPEG image.",
     "profileFirst": "Save your business details first.",
     "notFound": "Not found.",
     "generic": "Something went wrong. Please try again.",
     "locked": "This document is issued and can’t be changed.",
     "planLimit": "You’ve reached the free plan limit this month.",
-    "overpayment": "The amount is higher than what’s due."
+    "overpayment": "The amount is higher than what’s due.",
+    "rateLimited": "Too many attempts. Try again later."
   },
   "catalog": {
     "units": {
@@ -324,7 +318,7 @@
     "title": "Settings",
     "subtitle": "These details appear on every quote and invoice.",
     "logo": "Logo",
-    "logoHint": "PNG, JPEG or WebP, 200 KB max. Square or horizontal works best.",
+    "logoHint": "PNG or JPEG, 200 KB max. Square or horizontal works best.",
     "logoUpload": "Upload a logo",
     "logoRemove": "Remove",
     "business": "Your business",
@@ -601,7 +595,14 @@
     "account": "Account",
     "payOnline": "Pay online",
     "notes": "Notes",
-    "madeWith": "Made with Margokit — margokit.com"
+    "madeWith": "Made with Margokit — margokit.com",
+    "emailSubject": "{type} {number} from {seller}",
+    "emailBody": "Hello,\n\nPlease find attached {type} {number} for {amount}.\n\nThank you!\n{seller}",
+    "emailButton": "View the document",
+    "emailFooter": "Sent with Margokit.",
+    "whatsapp": "Hello, here is {type} {number} ({amount}): {url}",
+    "publicTitle": "{type} {number} — {seller}",
+    "download": "Download PDF"
   },
   "dashboard": {
     "revenueMonth": "Invoiced this month",
@@ -612,5 +613,28 @@
     "none": "—",
     "exclTax": "excl. tax",
     "seeAll": "See all"
+  },
+  "docShare": {
+    "title": "Share",
+    "pdf": "Download PDF",
+    "previewPdf": "Preview PDF",
+    "copyLink": "Copy client link",
+    "copied": "Link copied!",
+    "regenerate": "New link (disables the old one)",
+    "whatsapp": "Send by WhatsApp",
+    "email": "Send by email",
+    "emailTo": "Client email",
+    "emailMessage": "Message",
+    "emailSend": "Send",
+    "emailSent": "Email sent ✓",
+    "draftHint": "Issue the document to share it with your client.",
+    "linkHint": "Anyone with the link can view this document. Regenerate it if it was shared by mistake."
+  },
+  "share": {
+    "button": "Share my result",
+    "working": "Creating your image…",
+    "error": "Couldn’t create the image. Try again.",
+    "copyLink": "Copy link",
+    "copied": "Link copied!"
   }
 }

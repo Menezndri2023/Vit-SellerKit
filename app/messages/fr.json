@@ -55,13 +55,6 @@
     },
     "invalid": "Indique un prix de vente supérieur à 0 et un taux de retour inférieur à 100 %."
   },
-  "share": {
-    "button": "Partager mon résultat",
-    "working": "Création de ton image…",
-    "error": "Impossible de créer l’image. Réessaie.",
-    "copyLink": "Copier le lien",
-    "copied": "Lien copié !"
-  },
   "subscribe": {
     "title": "Conseils de vendeur & accès en avant-première",
     "text": "Un e-mail court par semaine : astuces de marge, templates gratuits et accès en avant-première à Margokit Pro.",
@@ -269,13 +262,14 @@
     "tooLong": "Trop long.",
     "numberingSeq": "Le modèle doit contenir '{SEQ}' (ou '{SEQ:3}').",
     "fileTooLarge": "Le fichier est trop lourd (200 Ko max).",
-    "fileType": "Utilise une image PNG, JPEG ou WebP.",
+    "fileType": "Utilise une image PNG ou JPEG.",
     "profileFirst": "Enregistre d’abord les informations de ton entreprise.",
     "notFound": "Introuvable.",
     "generic": "Un problème est survenu. Réessaie.",
     "locked": "Ce document est émis et ne peut plus être modifié.",
     "planLimit": "Tu as atteint la limite du plan gratuit ce mois-ci.",
-    "overpayment": "Le montant dépasse le reste à payer."
+    "overpayment": "Le montant dépasse le reste à payer.",
+    "rateLimited": "Trop de tentatives. Réessaie plus tard."
   },
   "catalog": {
     "units": {
@@ -324,7 +318,7 @@
     "title": "Paramètres",
     "subtitle": "Ces informations apparaissent sur chaque devis et facture.",
     "logo": "Logo",
-    "logoHint": "PNG, JPEG ou WebP, 200 Ko max. Carré ou horizontal de préférence.",
+    "logoHint": "PNG ou JPEG, 200 Ko max. Carré ou horizontal de préférence.",
     "logoUpload": "Importer un logo",
     "logoRemove": "Retirer",
     "business": "Ton entreprise",
@@ -601,7 +595,14 @@
     "account": "Compte",
     "payOnline": "Payer en ligne",
     "notes": "Notes",
-    "madeWith": "Réalisé avec Margokit — margokit.com"
+    "madeWith": "Réalisé avec Margokit — margokit.com",
+    "emailSubject": "{type} {number} de {seller}",
+    "emailBody": "Bonjour,\n\nVeuillez trouver ci-joint le document {type} {number} d’un montant de {amount}.\n\nMerci !\n{seller}",
+    "emailButton": "Voir le document",
+    "emailFooter": "Envoyé avec Margokit.",
+    "whatsapp": "Bonjour, voici le document {type} {number} ({amount}) : {url}",
+    "publicTitle": "{type} {number} — {seller}",
+    "download": "Télécharger le PDF"
   },
   "dashboard": {
     "revenueMonth": "Facturé ce mois-ci",
@@ -612,5 +613,28 @@
     "none": "—",
     "exclTax": "HT",
     "seeAll": "Tout voir"
+  },
+  "docShare": {
+    "title": "Partager",
+    "pdf": "Télécharger le PDF",
+    "previewPdf": "Aperçu PDF",
+    "copyLink": "Copier le lien client",
+    "copied": "Lien copié !",
+    "regenerate": "Nouveau lien (désactive l’ancien)",
+    "whatsapp": "Envoyer par WhatsApp",
+    "email": "Envoyer par e-mail",
+    "emailTo": "E-mail du client",
+    "emailMessage": "Message",
+    "emailSend": "Envoyer",
+    "emailSent": "E-mail envoyé ✓",
+    "draftHint": "Émets le document pour le partager avec ton client.",
+    "linkHint": "Toute personne ayant le lien peut voir ce document. Régénère-le s’il a été partagé par erreur."
+  },
+  "share": {
+    "button": "Partager mon résultat",
+    "working": "Création de ton image…",
+    "error": "Impossible de créer l’image. Réessaie.",
+    "copyLink": "Copier le lien",
+    "copied": "Lien copié !"
   }
 }

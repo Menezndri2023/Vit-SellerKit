@@ -125,3 +125,16 @@ describe('legalMentions', () => {
     expect(m.some((x) => x.includes('40 €'))).toBe(false);
   });
 });
+
+describe('epcPayload', async () => {
+  const { epcPayload } = await import('./epc-qr');
+  it('builds the EPC SEPA transfer payload', () => {
+    expect(epcPayload({ name: 'Atlas Studio', iban: 'FR76 3000 6000 0112 3456 7890 189', bic: 'BNPAFRPP', amountMinor: 255000, reference: 'INV-2026-001' })).toBe(
+      'BCD\n002\n1\nSCT\nBNPAFRPP\nAtlas Studio\nFR7630006000011234567890189\nEUR2550.00\n\n\nINV-2026-001',
+    );
+  });
+  it('refuses invalid IBANs or amounts', () => {
+    expect(epcPayload({ name: 'x', iban: '1234', amountMinor: 100, reference: '' })).toBeNull();
+    expect(epcPayload({ name: 'x', iban: 'FR7630006000011234567890189', amountMinor: 0, reference: '' })).toBeNull();
+  });
+});

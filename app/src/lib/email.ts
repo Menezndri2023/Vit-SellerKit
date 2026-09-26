@@ -1,19 +1,27 @@
 import 'server-only';
 import { env } from './env';
 
-type Email = { to: string; subject: string; html: string; text: string };
+type Email = { to: string; subject: string; html: string; text: string; replyTo?: string; attachments?: { filename: string; content: Buffer }[] };
 
 /** Sends through Resend's HTTP API. Without RESEND_API_KEY (local dev), prints the email instead. */
-export async function sendEmail({ to, subject, html, text }: Email) {
+export async function sendEmail({ to, subject, html, text, replyTo, attachments }: Email) {
   const { RESEND_API_KEY, EMAIL_FROM } = env();
   if (!RESEND_API_KEY) {
-    console.info(`\n[email] to=${to}\nsubject=${subject}\n${text}\n`);
+    console.info(`\n[email] to=${to}\nsubject=${subject}\n${text}\n${attachments?.length ? `attachments=${attachments.map((a) => a.filename).join(', ')}\n` : ''}`);
     return;
   }
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: EMAIL_FROM, to, subject, html, text }),
+    body: JSON.stringify({
+      from: EMAIL_FROM,
+      to,
+      subject,
+      html,
+      text,
+      reply_to: replyTo,
+      attachments: attachments?.map((a) => ({ filename: a.filename, content: a.content.toString('base64') })),
+    }),
   });
   if (!res.ok) throw new Error(`Resend error ${res.status}: ${await res.text()}`);
 }
@@ -21,7 +29,7 @@ export async function sendEmail({ to, subject, html, text }: Email) {
 const escapeHtml = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 
 /** Minimal branded layout: one message, one button. */
-function layout(title: string, body: string, button: { label: string; url: string }, footer: string) {
+export function layout(title: string, body: string, button: { label: string; url: string }, footer: string) {
   return `<!doctype html><html><body style="margin:0;background:#f8fafc;font-family:Arial,Helvetica,sans-serif;color:#0f172a">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:32px 16px">
 <table role="presentation" width="100%" style="max-width:520px;background:#ffffff;border:1px solid #e2e8f0;border-radius:16px" cellpadding="0" cellspacing="0">

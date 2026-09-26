@@ -4,13 +4,20 @@ import mongoose from 'mongoose';
 import { refresh } from 'next/cache';
 import { z } from 'zod';
 import { redirect } from '@/i18n/navigation';
+import en from '../../../../../messages/en.json';
+import fr from '../../../../../messages/fr.json';
 import { connectDb } from '@/lib/db';
 import { checkCompliance, type Issue } from '@/lib/documents/compliance';
 import { draftSchema } from '@/lib/documents/draft-schema';
 import { counterPeriod, formatNumber } from '@/lib/documents/numbering';
 import { buyerSnapshot, derive, findOwned, sellerSnapshot, todayIn } from '@/lib/documents/service';
 import { fieldErrors, type FormState } from '@/lib/forms';
-import { parseAmount } from '@/lib/money';
+import { layout, sendEmail } from '@/lib/email';
+import { loadDocView } from '@/lib/documents/load';
+import { getOrCreateShareToken, publicUrl } from '@/lib/documents/share';
+import { formatMinor, parseAmount } from '@/lib/money';
+import { pdfFileName, renderDocumentPdf } from '@/lib/pdf/render';
+import { rateLimit } from '@/lib/rate-limit';
 import { checkIssueAllowed } from '@/lib/plan';
 import { actionUser } from '@/lib/session';
 import { audit } from '@/models/AuditLog';
@@ -255,4 +262,53 @@ export async function removePayment(id: string, paymentId: string) {
   await doc.save();
   await audit({ userId: user.id, actorId: user.id, action: 'payment.remove', targetType: 'document', targetId: id, details: { paymentId } });
   refresh();
+}
+
+// ── Sharing ──────────────────────────────────────────────────────────────
+
+export async function getShareLink(id: string, locale: string, regenerate = false): Promise<string | null> {
+  const user = await actionUser();
+  await connectDb();
+  const token = await getOrCreateShareToken(user.id, id, regenerate);
+  if (!token) return null;
+  if (regenerate) await audit({ userId: user.id, actorId: user.id, action: 'document.share.regenerate', targetType: 'document', targetId: id });
+  return await publicUrl(token, locale);
+}
+
+const emailSchema = z.object({ to: z.email('invalidEmail').max(254), message: z.string().trim().min(1, 'required').max(3000, 'tooLong') });
+
+export async function sendDocumentEmail(id: string, _prev: FormState, form: FormData): Promise<FormState> {
+  const user = await actionUser();
+  const parsed = emailSchema.safeParse({ to: String(form.get('to') ?? '').trim(), message: form.get('message') });
+  if (!parsed.success) return { errors: fieldErrors(parsed.error) };
+  if (!(await rateLimit('doc-email', user.id, 20, 3600))) return { errors: { _form: 'rateLimited' } };
+
+  await connectDb();
+  const doc = await findOwned(user.id, id);
+  if (!doc || doc.status === 'draft') return { errors: { _form: 'notFound' } };
+  const view = await loadDocView(doc.toObject());
+  const token = await getOrCreateShareToken(user.id, id);
+  const m = (view.lang === 'fr' ? fr : en) as unknown as { doc: Record<string, string> };
+  const fill = (s: string) =>
+    s
+      .replaceAll('{type}', m.doc[view.type])
+      .replaceAll('{number}', view.number ?? '')
+      .replaceAll('{seller}', view.seller?.tradeName || view.seller?.legalName || '')
+      .replaceAll('{amount}', formatMinor(view.totals.totalInclTax, view.currency, view.lang === 'fr' ? 'fr-FR' : 'en-GB'));
+  const subject = fill(m.doc.emailSubject);
+  const url = await publicUrl(token!, view.lang);
+  const pdf = await renderDocumentPdf(view);
+
+  await sendEmail({
+    to: parsed.data.to,
+    subject,
+    text: `${parsed.data.message}\n\n${url}`,
+    html: layout(subject, parsed.data.message, { label: m.doc.emailButton, url }, m.doc.emailFooter),
+    replyTo: view.seller?.email,
+    attachments: [{ filename: pdfFileName(view), content: pdf }],
+  });
+  await Document.updateOne({ _id: id, userId: user.id, status: 'issued' }, { $set: { status: 'sent', sentAt: new Date() } });
+  await audit({ userId: user.id, actorId: user.id, action: 'document.email', targetType: 'document', targetId: id, details: { to: parsed.data.to } });
+  refresh();
+  return { ok: true, savedAt: Date.now() };
 }

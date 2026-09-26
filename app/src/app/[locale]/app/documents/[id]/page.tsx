@@ -4,6 +4,8 @@ import DocumentActions from '@/components/documents/DocumentActions';
 import DocumentEditor from '@/components/documents/DocumentEditor';
 import DocumentView from '@/components/documents/DocumentView';
 import PaymentsPanel from '@/components/documents/PaymentsPanel';
+import SharePanel from '@/components/documents/SharePanel';
+import { formatMinor } from '@/lib/money';
 import StatusBadge from '@/components/documents/StatusBadge';
 import { Link } from '@/i18n/navigation';
 import { connectDb } from '@/lib/db';
@@ -34,6 +36,14 @@ export default async function DocumentPage({ params }: PageProps<'/[locale]/app/
   ]);
   const view = buildDocView(doc.toObject(), profile, client);
   const typeLabel = t(`types.${doc.type}`);
+  const tDoc = await getTranslations({ locale: view.lang, namespace: 'doc' });
+  // Keep {url} for the share link, filled in the browser once the link exists
+  const fillTemplate = (tpl: string) =>
+    tpl
+      .replaceAll('{type}', tDoc(view.type).toLowerCase())
+      .replaceAll('{number}', view.number ?? '')
+      .replaceAll('{seller}', view.seller?.tradeName || view.seller?.legalName || '')
+      .replaceAll('{amount}', formatMinor(view.totals.totalInclTax, view.currency, view.lang === 'fr' ? 'fr-FR' : 'en-GB'));
   const payable = doc.type === 'invoice' || doc.type === 'deposit_invoice';
 
   return (
@@ -51,6 +61,15 @@ export default async function DocumentPage({ params }: PageProps<'/[locale]/app/
       {doc.convertedFromId && <p className="text-sm text-muted">{t('view.convertedFrom')}</p>}
 
       <DocumentActions id={id} type={doc.type} status={doc.status} typeLabel={typeLabel} />
+      <SharePanel
+        id={id}
+        isDraft={isDraft}
+        docLang={view.lang}
+        buyerEmail={view.buyer?.email}
+        buyerPhone={(view.buyer as { phone?: string } | null)?.phone}
+        emailMessage={fillTemplate(tDoc.raw('emailBody') as string)}
+        whatsappTemplate={fillTemplate(tDoc.raw('whatsapp') as string)}
+      />
 
       {isDraft ? (
         <>

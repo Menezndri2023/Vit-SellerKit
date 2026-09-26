@@ -31,7 +31,7 @@ export default function LogoForm({ logoKey, disabled }: { logoKey?: string; disa
             <input
               type="file"
               name="logo"
-              accept="image/png,image/jpeg,image/webp"
+              accept="image/png,image/jpeg"
               className="sr-only"
               disabled={disabled || pending}
               onChange={() => formRef.current?.requestSubmit()}

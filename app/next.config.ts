@@ -29,6 +29,9 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   // The app lives in a monorepo folder: trace files from here, not from a parent lockfile
   outputFileTracingRoot: process.cwd(),
+  // PDF generation runs in Node.js with its own font files
+  serverExternalPackages: ['@react-pdf/renderer'],
+  outputFileTracingIncludes: { '/**': ['./assets/fonts/**/*'] },
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }];
   },

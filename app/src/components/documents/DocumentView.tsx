@@ -29,6 +29,7 @@ export default async function DocumentView({ doc }: { doc: DocView }) {
   const b = doc.buyer;
   const showDiscount = doc.lines.some((l) => l.discountPct > 0);
   const isPayable = doc.type === 'invoice' || doc.type === 'deposit_invoice';
+  const c = doc.lang === 'fr' ? ' :' : ':';
 
 
   return (
@@ -53,7 +54,7 @@ export default async function DocumentView({ doc }: { doc: DocView }) {
           <p className="text-slate-600">{[s?.email, s?.phone, s?.website].filter(Boolean).join(' · ')}</p>
           {doc.sellerIds.map((i) => (
             <p key={i.label} className="text-slate-600">
-              {i.label} : {i.value}
+              {i.label}{c} {i.value}
             </p>
           ))}
         </div>
@@ -64,26 +65,26 @@ export default async function DocumentView({ doc }: { doc: DocView }) {
           </p>
           <dl className="mt-2 text-slate-600">
             <div>
-              {t('issueDate')} : {date(doc.issueDate)}
+              {t('issueDate')}{c} {date(doc.issueDate)}
             </div>
             {doc.dueDate && isPayable && (
               <div>
-                {t('dueDate')} : {date(doc.dueDate)}
+                {t('dueDate')}{c} {date(doc.dueDate)}
               </div>
             )}
             {doc.validUntil && doc.type === 'quote' && (
               <div>
-                {t('validUntil')} : {date(doc.validUntil)}
+                {t('validUntil')}{c} {date(doc.validUntil)}
               </div>
             )}
             {doc.serviceDate && (
               <div>
-                {t('serviceDate')} : {date(doc.serviceDate)}
+                {t('serviceDate')}{c} {date(doc.serviceDate)}
               </div>
             )}
             {doc.buyerReference && (
               <div>
-                {t('reference')} : {doc.buyerReference}
+                {t('reference')}{c} {doc.buyerReference}
               </div>
             )}
           </dl>
@@ -100,7 +101,7 @@ export default async function DocumentView({ doc }: { doc: DocView }) {
           </p>
           {doc.buyerIds.map((i) => (
             <p key={i.label} className="text-slate-600">
-              {i.label} : {i.value}
+              {i.label}{c} {i.value}
             </p>
           ))}
         </div>
@@ -134,8 +135,8 @@ export default async function DocumentView({ doc }: { doc: DocView }) {
                   {qty(l.qty)} {l.unitCode !== 'C62' ? tc(`units.${l.unitCode}`).toLowerCase() : ''}
                 </td>
                 <td className="px-3 py-2.5 text-end whitespace-nowrap">{money(l.unitPrice)}</td>
-                {showDiscount && <td className="px-3 py-2.5 text-end">{l.discountPct ? `${l.discountPct} %` : ''}</td>}
-                <td className="px-3 py-2.5 text-end whitespace-nowrap">{l.vatCategory === 'S' ? `${l.taxRate} %` : l.vatCategory}</td>
+                {showDiscount && <td className="px-3 py-2.5 text-end">{l.discountPct ? `${l.discountPct}${c === ':' ? '%' : ' %'}` : ''}</td>}
+                <td className="px-3 py-2.5 text-end whitespace-nowrap">{l.vatCategory === 'S' ? `${l.taxRate}${c === ':' ? '%' : ' %'}` : l.vatCategory}</td>
                 <td className="py-2.5 ps-3 text-end whitespace-nowrap">{money(l.net)}</td>
               </tr>
             ))}
@@ -185,17 +186,17 @@ export default async function DocumentView({ doc }: { doc: DocView }) {
                 {s.bankAccount.bankName && <p>{s.bankAccount.bankName}</p>}
                 {s.bankAccount.iban && (
                   <p>
-                    {t('iban')} : {s.bankAccount.iban.replace(/(.{4})/g, '$1 ').trim()}
+                    {t('iban')}{c} {s.bankAccount.iban.replace(/(.{4})/g, '$1 ').trim()}
                   </p>
                 )}
                 {s.bankAccount.bic && (
                   <p>
-                    {t('bic')} : {s.bankAccount.bic}
+                    {t('bic')}{c} {s.bankAccount.bic}
                   </p>
                 )}
                 {!s.bankAccount.iban && s.bankAccount.accountNumber && (
                   <p>
-                    {t('account')} : {s.bankAccount.accountNumber}
+                    {t('account')}{c} {s.bankAccount.accountNumber}
                   </p>
                 )}
               </div>

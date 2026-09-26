@@ -18,6 +18,6 @@ export default defineConfig({
     command: `npx next start -p ${PORT}`,
     url: `http://localhost:${PORT}/en`,
     reuseExistingServer: false,
-    env: { MONGODB_URI: E2E_DB, NEXT_PUBLIC_SITE_URL: `http://localhost:${PORT}`, BETTER_AUTH_URL: `http://localhost:${PORT}`, BETTER_AUTH_SECRET: 'e2e-secret-e2e-secret-e2e-secret-123', E2E_DISABLE_RATE_LIMIT: '1' },
+    env: { MONGODB_URI: E2E_DB, NEXT_PUBLIC_SITE_URL: `http://localhost:${PORT}`, BETTER_AUTH_URL: `http://localhost:${PORT}`, BETTER_AUTH_SECRET: 'e2e-secret-e2e-secret-e2e-secret-123', E2E_DISABLE_RATE_LIMIT: '1', APP_ENCRYPTION_KEY: 'MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=' },
   },
 });

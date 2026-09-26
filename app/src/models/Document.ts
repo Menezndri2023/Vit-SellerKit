@@ -96,7 +96,9 @@ const schema = new Schema(
     precedingInvoice: { id: String, number: String, issueDate: Date },
     convertedFromId: { type: String },
     watermark: { type: Boolean, default: false },
+    /** Public share link: SHA-256 for lookup + AES-GCM encrypted token so the owner can copy the same link again */
     publicTokenHash: { type: String, index: { unique: true, sparse: true } },
+    publicTokenEnc: { type: String, select: false },
     einvoice: { format: String, xmlHash: String, provider: String, providerId: String, lifecycle: [{ _id: false, status: String, at: Date, reason: String }] },
     issuedAt: { type: Date },
     sentAt: { type: Date },
