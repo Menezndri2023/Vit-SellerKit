@@ -35,6 +35,8 @@ export async function generateMetadata({ params }: LayoutProps<'/[locale]'>): Pr
       url: `/${locale}`,
     },
     twitter: { card: 'summary_large_image', title: t('title'), description: t('description') },
+    // Google Search Console : méthode « Balise HTML » (seule possible sur un sous-domaine vercel.app)
+    verification: process.env.GOOGLE_SITE_VERIFICATION ? { google: process.env.GOOGLE_SITE_VERIFICATION } : undefined,
   };
 }
 

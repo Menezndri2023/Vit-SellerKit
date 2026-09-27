@@ -28,8 +28,36 @@ export default async function Page({ params, searchParams }: PageProps<'/[locale
   const trackerUrl = withUtm(process.env.GUMROAD_TRACKER_URL, 'tracker');
   const faq = [1, 2, 3, 4] as const;
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebApplication',
+        name: t('meta.title'),
+        description: t('meta.description'),
+        url: `${siteUrl}/${locale}`,
+        inLanguage: locale,
+        applicationCategory: 'BusinessApplication',
+        operatingSystem: 'Any',
+        isAccessibleForFree: true,
+        offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+        publisher: { '@type': 'Organization', name: 'Margokit', url: siteUrl },
+      },
+      {
+        '@type': 'FAQPage',
+        mainEntity: faq.map((n) => ({
+          '@type': 'Question',
+          name: t(`faq.q${n}`),
+          acceptedAnswer: { '@type': 'Answer', text: t(`faq.a${n}`) },
+        })),
+      },
+    ],
+  };
+
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 pb-28 pt-5 sm:px-6 lg:pb-12">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }} />
       <header className="flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-display text-lg font-extrabold">
           <span aria-hidden className="grid size-8 place-items-center rounded-lg bg-primary text-on-primary">
