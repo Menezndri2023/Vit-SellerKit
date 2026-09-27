@@ -115,7 +115,7 @@
       "f3Title": "Get paid faster",
       "f3Text": "Share by link, email or WhatsApp. Add your payment links and bank details; track paid and overdue invoices.",
       "f4Title": "Ready for e-invoicing",
-      "f4Text": "Built on the European EN 16931 standard, with the new mandatory mentions of the French reform."
+      "f4Text": "Built on the European EN 16931 standard: Factur-X and UBL/Peppol exports, and the new mandatory mentions of the French reform."
     },
     "sheetsTitle": "Sell on Instagram, TikTok or WhatsApp?",
     "sheetsText": "Our Google Sheets templates track every order, your stock, your ads and your cash — with your real profit calculated automatically.",
@@ -159,7 +159,7 @@
     "q2": "Which countries does it work for?",
     "a2": "Margokit works anywhere: any currency, several tax rates, tax ID labels and legal mentions adapted to your country (France, Belgium, Morocco and more), documents in English or French.",
     "q3": "Is it compliant with the French e-invoicing reform?",
-    "a3": "Margokit invoices include the new mandatory mentions (client SIREN, delivery address, nature of the operation, VAT on debits option). Factur-X export and sending through an approved platform are coming before the September 2027 obligation for small businesses. Margokit helps you invoice correctly but doesn't replace an accountant.",
+    "a3": "Margokit invoices include the new mandatory mentions (client SIREN, delivery address, nature of the operation, VAT on debits option) and can be downloaded as Factur-X (EN 16931) and UBL/Peppol files, ready to upload to your approved e-invoicing platform. Direct sending through a partner platform is coming before the September 2027 obligation for small businesses. Margokit helps you invoice correctly but doesn’t replace an accountant.",
     "q4": "Can I cancel anytime?",
     "a4": "Yes. The monthly plan can be cancelled anytime from your Gumroad receipt; you keep Pro until the end of the paid month.",
     "q5": "My card was declined. How can I pay?",
@@ -629,7 +629,11 @@
     "emailSend": "Send",
     "emailSent": "Email sent ✓",
     "draftHint": "Issue the document to share it with your client.",
-    "linkHint": "Anyone with the link can view this document. Regenerate it if it was shared by mistake."
+    "linkHint": "Anyone with the link can view this document. Regenerate it if it was shared by mistake.",
+    "facturx": "Factur-X (PDF)",
+    "ubl": "UBL / Peppol (XML)",
+    "einvoiceHint": "Structured e-invoice formats (EN 16931): upload them to your approved e-invoicing platform or send them through Peppol.",
+    "einvoiceError": "This document can’t be exported yet:"
   },
   "share": {
     "button": "Share my result",

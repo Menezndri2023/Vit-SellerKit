@@ -15,8 +15,9 @@ Architecture et décisions : [../docs/pro/ARCHITECTURE.md](../docs/pro/ARCHITECT
 7. [Créer le compte admin](#7-créer-le-compte-admin)
 8. [Codes d'activation (ventes WhatsApp)](#8-codes-dactivation-ventes-whatsapp)
 9. [Ajouter une langue (ex. arabe, RTL)](#9-ajouter-une-langue-ex-arabe-rtl)
-10. [Structure du code](#10-structure-du-code)
-11. [Sécurité](#11-sécurité)
+10. [Facture électronique](#10-facture-électronique-factur-x-ubl)
+11. [Structure du code](#11-structure-du-code)
+12. [Sécurité](#12-sécurité)
 
 ## 1. Fonctionnalités
 
@@ -27,6 +28,7 @@ Architecture et décisions : [../docs/pro/ARCHITECTURE.md](../docs/pro/ARCHITECT
 | Entreprise | Identifiants par pays avec contrôle des clés (SIREN, SIRET, TVA, BCE, ICE, IBAN…), régime de TVA (normal, franchise 293 B, exonéré), taux, RIB, liens de paiement, numérotation, mentions, logo |
 | Documents | Devis, factures, avoirs ; totaux EN 16931 ; catégories de TVA (normal, zéro, exonéré, autoliquidation, intracommunautaire, export, hors champ) ; contrôles de conformité avant émission ; numérotation continue attribuée à l'émission ; document verrouillé une fois émis ; conversion devis → facture ; paiements partiels |
 | Partage | PDF EN/FR (QR code virement SEPA), lien public sécurisé et révocable, e-mail avec PDF joint, WhatsApp |
+| Facture électronique | **Factur-X** (PDF/A-3 + XML CII, profil EN 16931, validé contre les XSD officiels à chaque export) et **UBL 2.1 Peppol BIS 3.0** pour les factures et avoirs émis |
 | Plans | Gratuit : 3 documents émis/mois avec filigrane · Pro mensuel ou à vie via Gumroad · codes manuels |
 | Admin | Statistiques, utilisateurs (attribuer / prolonger / retirer Pro), codes par lot, journal des ventes |
 | RGPD | Export JSON de toutes les données, suppression du compte |
@@ -149,7 +151,16 @@ Tu peux aussi attribuer du Pro directement à un compte : **Admin → Utilisateu
 5. **PDF** : `@react-pdf/renderer` gère mal l'arabe (liaison des lettres, sens de lecture). Prévois une génération HTML → PDF (Chromium) pour les documents en arabe, et teste-la avant de la proposer.
 6. Mentions légales : ajoute la langue dans `src/lib/documents/compliance.ts` et `src/content/legal.ts`.
 
-## 10. Structure du code
+## 10. Facture électronique (Factur-X, UBL)
+
+- Sur une facture ou un avoir émis : **Partager → Factur-X (PDF)** ou **UBL / Peppol (XML)**.
+- Le Factur-X est validé à chaque export (règles du profil EN 16931 + schémas XSD officiels) ; si une donnée manque, l'utilisateur voit la liste des erreurs au lieu d'un fichier invalide.
+- Correspondances EN 16931 : SIREN → schéma `0002`, BCE → `0208`, KvK → `0106` ; franchise en base → catégorie `E` + `VATEX-FR-FRANCHISE` ; autoliquidation, intracommunautaire, export, hors champ → codes `VATEX-EU-*` ; notes `PMD` (pénalités), `PMT` (indemnité 40 €), `AAB` (escompte) ; date de livraison/prestation = date de facture si non renseignée.
+- UBL : `EndpointID` Peppol déduit des identifiants (BCE, SIRET/SIREN, KvK, TVA DE/LU) ; validé contre les XSD OASIS UBL 2.1 pendant le développement.
+- **Pas encore fait** : validation officielle Schematron (règles EN 16931 et Peppol) et contrôle PDF/A-3 par veraPDF — à lancer avant de promettre la conformité (ces outils nécessitent Java) ; envoi direct via une plateforme agréée (étape M9, interface prête dans `src/lib/einvoice/providers`).
+- Profil de couleurs sRGB : `assets/icc/sRGB-v2-micro.icc` (CC0).
+
+## 11. Structure du code
 
 | Chemin | Rôle |
 |---|---|
@@ -169,7 +180,7 @@ Tu peux aussi attribuer du Pro directement à un compte : **Admin → Utilisateu
 | `e2e/` | Tests Playwright et faux serveur Gumroad |
 | `scripts/` | Base locale, admin, codes |
 
-## 11. Sécurité
+## 12. Sécurité
 
 - Validation Zod de toutes les entrées côté serveur ; chaque requête métier est filtrée par l'utilisateur de la session (tests d'isolation entre comptes).
 - Secrets uniquement côté serveur (`server-only`), aucun secret en `NEXT_PUBLIC_`.

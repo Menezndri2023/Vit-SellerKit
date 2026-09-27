@@ -115,7 +115,7 @@
       "f3Title": "Fais-toi payer plus vite",
       "f3Text": "Partage par lien, e-mail ou WhatsApp. Ajoute tes liens de paiement et ton RIB ; suis les factures payées et en retard.",
       "f4Title": "Prêt pour la facture électronique",
-      "f4Text": "Construit sur la norme européenne EN 16931, avec les nouvelles mentions obligatoires de la réforme française."
+      "f4Text": "Construit sur la norme européenne EN 16931 : exports Factur-X et UBL/Peppol, et nouvelles mentions obligatoires de la réforme française."
     },
     "sheetsTitle": "Tu vends sur Instagram, TikTok ou WhatsApp ?",
     "sheetsText": "Nos templates Google Sheets suivent chaque commande, ton stock, ta pub et ta trésorerie — avec ton vrai bénéfice calculé automatiquement.",
@@ -159,7 +159,7 @@
     "q2": "Pour quels pays ça marche ?",
     "a2": "Margokit fonctionne partout : toutes les devises, plusieurs taux de TVA, libellés d’identifiants et mentions légales adaptés à ton pays (France, Belgique, Maroc et d’autres), documents en français ou en anglais.",
     "q3": "Est-ce conforme à la réforme de la facture électronique en France ?",
-    "a3": "Les factures Margokit incluent les nouvelles mentions obligatoires (SIREN du client, adresse de livraison, nature de l’opération, option TVA sur les débits). L’export Factur-X et l’envoi via une plateforme agréée arrivent avant l’obligation de septembre 2027 pour les petites entreprises. Margokit t’aide à bien facturer mais ne remplace pas un expert-comptable.",
+    "a3": "Les factures Margokit incluent les nouvelles mentions obligatoires (SIREN du client, adresse de livraison, nature de l’opération, option TVA sur les débits) et se téléchargent aux formats Factur-X (EN 16931) et UBL/Peppol, prêts à déposer sur ta plateforme agréée. L’envoi direct via une plateforme partenaire arrive avant l’obligation de septembre 2027 pour les petites entreprises. Margokit t’aide à bien facturer mais ne remplace pas un expert-comptable.",
     "q4": "Je peux arrêter quand je veux ?",
     "a4": "Oui. L’abonnement mensuel s’annule à tout moment depuis ton reçu Gumroad ; tu gardes Pro jusqu’à la fin du mois payé.",
     "q5": "Ma carte a été refusée. Comment payer ?",
@@ -629,7 +629,11 @@
     "emailSend": "Envoyer",
     "emailSent": "E-mail envoyé ✓",
     "draftHint": "Émets le document pour le partager avec ton client.",
-    "linkHint": "Toute personne ayant le lien peut voir ce document. Régénère-le s’il a été partagé par erreur."
+    "linkHint": "Toute personne ayant le lien peut voir ce document. Régénère-le s’il a été partagé par erreur.",
+    "facturx": "Factur-X (PDF)",
+    "ubl": "UBL / Peppol (XML)",
+    "einvoiceHint": "Formats de facture électronique structurée (EN 16931) : dépose-les sur ta plateforme agréée ou envoie-les via Peppol.",
+    "einvoiceError": "Ce document ne peut pas encore être exporté :"
   },
   "share": {
     "button": "Partager mon résultat",

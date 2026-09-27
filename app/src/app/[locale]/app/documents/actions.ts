@@ -119,7 +119,18 @@ export async function issueDocument(id: string, locale: string): Promise<IssueRe
       const seq = await nextSeq(`${user.id}:${series}:${counterPeriod(pattern, issueDate)}`, session);
       const res = await Document.updateOne(
         { _id: doc._id, userId: user.id, status: 'draft' },
-        { $set: { status: 'issued', number: formatNumber(pattern, issueDate, seq), seller, buyer, issuedAt: new Date(), watermark: plan.watermark } },
+        {
+          $set: {
+            status: 'issued',
+            number: formatNumber(pattern, issueDate, seq),
+            seller,
+            buyer,
+            issuedAt: new Date(),
+            watermark: plan.watermark,
+            // Date of the sale / service is a mandatory mention on invoices: defaults to the invoice date
+            ...(doc.type !== 'quote' && !doc.serviceDate ? { serviceDate: issueDate } : {}),
+          },
+        },
         { session },
       );
       if (res.matchedCount === 0) throw new Error('LOCKED');

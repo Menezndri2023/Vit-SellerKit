@@ -30,8 +30,9 @@ const nextConfig: NextConfig = {
   // The app lives in a monorepo folder: trace files from here, not from a parent lockfile
   outputFileTracingRoot: process.cwd(),
   // PDF generation runs in Node.js with its own font files
-  serverExternalPackages: ['@react-pdf/renderer'],
-  outputFileTracingIncludes: { '/**': ['./assets/fonts/**/*'] },
+  serverExternalPackages: ['@react-pdf/renderer', '@stackforge-eu/factur-x', 'libxml2-wasm'],
+  // Fonts, ICC profile and the Factur-X XSD schemas are read from disk at runtime
+  outputFileTracingIncludes: { '/**': ['./assets/**/*', './node_modules/@stackforge-eu/factur-x/schema/**/*', './node_modules/libxml2-wasm/**/*.wasm'] },
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }];
   },

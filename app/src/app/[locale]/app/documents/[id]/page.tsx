@@ -64,6 +64,7 @@ export default async function DocumentPage({ params }: PageProps<'/[locale]/app/
       <SharePanel
         id={id}
         isDraft={isDraft}
+        exportable={['invoice', 'credit_note', 'deposit_invoice'].includes(doc.type)}
         docLang={view.lang}
         buyerEmail={view.buyer?.email}
         buyerPhone={(view.buyer as { phone?: string } | null)?.phone}

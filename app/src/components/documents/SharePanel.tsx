@@ -6,18 +6,19 @@ import { getShareLink, sendDocumentEmail } from '@/app/[locale]/app/documents/ac
 import { keepValues } from '@/components/form/fields';
 import type { FormState } from '@/lib/forms';
 
-type Props = { id: string; isDraft: boolean; docLang: 'en' | 'fr'; buyerEmail?: string; buyerPhone?: string; emailMessage: string; whatsappTemplate: string };
+type Props = { id: string; isDraft: boolean; exportable?: boolean; docLang: 'en' | 'fr'; buyerEmail?: string; buyerPhone?: string; emailMessage: string; whatsappTemplate: string };
 
 const btn = 'inline-flex h-11 items-center justify-center rounded-xl border border-line bg-surface px-4 font-medium hover:bg-bg disabled:opacity-60';
 const control = 'w-full rounded-xl border border-line bg-surface px-3 text-base outline-none focus:border-primary-ink focus:ring-2 focus:ring-primary/40';
 
-export default function SharePanel({ id, isDraft, docLang, buyerEmail, buyerPhone, emailMessage, whatsappTemplate }: Props) {
+export default function SharePanel({ id, isDraft, exportable, docLang, buyerEmail, buyerPhone, emailMessage, whatsappTemplate }: Props) {
   const t = useTranslations('docShare');
   const te = useTranslations('errors');
   const locale = useLocale();
   const [pending, start] = useTransition();
   const [copied, setCopied] = useState(false);
   const [showEmail, setShowEmail] = useState(false);
+  const [exportErrors, setExportErrors] = useState<string[] | null>(null);
   const [state, action, sending] = useActionState<FormState, FormData>(sendDocumentEmail.bind(null, id), {});
 
   if (isDraft) {
@@ -38,6 +39,20 @@ export default function SharePanel({ id, isDraft, docLang, buyerEmail, buyerPhon
     });
 
   const error = state.errors ? Object.values(state.errors)[0] : null;
+
+  async function download(kind: 'facturx' | 'ubl') {
+    setExportErrors(null);
+    const res = await fetch(`/api/documents/${id}/${kind}`);
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({ errors: [String(res.status)] }));
+      setExportErrors(body.errors ?? [String(res.status)]);
+      return;
+    }
+    const name = /filename="([^"]+)"/.exec(res.headers.get('content-disposition') ?? '')?.[1] ?? `${kind}`;
+    const url = URL.createObjectURL(await res.blob());
+    Object.assign(document.createElement('a'), { href: url, download: name }).click();
+    URL.revokeObjectURL(url);
+  }
 
   return (
     <section className="rounded-2xl border border-line bg-surface p-5">
@@ -66,6 +81,29 @@ export default function SharePanel({ id, isDraft, docLang, buyerEmail, buyerPhon
           {t('email')}
         </button>
       </div>
+      {exportable && (
+        <div className="mt-4 border-t border-line pt-4">
+          <div className="flex flex-wrap gap-2">
+            <button type="button" className={btn} onClick={() => void download('facturx')}>
+              {t('facturx')}
+            </button>
+            <button type="button" className={btn} onClick={() => void download('ubl')}>
+              {t('ubl')}
+            </button>
+          </div>
+          <p className="mt-2 text-xs text-muted">{t('einvoiceHint')}</p>
+          {exportErrors && (
+            <div role="alert" className="mt-2 rounded-xl bg-loss/10 p-3 text-sm text-loss">
+              <p className="font-semibold">{t('einvoiceError')}</p>
+              <ul className="mt-1 list-disc ps-5">
+                {exportErrors.map((e) => (
+                  <li key={e}>{e}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
       <p className="mt-3 text-xs text-muted">
         {t('linkHint')}{' '}
         <button type="button" disabled={pending} className="font-medium text-primary-ink hover:underline" onClick={() => withLink(() => undefined, true)}>

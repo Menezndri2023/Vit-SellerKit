@@ -19,7 +19,7 @@ export type DocView = {
   serviceDate?: string;
   buyerReference?: string;
   notes?: string;
-  lines: { description: string; qty: number; unitCode: string; unitPrice: number; discountPct: number; vatCategory: string; taxRate: number; net: number }[];
+  lines: { description: string; qty: number; unitCode: string; unitPrice: number; discountPct: number; vatCategory: string; taxRate: number; net: number; exemptionReason?: string }[];
   totals: { totalExclTax: number; totalTax: number; totalInclTax: number; taxBreakdown: { category: string; rate: number; base: number; amount: number }[] };
   paid: number;
   amountDue: number;
@@ -30,6 +30,8 @@ export type DocView = {
   mentions: string[];
   watermark: boolean;
   isDraft: boolean;
+  precedingInvoice?: { number: string; issueDate: string };
+  operationCategory: 'goods' | 'services' | 'mixed';
 };
 
 const iso = (d: Date | null | undefined) => (d ? new Date(d).toISOString() : undefined);
@@ -100,5 +102,7 @@ export function buildDocView(doc: DocumentDoc & { _id: unknown }, liveProfile: B
       : [],
     watermark: Boolean(doc.watermark),
     isDraft,
+    precedingInvoice: doc.precedingInvoice?.number ? { number: doc.precedingInvoice.number, issueDate: iso(doc.precedingInvoice.issueDate)! } : undefined,
+    operationCategory: (doc.operationCategory ?? 'services') as 'goods' | 'services' | 'mixed',
   };
 }
