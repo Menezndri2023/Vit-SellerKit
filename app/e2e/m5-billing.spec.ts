@@ -94,6 +94,7 @@ test('Gumroad webhook: secret, idempotency, automatic activation by verified ema
   const form = { sale_id: saleId, product_id: 'prod_monthly', product_name: 'Margokit Pro — Monthly', email, license_key: key, price: '500', currency: 'usd', ip_country: 'Morocco' };
 
   expect((await request.post('/api/webhooks/gumroad/wrong-secret', { form })).status()).toBe(404);
+  expect((await request.post(`/api/webhooks/unknown-provider/${E2E_PING_SECRET}`, { form })).status()).toBe(404);
   const first = await request.post(`/api/webhooks/gumroad/${E2E_PING_SECRET}`, { form });
   expect(await first.text()).toBe('OK');
   const again = await request.post(`/api/webhooks/gumroad/${E2E_PING_SECRET}`, { form });

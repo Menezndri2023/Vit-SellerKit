@@ -16,8 +16,9 @@ Architecture et décisions : [../docs/pro/ARCHITECTURE.md](../docs/pro/ARCHITECT
 8. [Codes d'activation (ventes WhatsApp)](#8-codes-dactivation-ventes-whatsapp)
 9. [Ajouter une langue (ex. arabe, RTL)](#9-ajouter-une-langue-ex-arabe-rtl)
 10. [Facture électronique](#10-facture-électronique-factur-x-ubl)
-11. [Structure du code](#11-structure-du-code)
-12. [Sécurité](#12-sécurité)
+11. [Ajouter un prestataire de paiement](#11-ajouter-un-prestataire-de-paiement-par-carte)
+12. [Structure du code](#12-structure-du-code)
+13. [Sécurité](#13-sécurité)
 
 ## 1. Fonctionnalités
 
@@ -169,7 +170,22 @@ L'envoi, le suivi du cycle de vie (déposée, reçue, mise à disposition, appro
 4. Pour tester sans partenaire : `EINVOICE_PROVIDER=sandbox` (simulation locale, ignorée en production).
 - Profil de couleurs sRGB : `assets/icc/sRGB-v2-micro.icc` (CC0).
 
-## 11. Structure du code
+## 11. Ajouter un prestataire de paiement par carte
+
+**A. Abonnements Margokit Pro** (remplacer ou compléter Gumroad : Paddle, Lemon Squeezy, Stripe, CMI…)
+
+1. Vérifie d'abord que le prestataire accepte un vendeur de ton pays et de ton statut : Paddle et Lemon Squeezy agissent comme revendeur (ils gèrent la TVA mondiale, comme Gumroad) ; Stripe demande en général une société dans un pays éligible ; CMI demande un contrat commerçant au Maroc.
+2. Crée `src/lib/billing/providers/<id>.ts` qui implémente `BillingProvider` :
+   - `checkoutUrl(plan)` : lien de paiement hébergé (inclure l'identifiant ou l'e-mail du compte si le prestataire le permet) ;
+   - `handleWebhook(req, secret)` : **vérifier la signature** du prestataire sur le corps brut (`await req.text()`), idempotence via `BillingEvent.eventId`, puis créer ou mettre à jour la `Subscription` (`provider: '<id>'`, `external.customerId/subscriptionId`, `status`, `expiresAt`).
+3. Ajoute `'<id>'` aux valeurs autorisées de `provider` dans `src/models/Subscription.ts`, enregistre le prestataire dans `providers/index.ts`, puis `BILLING_PROVIDER=<id>` sur Vercel. Webhook : `https://margokit.com/api/webhooks/<id>/<secret>`.
+4. Les droits Pro, l'admin et les statistiques fonctionnent sans autre changement (ils ne lisent que `Subscription` et `BillingEvent`).
+
+**B. Paiement en ligne des factures de tes utilisateurs**
+
+Aujourd'hui : chaque utilisateur ajoute ses propres liens de paiement (Stripe Payment Link, PayPal, Wise, CMI…) et son IBAN dans Paramètres ; ils apparaissent sur le PDF, la page client et le QR code SEPA. Pour aller plus loin (paiement intégré qui marque la facture payée automatiquement), il faut un prestataire qui gère des **comptes connectés** (ex. Stripe Connect) : le paiement arrive sur le compte de l'utilisateur, un webhook enregistre le paiement dans `Document.payments` (`source: 'provider'`), et M9 signale « encaissée » à la plateforme.
+
+## 12. Structure du code
 
 | Chemin | Rôle |
 |---|---|
@@ -182,14 +198,15 @@ L'envoi, le suivi du cycle de vie (déposée, reçue, mise à disposition, appro
 | `src/app/api` | Auth, PDF, logos, webhook Gumroad, cron, export, image de partage, newsletter |
 | `src/lib/documents` | Totaux, numérotation, conformité et mentions, QR SEPA, partage, vues |
 | `src/lib/countries` | Registre des règles par pays et validation des identifiants |
-| `src/lib/billing` | Licences Gumroad, codes, activation |
+| `src/lib/billing` | Prestataires de paiement (Gumroad), licences, codes, activation |
+| `src/lib/einvoice` | Factur-X, UBL, plateformes de transmission |
 | `src/lib/pdf` | Génération PDF |
 | `src/models` | Modèles Mongoose |
 | `messages/` | Tous les textes (EN/FR) |
 | `e2e/` | Tests Playwright et faux serveur Gumroad |
 | `scripts/` | Base locale, admin, codes |
 
-## 12. Sécurité
+## 13. Sécurité
 
 - Validation Zod de toutes les entrées côté serveur ; chaque requête métier est filtrée par l'utilisateur de la session (tests d'isolation entre comptes).
 - Secrets uniquement côté serveur (`server-only`), aucun secret en `NEXT_PUBLIC_`.
