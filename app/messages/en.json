@@ -747,5 +747,15 @@
       "test": "test",
       "none": "No sales received yet. Configure the Gumroad Ping (see README)."
     }
+  },
+  "account": {
+    "title": "Your account and data",
+    "exportText": "Download all your data (business details, clients, products, documents) as a JSON file.",
+    "export": "Export my data",
+    "delete": "Delete my account",
+    "deleteWarning": "This permanently deletes your account, clients, products and documents. Export your invoices first: in most countries you must keep them for several years (10 years in France).",
+    "deleteConfirm": "Type your email ({email}) to confirm",
+    "deleteMismatch": "The email doesn’t match.",
+    "deleteButton": "Delete everything"
   }
 }

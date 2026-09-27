@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { PageHeader } from '@/components/form/fields';
+import AccountSection from '@/components/settings/AccountSection';
 import LogoForm from '@/components/settings/LogoForm';
 import ProfileForm, { type ProfileValues } from '@/components/settings/ProfileForm';
 import { connectDb } from '@/lib/db';
@@ -22,6 +23,7 @@ export default async function SettingsPage({ params }: PageProps<'/[locale]/app/
       <PageHeader title={t('title')} subtitle={t('subtitle')} />
       <LogoForm logoKey={values.logo?.key} disabled={!profile} />
       <ProfileForm initial={values} isNew={!profile} defaultCountry={await guessCountry(locale)} />
+      <AccountSection email={user.email} />
     </div>
   );
 }

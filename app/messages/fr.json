@@ -747,5 +747,15 @@
       "test": "test",
       "none": "Aucune vente reçue. Configure le Ping Gumroad (voir README)."
     }
+  },
+  "account": {
+    "title": "Ton compte et tes données",
+    "exportText": "Télécharge toutes tes données (entreprise, clients, produits, documents) dans un fichier JSON.",
+    "export": "Exporter mes données",
+    "delete": "Supprimer mon compte",
+    "deleteWarning": "Cela supprime définitivement ton compte, tes clients, produits et documents. Exporte d’abord tes factures : dans la plupart des pays tu dois les conserver plusieurs années (10 ans en France).",
+    "deleteConfirm": "Tape ton e-mail ({email}) pour confirmer",
+    "deleteMismatch": "L’e-mail ne correspond pas.",
+    "deleteButton": "Tout supprimer"
   }
 }
