@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { connectDb } from '@/lib/db';
 import { BillingEvent } from '@/models/BillingEvent';
+import { fmtLocale } from '@/lib/intl';
 
 export default async function AdminSales({ params }: PageProps<'/[locale]/admin/sales'>) {
   const { locale } = await params;
@@ -8,8 +9,8 @@ export default async function AdminSales({ params }: PageProps<'/[locale]/admin/
   const t = await getTranslations('admin.sales');
   await connectDb();
   const events = await BillingEvent.find().sort({ receivedAt: -1 }).limit(200).lean();
-  const date = (d: Date) => new Intl.DateTimeFormat(locale, { dateStyle: 'short', timeStyle: 'short' }).format(d);
-  const money = (cents?: number | null, currency?: string | null) => (cents ? new Intl.NumberFormat(locale, { style: 'currency', currency: currency || 'USD' }).format(cents / 100) : '');
+  const date = (d: Date) => new Intl.DateTimeFormat(fmtLocale(locale), { dateStyle: 'short', timeStyle: 'short' }).format(d);
+  const money = (cents?: number | null, currency?: string | null) => (cents ? new Intl.NumberFormat(fmtLocale(locale), { style: 'currency', currency: currency || 'USD' }).format(cents / 100) : '');
 
   if (!events.length) return <p className="rounded-2xl border border-dashed border-line p-6 text-muted">{t('none')}</p>;
   return (

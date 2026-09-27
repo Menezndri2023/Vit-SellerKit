@@ -2,6 +2,7 @@
 
 import { useId, useState } from 'react';
 import { useLocale } from 'next-intl';
+import { normalizeDigits } from '@/lib/intl';
 
 type Props = {
   label: string;
@@ -15,7 +16,7 @@ type Props = {
 
 /** Accepts "6.5" and "6,5" (French keyboards), keeps the user's text while typing. */
 function parse(text: string): number | null {
-  const n = Number(text.replace(/\s/g, '').replace(',', '.'));
+  const n = Number(normalizeDigits(text).replace(/\s/g, '').replace(',', '.'));
   return text.trim() === '' || Number.isNaN(n) ? null : n;
 }
 

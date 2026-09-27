@@ -4,6 +4,7 @@ import UserActions from '@/components/admin/UserActions';
 import { connectDb, mongoClient } from '@/lib/db';
 import { grantsAccess } from '@/lib/plan';
 import { Subscription } from '@/models/Subscription';
+import { fmtLocale } from '@/lib/intl';
 
 export default async function AdminUsers({ params, searchParams }: PageProps<'/[locale]/admin/users'>) {
   const { locale } = await params;
@@ -15,7 +16,7 @@ export default async function AdminUsers({ params, searchParams }: PageProps<'/[
   const filter = query ? { $or: [{ email: { $regex: escapeRegex(query), $options: 'i' } }, { name: { $regex: escapeRegex(query), $options: 'i' } }] } : {};
   const users = await mongoClient().db().collection('user').find(filter).sort({ createdAt: -1 }).limit(100).toArray();
   const subs = await Subscription.find({ userId: { $in: users.map((u) => String(u._id)) } }).lean();
-  const date = (d: Date) => new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(d);
+  const date = (d: Date) => new Intl.DateTimeFormat(fmtLocale(locale), { dateStyle: 'medium' }).format(d);
 
   return (
     <div className="flex flex-col gap-4">

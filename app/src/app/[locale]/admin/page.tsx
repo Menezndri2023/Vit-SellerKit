@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { connectDb, mongoClient } from '@/lib/db';
 import { Subscription } from '@/models/Subscription';
 import { BillingEvent } from '@/models/BillingEvent';
+import { fmtLocale } from '@/lib/intl';
 
 function Table({ head, rows, empty }: { head: string[]; rows: (string | number)[][]; empty: string }) {
   if (!rows.length) return <p className="text-sm text-muted">{empty}</p>;
@@ -55,12 +56,12 @@ export default async function AdminStats({ params }: PageProps<'/[locale]/admin'
   ]);
 
   // Gumroad sends prices in cents
-  const money = (cents: number, currency: string) => new Intl.NumberFormat(locale, { style: 'currency', currency: currency || 'USD' }).format(cents / 100);
+  const money = (cents: number, currency: string) => new Intl.NumberFormat(fmtLocale(locale), { style: 'currency', currency: currency || 'USD' }).format(cents / 100);
   const conversion = verified ? proUsers.length / verified : 0;
   const tiles = [
     { label: t('users'), value: String(total), hint: `${verified} ${t('verified')}` },
     { label: t('pro'), value: String(proUsers.length) },
-    { label: t('conversion'), value: new Intl.NumberFormat(locale, { style: 'percent', maximumFractionDigits: 1 }).format(conversion) },
+    { label: t('conversion'), value: new Intl.NumberFormat(fmtLocale(locale), { style: 'percent', maximumFractionDigits: 1 }).format(conversion) },
   ];
 
   return (

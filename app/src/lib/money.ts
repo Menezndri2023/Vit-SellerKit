@@ -1,3 +1,5 @@
+import { fmtLocale, normalizeDigits } from './intl';
+
 /**
  * Money is stored as integer minor units (cents) to avoid floating-point errors.
  * The number of decimals depends on the currency (EUR 2, XOF 0, TND 3…), taken from Intl.
@@ -13,7 +15,7 @@ export function currencyDigits(currency: string): number {
 
 /** "12,5" / "12.50" / "1 234.5" → minor units (1250, 1250, 123450). Returns null if not a valid amount. */
 export function parseAmount(input: string, currency: string): number | null {
-  const s = input.replace(/[\s  ]/g, '').replace(',', '.');
+  const s = normalizeDigits(input).replace(/[\s  ]/g, '').replace(',', '.');
   if (!/^-?\d+(\.\d+)?$/.test(s)) return null;
   const digits = currencyDigits(currency);
   const [int, frac = ''] = s.replace('-', '').split('.');
@@ -31,7 +33,7 @@ export function toInput(minor: number, currency: string, locale: string): string
 }
 
 export function formatMinor(minor: number, currency: string, locale: string): string {
-  return new Intl.NumberFormat(locale, { style: 'currency', currency }).format(toMajor(minor, currency));
+  return new Intl.NumberFormat(fmtLocale(locale), { style: 'currency', currency }).format(toMajor(minor, currency));
 }
 
 export const CURRENCY_OPTIONS = ['EUR', 'USD', 'GBP', 'CHF', 'CAD', 'MAD', 'XOF', 'XAF', 'TND', 'DZD', 'AED', 'SAR', 'EGP', 'NGN', 'KES', 'ZAR'];

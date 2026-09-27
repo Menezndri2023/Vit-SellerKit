@@ -20,7 +20,7 @@ export default async function AdminLayout({ children, params }: LayoutProps<'/[l
             <span className="rounded-full bg-ink px-2.5 py-0.5 text-xs font-semibold text-bg">{t('title')}</span>
           </div>
           <Link href="/app" className="text-sm text-muted hover:text-ink">
-            ← App
+            <span className="inline-block rtl:-scale-x-100">←</span> App
           </Link>
         </div>
         <AdminTabs />

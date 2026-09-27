@@ -18,9 +18,10 @@ import {
   type Platform,
 } from '@/lib/calculator-state';
 import { computeProfit } from '@/lib/profit';
+import { fmtLocale } from '@/lib/intl';
 
 function currencySymbol(currency: Currency, locale: string) {
-  return new Intl.NumberFormat(locale, { style: 'currency', currency }).formatToParts(0).find((p) => p.type === 'currency')?.value ?? currency;
+  return new Intl.NumberFormat(fmtLocale(locale), { style: 'currency', currency }).formatToParts(0).find((p) => p.type === 'currency')?.value ?? currency;
 }
 
 const selectClass =
@@ -165,7 +166,7 @@ export default function Calculator({ initial }: { initial: CalculatorState }) {
                 [t('results.price30'), money(results.price30)],
                 [t('results.price50'), money(results.price50)],
                 [t('results.maxAdCost'), money(results.maxAdCost)],
-                [t('results.breakEvenRoas'), results.breakEvenRoas === null ? t('results.none') : `${results.breakEvenRoas.toLocaleString(locale, { maximumFractionDigits: 2 })}x`],
+                [t('results.breakEvenRoas'), results.breakEvenRoas === null ? t('results.none') : `${results.breakEvenRoas.toLocaleString(fmtLocale(locale), { maximumFractionDigits: 2 })}x`],
                 [t('results.ordersToRecoup'), results.ordersToRecoup === null ? t('results.none') : t('results.orders', { count: results.ordersToRecoup })],
               ].map(([label, value]) => (
                 <div key={label} className="flex items-baseline justify-between gap-4 py-2.5">

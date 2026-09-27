@@ -10,6 +10,7 @@ import { formatMinor } from '@/lib/money';
 import { requireUser } from '@/lib/session';
 import { Client } from '@/models/Client';
 import { Document } from '@/models/Document';
+import { fmtLocale } from '@/lib/intl';
 
 const TABS = ['all', 'quote', 'invoice', 'credit_note'] as const;
 const FILTERS = ['all', 'draft', 'unpaid', 'overdue', 'paid'] as const;
@@ -40,7 +41,7 @@ export default async function DocumentsPage({ params, searchParams }: PageProps<
   }
   const docs = await Document.find(query).sort({ issueDate: -1, createdAt: -1 }).limit(200).lean();
   const names = new Map((await Client.find({ userId: user.id, _id: { $in: docs.map((d) => d.clientId).filter(Boolean) } }).select('name').lean()).map((c) => [String(c._id), c.name]));
-  const dateFmt = new Intl.DateTimeFormat(locale, { timeZone: 'UTC', dateStyle: 'medium' });
+  const dateFmt = new Intl.DateTimeFormat(fmtLocale(locale), { timeZone: 'UTC', dateStyle: 'medium' });
   const href = (patch: Record<string, string>) => {
     const p = new URLSearchParams({ ...(tab !== 'all' && { type: tab }), ...(filter !== 'all' && { status: filter }), ...(q && { q }), ...patch });
     for (const [k, v] of [...p]) if (v === 'all') p.delete(k);

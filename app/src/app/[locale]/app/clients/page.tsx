@@ -39,7 +39,7 @@ export default async function ClientsPage({ params, searchParams }: PageProps<'/
                       <p className="truncate font-semibold">{c.name}</p>
                       <p className="truncate text-sm text-muted">{[c.email, c.address?.city, countryName.get(c.address?.country ?? '')].filter(Boolean).join(' · ')}</p>
                     </div>
-                    <span aria-hidden className="text-muted">›</span>
+                    <span aria-hidden className="inline-block text-muted rtl:-scale-x-100">›</span>
                   </Link>
                 </li>
               ))}

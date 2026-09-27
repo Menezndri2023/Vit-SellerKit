@@ -52,7 +52,7 @@ export default async function DocumentPage({ params }: PageProps<'/[locale]/app/
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-6">
       <Link href="/app/documents" className="text-sm text-muted hover:text-ink">
-        ← {t('view.back')}
+        <span className="inline-block rtl:-scale-x-100">←</span> {t('view.back')}
       </Link>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="font-display text-3xl font-bold">

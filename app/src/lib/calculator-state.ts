@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { fmtLocale } from './intl';
 import type { ProfitInputs } from './profit';
 
 /**
@@ -69,9 +70,9 @@ export function toInputs(s: CalculatorState): ProfitInputs {
 }
 
 export function formatMoney(value: number, currency: Currency, locale: string): string {
-  return new Intl.NumberFormat(locale, { style: 'currency', currency, maximumFractionDigits: 2 }).format(value);
+  return new Intl.NumberFormat(fmtLocale(locale), { style: 'currency', currency, maximumFractionDigits: 2 }).format(value);
 }
 
 export function formatPct(value: number, locale: string): string {
-  return new Intl.NumberFormat(locale, { style: 'percent', maximumFractionDigits: 1 }).format(value);
+  return new Intl.NumberFormat(fmtLocale(locale), { style: 'percent', maximumFractionDigits: 1 }).format(value);
 }

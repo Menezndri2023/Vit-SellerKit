@@ -6,6 +6,7 @@ import { addPayment, removePayment } from '@/app/[locale]/app/documents/actions'
 import { keepValues } from '@/components/form/fields';
 import type { FormState } from '@/lib/forms';
 import { formatMinor, toInput } from '@/lib/money';
+import { fmtLocale } from '@/lib/intl';
 
 type Payment = { _id: string; amount: number; date: string; method: string; reference?: string };
 
@@ -35,7 +36,7 @@ export default function PaymentsPanel({ id, currency, payments, amountDue, canAd
           {payments.map((p) => (
             <li key={p._id} className="flex items-center justify-between gap-3 py-2">
               <span>
-                <strong className="tabular">{money(p.amount)}</strong> · {new Intl.DateTimeFormat(locale, { timeZone: 'UTC', dateStyle: 'medium' }).format(new Date(p.date))} · {t(`methods.${p.method as 'transfer'}`)}
+                <strong className="tabular">{money(p.amount)}</strong> · {new Intl.DateTimeFormat(fmtLocale(locale), { timeZone: 'UTC', dateStyle: 'medium' }).format(new Date(p.date))} · {t(`methods.${p.method as 'transfer'}`)}
                 {p.reference ? ` · ${p.reference}` : ''}
               </span>
               <button type="button" className="text-xs text-muted hover:text-loss" onClick={() => void removePayment(id, p._id)}>

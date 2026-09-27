@@ -29,8 +29,9 @@ export async function sendEmail({ to, subject, html, text, replyTo, attachments 
 const escapeHtml = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 
 /** Minimal branded layout: one message, one button. */
-export function layout(title: string, body: string, button: { label: string; url: string }, footer: string) {
-  return `<!doctype html><html><body style="margin:0;background:#f8fafc;font-family:Arial,Helvetica,sans-serif;color:#0f172a">
+export function layout(title: string, body: string, button: { label: string; url: string }, footer: string, lang = 'en') {
+  const dir = lang === 'ar' ? 'rtl' : 'ltr';
+  return `<!doctype html><html lang="${lang}" dir="${dir}"><body dir="${dir}" style="margin:0;background:#f8fafc;font-family:Arial,Helvetica,sans-serif;color:#0f172a">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:32px 16px">
 <table role="presentation" width="100%" style="max-width:520px;background:#ffffff;border:1px solid #e2e8f0;border-radius:16px" cellpadding="0" cellspacing="0">
 <tr><td style="padding:32px">
@@ -48,6 +49,11 @@ const copy = {
     reset: { subject: 'Reset your password — Margokit', title: 'Reset your password', body: 'Someone (hopefully you) asked to reset your Margokit password. This link expires in 1 hour.', button: 'Choose a new password' },
     footer: "If you didn't ask for this, you can ignore this email.",
   },
+  ar: {
+    verify: { subject: 'أكّد بريدك الإلكتروني — Margokit', title: 'أكّد بريدك الإلكتروني', body: 'انقر على الزر أدناه لتأكيد بريدك الإلكتروني وفتح حسابك في Margokit.', button: 'تأكيد بريدي' },
+    reset: { subject: 'إعادة تعيين كلمة المرور — Margokit', title: 'إعادة تعيين كلمة المرور', body: 'طلب أحدهم (نتمنى أن تكون أنت) إعادة تعيين كلمة مرور حسابك في Margokit. تنتهي صلاحية هذا الرابط بعد ساعة.', button: 'اختيار كلمة مرور جديدة' },
+    footer: 'إن لم تطلب ذلك، يمكنك تجاهل هذه الرسالة.',
+  },
   fr: {
     verify: { subject: 'Confirme ton e-mail — Margokit', title: 'Confirme ton e-mail', body: 'Clique sur le bouton ci-dessous pour confirmer ton adresse e-mail et ouvrir ton compte Margokit.', button: 'Confirmer mon e-mail' },
     reset: { subject: 'Réinitialise ton mot de passe — Margokit', title: 'Réinitialise ton mot de passe', body: 'Quelqu’un (toi, on l’espère) a demandé à réinitialiser ton mot de passe Margokit. Ce lien expire dans 1 heure.', button: 'Choisir un nouveau mot de passe' },
@@ -55,13 +61,16 @@ const copy = {
   },
 } as const;
 
+const langOf = (locale: string | null | undefined) => (locale === 'fr' || locale === 'ar' ? locale : 'en');
+
 export function authEmail(kind: 'verify' | 'reset', locale: string | null | undefined, to: string, url: string): Email {
-  const c = copy[locale === 'fr' ? 'fr' : 'en'];
+  const lang = langOf(locale);
+  const c = copy[lang];
   const k = c[kind];
   return {
     to,
     subject: k.subject,
-    html: layout(k.title, k.body, { label: k.button, url }, c.footer),
+    html: layout(k.title, k.body, { label: k.button, url }, c.footer, lang),
     text: `${k.title}\n\n${k.body}\n\n${url}\n\n${c.footer}`,
   };
 }
@@ -74,6 +83,13 @@ const planCopy = {
     button: 'Renew Pro',
     footer: 'You receive this email because you have a Margokit account.',
   },
+  ar: {
+    j7: { subject: 'ينتهي وصولك إلى Margokit Pro بعد 7 أيام', body: 'ينتهي وصولك إلى Pro في {date}. جدّده الآن لتحتفظ بفواتير غير محدودة وبدون علامة.' },
+    j1: { subject: 'ينتهي وصولك إلى Margokit Pro غدًا', body: 'ينتهي وصولك إلى Pro في {date}. جدّده الآن لتبقى فواتيرك القادمة غير محدودة وبدون علامة.' },
+    expired: { subject: 'انتهى وصولك إلى Margokit Pro', body: 'انتهى وصولك إلى Pro في {date}. مستنداتك محفوظة، وقد عدت إلى الخطة المجانية (3 مستندات شهريًا).' },
+    button: 'تجديد Pro',
+    footer: 'تصلك هذه الرسالة لأن لديك حسابًا في Margokit.',
+  },
   fr: {
     j7: { subject: 'Ton accès Margokit Pro se termine dans 7 jours', body: 'Ton accès Pro se termine le {date}. Renouvelle-le pour garder des factures illimitées et sans filigrane.' },
     j1: { subject: 'Ton accès Margokit Pro se termine demain', body: 'Ton accès Pro se termine le {date}. Renouvelle-le pour que tes prochaines factures restent illimitées et sans filigrane.' },
@@ -84,8 +100,8 @@ const planCopy = {
 } as const;
 
 export function planEmail(kind: 'j7' | 'j1' | 'expired', locale: string | null | undefined, to: string, date: Date, url: string): Email {
-  const lang = locale === 'fr' ? 'fr' : 'en';
+  const lang = langOf(locale);
   const c = planCopy[lang];
-  const body = c[kind].body.replace('{date}', new Intl.DateTimeFormat(lang, { dateStyle: 'long' }).format(date));
-  return { to, subject: c[kind].subject, html: layout(c[kind].subject, body, { label: c.button, url }, c.footer), text: `${body}\n\n${url}` };
+  const body = c[kind].body.replace('{date}', new Intl.DateTimeFormat(lang === 'ar' ? 'ar-u-nu-latn' : lang, { dateStyle: 'long' }).format(date));
+  return { to, subject: c[kind].subject, html: layout(c[kind].subject, body, { label: c.button, url }, c.footer, lang), text: `${body}\n\n${url}` };
 }

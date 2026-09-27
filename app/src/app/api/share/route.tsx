@@ -11,7 +11,9 @@ const messages = { en, fr };
 /** 1080×1920 image (stories, TikTok, Reels) of the user's result. */
 export async function GET(request: Request) {
   const params = Object.fromEntries(new URL(request.url).searchParams);
-  const locale = hasLocale(routing.locales, params.locale) ? params.locale : routing.defaultLocale;
+  const requested = hasLocale(routing.locales, params.locale) ? params.locale : routing.defaultLocale;
+  // The image renderer can't shape Arabic text: Arabic users get the English image
+  const locale = requested === 'fr' ? 'fr' : 'en';
   const t = messages[locale].image;
   const s = parseState(params, locale);
   const r = computeProfit(toInputs(s));

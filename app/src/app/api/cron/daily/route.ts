@@ -29,7 +29,7 @@ export async function GET(req: Request) {
     const u = await users.findOne({ _id: ObjectId.isValid(userId) ? new ObjectId(userId) : userId } as never);
     if (!u?.email) return;
     const locale = (u.uiLocale as string) ?? 'en';
-    await sendEmail(planEmail(kind, locale, u.email as string, date, url.replace('/en/', `/${locale === 'fr' ? 'fr' : 'en'}/`)));
+    await sendEmail(planEmail(kind, locale, u.email as string, date, url.replace('/en/', `/${locale === 'fr' || locale === 'ar' ? locale : 'en'}/`)));
     report.reminders++;
   };
 

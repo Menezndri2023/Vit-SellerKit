@@ -25,3 +25,15 @@ describe('money', () => {
     expect(parseAmount(toInput(1999, 'MAD', 'fr'), 'MAD')).toBe(1999);
   });
 });
+
+describe('arabic input and display', async () => {
+  const { fmtLocale } = await import('./intl');
+  it('parses Arabic-Indic digits and separators', () => {
+    expect(parseAmount('١٢٥٫٥٠', 'MAD')).toBe(12550);
+    expect(parseAmount('۳۰۰', 'EUR')).toBe(30000);
+  });
+  it('shows Latin digits in the Arabic UI', () => {
+    expect(formatMinor(123450, 'MAD', 'ar')).toMatch(/1,234\.50|1٬234٫50|1234/);
+    expect(new Intl.NumberFormat(fmtLocale('ar')).format(1234)).toBe('1,234');
+  });
+});

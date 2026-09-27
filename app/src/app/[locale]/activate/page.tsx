@@ -8,6 +8,7 @@ import { connectDb } from '@/lib/db';
 import { links } from '@/lib/links';
 import { getPlan } from '@/lib/plan';
 import { requireUser } from '@/lib/session';
+import { fmtLocale } from '@/lib/intl';
 
 export const metadata: Metadata = { robots: { index: false } };
 
@@ -18,7 +19,7 @@ export default async function ActivatePage({ params }: PageProps<'/[locale]/acti
   const t = await getTranslations('plan');
   await connectDb();
   const plan = await getPlan(user.id);
-  const fmt = (d: Date) => new Intl.DateTimeFormat(locale, { dateStyle: 'long' }).format(d);
+  const fmt = (d: Date) => new Intl.DateTimeFormat(fmtLocale(locale), { dateStyle: 'long' }).format(d);
   const label = planLabel(plan, fmt);
   const monthly = links.proMonthly();
   const lifetime = links.proLifetime();

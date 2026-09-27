@@ -149,7 +149,7 @@ export default function ProfileForm({ initial, isNew, defaultCountry }: { initia
 
       <Section title={t('documents')}>
         <Select name="defaultCurrency" label={t('defaultCurrency')} value={currency} onChange={(e) => setCurrency(e.target.value)} errors={errors} options={Array.from(new Set([currency, ...CURRENCY_OPTIONS])).map((c) => ({ value: c, label: c }))} />
-        <Select name="defaultDocLocale" label={t('defaultDocLocale')} defaultValue={initial.defaultDocLocale ?? locale} options={DOC_LOCALES.map((l) => ({ value: l, label: tc(`docLocales.${l}`) }))} />
+        <Select name="defaultDocLocale" label={t('defaultDocLocale')} defaultValue={initial.defaultDocLocale ?? (locale === 'en' ? 'en' : 'fr')} options={DOC_LOCALES.map((l) => ({ value: l, label: tc(`docLocales.${l}`) }))} />
         <div className="sm:col-span-2">
           <p className="text-sm font-medium">{t('numbering')}</p>
           <p className="text-xs text-muted">{t('numberingHint')}</p>

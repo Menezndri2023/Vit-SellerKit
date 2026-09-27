@@ -14,7 +14,7 @@ Architecture et décisions : [../docs/pro/ARCHITECTURE.md](../docs/pro/ARCHITECT
 6. [Services complémentaires : e-mails, Google, cron](#6-services-complémentaires)
 7. [Créer le compte admin](#7-créer-le-compte-admin)
 8. [Codes d'activation (ventes WhatsApp)](#8-codes-dactivation-ventes-whatsapp)
-9. [Ajouter une langue (ex. arabe, RTL)](#9-ajouter-une-langue-ex-arabe-rtl)
+9. [Langues (EN, FR, AR)](#9-langues-en-fr-ar-et-ajout-dune-langue)
 10. [Facture électronique](#10-facture-électronique-factur-x-ubl)
 11. [Ajouter un prestataire de paiement](#11-ajouter-un-prestataire-de-paiement-par-carte)
 12. [Structure du code](#12-structure-du-code)
@@ -143,14 +143,16 @@ node --env-file=.env.local scripts/create-codes.mjs --count 1 --lifetime --note 
 
 Tu peux aussi attribuer du Pro directement à un compte : **Admin → Utilisateurs → +30 jours / +1 an / À vie**.
 
-## 9. Ajouter une langue (ex. arabe, RTL)
+## 9. Langues (EN, FR, AR) et ajout d'une langue
 
-1. `messages/ar.json` : copie de `messages/en.json`, traduite. Garde les clés et les variables `{…}` telles quelles.
-2. `src/i18n/routing.ts` : ajoute `'ar'` à `locales`.
-3. `src/app/[locale]/layout.tsx` : `dir={locale === 'ar' ? 'rtl' : 'ltr'}` sur `<html>`, et une police arabe (`IBM_Plex_Sans_Arabic` via `next/font/google`). L'interface utilise déjà les propriétés logiques (`ms-`, `me-`, `start`, `end`).
-4. Documents : ajoute `'ar'` à `DOC_LOCALES` (`src/lib/catalog.ts`) et les textes `doc` et `catalog`.
-5. **PDF** : `@react-pdf/renderer` gère mal l'arabe (liaison des lettres, sens de lecture). Prévois une génération HTML → PDF (Chromium) pour les documents en arabe, et teste-la avant de la proposer.
-6. Mentions légales : ajoute la langue dans `src/lib/documents/compliance.ts` et `src/content/legal.ts`.
+**Arabe (disponible)** : interface complète en arabe, écriture de droite à gauche (`dir="rtl"`), police IBM Plex Sans Arabic, chiffres latins à l'affichage (usage au Maghreb) et chiffres arabo-indiens acceptés à la saisie, e-mails en arabe. Limites assumées : **les documents (PDF, Factur-X) restent en français ou en anglais** (le moteur PDF ne gère pas bien l'écriture arabe liée) ; l'image de partage du calculateur et l'aperçu Open Graph restent en anglais ; les CGU et la politique de confidentialité s'affichent en anglais. Fais relire les textes arabes (`messages/ar.json`) par un locuteur natif avant de communiquer auprès d'un public arabophone.
+
+**Ajouter une langue** (ex. espagnol) :
+1. `messages/es.json` : copie de `messages/en.json`, traduite (garder les clés et les variables `{…}`) ; vérifier avec le script de contrôle ICU (voir historique Git) ou `new IntlMessageFormat(text, 'es')`.
+2. `src/i18n/routing.ts` : ajouter la langue à `locales` ; nom affiché dans `src/components/LocaleSwitcher.tsx`.
+3. Si la langue s'écrit de droite à gauche : `isRtl` dans `src/lib/intl.ts` et une police adaptée dans `src/app/[locale]/layout.tsx` (l'interface utilise déjà les propriétés logiques `ms-`/`me-`/`start`/`end`).
+4. Pour des **documents** dans cette langue : `DOC_LOCALES` (`src/lib/catalog.ts`), textes `doc` et `catalog`, mentions légales (`src/lib/documents/compliance.ts`), et vérifier le rendu PDF (police couvrant l'alphabet).
+5. E-mails : `src/lib/email.ts` ; pages légales : `src/content/legal.ts`.
 
 ## 10. Facture électronique (Factur-X, UBL)
 

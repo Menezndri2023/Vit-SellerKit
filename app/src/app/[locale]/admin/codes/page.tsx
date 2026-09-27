@@ -4,6 +4,7 @@ import CodesForm from '@/components/admin/CodesForm';
 import RevokeCodeButton from '@/components/admin/RevokeCodeButton';
 import { connectDb, mongoClient } from '@/lib/db';
 import { ActivationCode } from '@/models/ActivationCode';
+import { fmtLocale } from '@/lib/intl';
 
 export default async function AdminCodes({ params }: PageProps<'/[locale]/admin/codes'>) {
   const { locale } = await params;
@@ -13,7 +14,7 @@ export default async function AdminCodes({ params }: PageProps<'/[locale]/admin/
   const codes = await ActivationCode.find().sort({ createdAt: -1 }).limit(200).lean();
   const userIds = codes.map((c) => c.usedBy).filter((x): x is string => Boolean(x && ObjectId.isValid(x)));
   const emails = new Map((await mongoClient().db().collection('user').find({ _id: { $in: userIds.map((x) => new ObjectId(x)) } }, { projection: { email: 1 } }).toArray()).map((u) => [String(u._id), u.email as string]));
-  const date = (d?: Date | null) => (d ? new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(d) : '');
+  const date = (d?: Date | null) => (d ? new Intl.DateTimeFormat(fmtLocale(locale), { dateStyle: 'medium' }).format(d) : '');
 
   return (
     <div className="flex flex-col gap-6">

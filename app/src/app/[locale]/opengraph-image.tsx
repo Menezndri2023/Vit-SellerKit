@@ -11,7 +11,8 @@ export const alt = 'Margokit — Profit Calculator';
 export default async function Image({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: requested } = await params;
   const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale;
-  const { hero } = { en, fr }[locale];
+  // The image renderer can't shape Arabic text: Arabic pages use the English image
+  const { hero } = locale === 'fr' ? fr : en;
 
   return new ImageResponse(
     (

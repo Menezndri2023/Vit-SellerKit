@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { getSession } from '@/lib/session';
+import LocaleSwitcher from './LocaleSwitcher';
 import Logo from './Logo';
 
 export default async function SiteHeader() {
@@ -17,9 +18,7 @@ export default async function SiteHeader() {
         <Link href="/#pricing" className="hidden rounded-lg px-3 py-2 text-muted hover:bg-surface sm:block">
           {t('pricing')}
         </Link>
-        <Link href="/" locale={t('switchLocale')} className="rounded-lg px-3 py-2 text-muted hover:bg-surface">
-          {t('switchLabel')}
-        </Link>
+        <LocaleSwitcher />
         {session ? (
           <Link href="/app" className="rounded-xl bg-ink px-4 py-2 text-bg hover:opacity-90">
             {t('openApp')}

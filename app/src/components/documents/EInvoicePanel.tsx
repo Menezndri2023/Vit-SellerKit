@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { refreshPlatformStatus, sendToPlatform, type TransmitResult } from '@/app/[locale]/app/documents/actions';
+import { fmtLocale } from '@/lib/intl';
 
 type Event = { status: string; at: string; reason?: string };
 const BAD = ['refused', 'rejected', 'disputed', 'suspended'];
@@ -13,7 +14,7 @@ export default function EInvoicePanel({ id, provider, lifecycle }: { id: string;
   const [pending, start] = useTransition();
   const [result, setResult] = useState<TransmitResult | null>(null);
   const sent = lifecycle.length > 0;
-  const fmt = (iso: string) => new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(iso));
+  const fmt = (iso: string) => new Intl.DateTimeFormat(fmtLocale(locale), { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(iso));
 
   return (
     <section className="rounded-2xl border border-line bg-surface p-5">
