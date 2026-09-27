@@ -46,6 +46,8 @@ export async function POST(request: Request) {
     body: JSON.stringify({ secret: process.env.SUBSCRIBE_WEBHOOK_SECRET, email: email.toLowerCase(), locale, source }),
   }).catch(() => null);
 
-  if (!res?.ok) return Response.json({ error: 'upstream' }, { status: 502 });
+  // Apps Script répond 200 même en cas d'erreur (page HTML) ou de secret refusé ({ ok: false })
+  const stored = res?.ok && (await res.json().catch(() => null))?.ok === true;
+  if (!stored) return Response.json({ error: 'upstream' }, { status: 502 });
   return Response.json({ ok: true });
 }
