@@ -698,7 +698,8 @@
       "country": "Country",
       "sales": "Sales",
       "none": "No data yet.",
-      "testExcluded": "Test purchases are excluded."
+      "testExcluded": "Test purchases are excluded.",
+      "activation": "Activation (≥ 1 document issued)"
     },
     "users": {
       "search": "Search by email or name",

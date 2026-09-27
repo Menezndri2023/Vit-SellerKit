@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { connectDb, mongoClient } from '@/lib/db';
+import { Document } from '@/models/Document';
 import { Subscription } from '@/models/Subscription';
 import { BillingEvent } from '@/models/BillingEvent';
 import { fmtLocale } from '@/lib/intl';
@@ -42,7 +43,7 @@ export default async function AdminStats({ params }: PageProps<'/[locale]/admin'
   const sixMonths = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 5, 1));
   const ninetyDays = new Date(now.getTime() - 90 * 86_400_000);
 
-  const [total, verified, proUsers, signups, revenue, countries] = await Promise.all([
+  const [total, verified, proUsers, signups, revenue, countries, activeUsers] = await Promise.all([
     users.countDocuments(),
     users.countDocuments({ emailVerified: true }),
     Subscription.distinct('userId', { status: { $in: ['active', 'cancelled'] }, $or: [{ expiresAt: null }, { expiresAt: { $gt: now } }] }),
@@ -53,6 +54,8 @@ export default async function AdminStats({ params }: PageProps<'/[locale]/admin'
       { $sort: { '_id.m': -1 } },
     ]),
     BillingEvent.aggregate<{ _id: string; n: number }>([{ $match: { type: 'sale', isTest: { $ne: true }, receivedAt: { $gte: ninetyDays } } }, { $group: { _id: '$country', n: { $sum: 1 } } }, { $sort: { n: -1 } }, { $limit: 15 }]),
+    // Activation: users who issued at least one document
+    Document.distinct('userId', { status: { $ne: 'draft' } }),
   ]);
 
   // Gumroad sends prices in cents
@@ -62,11 +65,12 @@ export default async function AdminStats({ params }: PageProps<'/[locale]/admin'
     { label: t('users'), value: String(total), hint: `${verified} ${t('verified')}` },
     { label: t('pro'), value: String(proUsers.length) },
     { label: t('conversion'), value: new Intl.NumberFormat(fmtLocale(locale), { style: 'percent', maximumFractionDigits: 1 }).format(conversion) },
+    { label: t('activation'), value: new Intl.NumberFormat(fmtLocale(locale), { style: 'percent', maximumFractionDigits: 1 }).format(verified ? activeUsers.length / verified : 0), hint: `${activeUsers.length} / ${verified}` },
   ];
 
   return (
     <div className="flex flex-col gap-6">
-      <section className="grid gap-4 sm:grid-cols-3">
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {tiles.map((x) => (
           <div key={x.label} className="rounded-2xl border border-line bg-surface p-5">
             <p className="text-sm text-muted">{x.label}</p>

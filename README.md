@@ -13,5 +13,5 @@ Domaine visé : margokit.com
 | [sheets/](sheets/) | Templates Google Sheets (Tracker, Seller Pack) | ✅ |
 | [calculator/](calculator/) | Profit Calculator gratuit (Next.js, déployable seul) | ✅ |
 | [app/](app/) | Margokit Pro : site principal + devis, factures, avoirs (Next.js + MongoDB) | ✅ prêt à déployer |
-| [docs/](docs/) | Architecture de Margokit Pro | ✅ |
+| [docs/](docs/) | Architecture de Margokit Pro, suivi hebdomadaire (indicateurs et décisions) | ✅ |
 | [marketing/](marketing/) | Pages Gumroad, 30 vidéos, 10 épingles Pinterest, 5 messages de prospection | ✅ |
