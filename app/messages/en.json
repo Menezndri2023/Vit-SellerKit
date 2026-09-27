@@ -761,5 +761,34 @@
     "deleteConfirm": "Type your email ({email}) to confirm",
     "deleteMismatch": "The email doesn’t match.",
     "deleteButton": "Delete everything"
+  },
+  "einvoice": {
+    "title": "E-invoicing platform",
+    "send": "Send via {provider}",
+    "sending": "Sending…",
+    "refresh": "Refresh status",
+    "sentHint": "Sent through {provider}. Statuses are updated by the platform.",
+    "notSentHint": "Send this invoice as a structured e-invoice through your approved platform.",
+    "errors": {
+      "noProvider": "No e-invoicing platform is configured.",
+      "notExportable": "Only issued invoices and credit notes can be sent.",
+      "alreadySent": "This document was already sent.",
+      "invalid": "The e-invoice isn’t valid yet:"
+    },
+    "statuses": {
+      "submitted": "Submitted",
+      "issued": "Issued by the platform",
+      "received": "Received",
+      "made_available": "Made available to the client",
+      "in_process": "In process",
+      "approved": "Approved",
+      "partially_approved": "Partially approved",
+      "disputed": "Disputed",
+      "suspended": "Suspended",
+      "refused": "Refused",
+      "rejected": "Rejected",
+      "payment_sent": "Payment sent",
+      "cashed": "Cashed"
+    }
   }
 }

@@ -157,7 +157,16 @@ Tu peux aussi attribuer du Pro directement à un compte : **Admin → Utilisateu
 - Le Factur-X est validé à chaque export (règles du profil EN 16931 + schémas XSD officiels) ; si une donnée manque, l'utilisateur voit la liste des erreurs au lieu d'un fichier invalide.
 - Correspondances EN 16931 : SIREN → schéma `0002`, BCE → `0208`, KvK → `0106` ; franchise en base → catégorie `E` + `VATEX-FR-FRANCHISE` ; autoliquidation, intracommunautaire, export, hors champ → codes `VATEX-EU-*` ; notes `PMD` (pénalités), `PMT` (indemnité 40 €), `AAB` (escompte) ; date de livraison/prestation = date de facture si non renseignée.
 - UBL : `EndpointID` Peppol déduit des identifiants (BCE, SIRET/SIREN, KvK, TVA DE/LU) ; validé contre les XSD OASIS UBL 2.1 pendant le développement.
-- **Pas encore fait** : validation officielle Schematron (règles EN 16931 et Peppol) et contrôle PDF/A-3 par veraPDF — à lancer avant de promettre la conformité (ces outils nécessitent Java) ; envoi direct via une plateforme agréée (étape M9, interface prête dans `src/lib/einvoice/providers`).
+- **Pas encore fait** : validation officielle Schematron (règles EN 16931 et Peppol) et contrôle PDF/A-3 par veraPDF — à lancer avant de promettre la conformité (ces outils nécessitent Java).
+
+### Envoi via une plateforme agréée (PA) ou Peppol
+
+L'envoi, le suivi du cycle de vie (déposée, reçue, mise à disposition, approuvée, refusée, en litige, encaissée…), le signalement « encaissée » au paiement complet et le webhook de statuts sont en place. Seul le connecteur du partenaire reste à écrire :
+
+1. Choisis une plateforme **immatriculée par la DGFiP** (liste officielle sur impots.gouv.fr) qui propose une API pour les éditeurs de logiciels, et compare tarif par facture, réception gratuite pour tes utilisateurs, et Peppol.
+2. Crée `src/lib/einvoice/providers/<partenaire>.ts` qui implémente `EInvoicingProvider` (`send`, `getStatus`, `reportPayment`, `parseWebhook`) avec leur API, en traduisant leurs codes de statut vers les nôtres (`types.ts`).
+3. Enregistre-le dans `providers/index.ts`, puis sur Vercel : `EINVOICE_PROVIDER=<partenaire>`, `EINVOICE_WEBHOOK_SECRET=…`, et chez le partenaire l'URL `https://margokit.com/api/einvoicing/<partenaire>/<secret>`. Si le partenaire signe ses webhooks, vérifie la signature dans `parseWebhook`.
+4. Pour tester sans partenaire : `EINVOICE_PROVIDER=sandbox` (simulation locale, ignorée en production).
 - Profil de couleurs sRGB : `assets/icc/sRGB-v2-micro.icc` (CC0).
 
 ## 11. Structure du code

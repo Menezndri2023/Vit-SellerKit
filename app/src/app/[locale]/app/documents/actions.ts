@@ -17,6 +17,7 @@ import { loadDocView } from '@/lib/documents/load';
 import { getOrCreateShareToken, publicUrl } from '@/lib/documents/share';
 import { formatMinor, parseAmount } from '@/lib/money';
 import { pdfFileName, renderDocumentPdf } from '@/lib/pdf/render';
+import { refreshLifecycle, reportCashed, transmitDocument } from '@/lib/einvoice/transmit';
 import { rateLimit } from '@/lib/rate-limit';
 import { checkIssueAllowed } from '@/lib/plan';
 import { actionUser } from '@/lib/session';
@@ -254,6 +255,7 @@ export async function addPayment(id: string, _prev: FormState, form: FormData): 
   doc.status = d.status as typeof doc.status;
   await doc.save();
   await audit({ userId: user.id, actorId: user.id, action: 'payment.add', targetType: 'document', targetId: id, details: { amount } });
+  if (doc.status === 'paid') await reportCashed(user.id, id).catch(() => undefined);
   refresh();
   return { ok: true, savedAt: Date.now() };
 }
@@ -322,4 +324,24 @@ export async function sendDocumentEmail(id: string, _prev: FormState, form: Form
   await audit({ userId: user.id, actorId: user.id, action: 'document.email', targetType: 'document', targetId: id, details: { to: parsed.data.to } });
   refresh();
   return { ok: true, savedAt: Date.now() };
+}
+
+// ── E-invoicing transmission (approved platform / Peppol) ────────────────
+
+export type TransmitResult = { ok?: boolean; error?: string; details?: string[] };
+
+export async function sendToPlatform(id: string): Promise<TransmitResult> {
+  const user = await actionUser();
+  await connectDb();
+  const result = await transmitDocument(user.id, id);
+  await audit({ userId: user.id, actorId: user.id, action: result.ok ? 'einvoice.send' : 'einvoice.send.failed', targetType: 'document', targetId: id, details: result.ok ? {} : { error: result.error } });
+  refresh();
+  return result;
+}
+
+export async function refreshPlatformStatus(id: string) {
+  const user = await actionUser();
+  await connectDb();
+  await refreshLifecycle(user.id, id).catch(() => undefined);
+  refresh();
 }

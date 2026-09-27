@@ -3,6 +3,8 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import DocumentActions from '@/components/documents/DocumentActions';
 import DocumentEditor from '@/components/documents/DocumentEditor';
 import DocumentView from '@/components/documents/DocumentView';
+import EInvoicePanel from '@/components/documents/EInvoicePanel';
+import { einvoicingProvider } from '@/lib/einvoice/providers';
 import PaymentsPanel from '@/components/documents/PaymentsPanel';
 import SharePanel from '@/components/documents/SharePanel';
 import { formatMinor } from '@/lib/money';
@@ -45,6 +47,7 @@ export default async function DocumentPage({ params }: PageProps<'/[locale]/app/
       .replaceAll('{seller}', view.seller?.tradeName || view.seller?.legalName || '')
       .replaceAll('{amount}', formatMinor(view.totals.totalInclTax, view.currency, view.lang === 'fr' ? 'fr-FR' : 'en-GB'));
   const payable = doc.type === 'invoice' || doc.type === 'deposit_invoice';
+  const platform = einvoicingProvider();
 
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-6">
@@ -81,6 +84,9 @@ export default async function DocumentPage({ params }: PageProps<'/[locale]/app/
       ) : (
         <>
           <p className="text-sm text-muted">{t('view.locked')}</p>
+          {platform && ['invoice', 'credit_note', 'deposit_invoice'].includes(doc.type) && (
+            <EInvoicePanel id={id} provider={platform.name} lifecycle={plain(doc.einvoice?.lifecycle ?? [])} />
+          )}
           {payable && (
             <PaymentsPanel
               id={id}

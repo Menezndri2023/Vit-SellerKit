@@ -29,6 +29,8 @@ export default defineConfig({
       GUMROAD_PRODUCT_ID_LIFETIME: 'prod_lifetime',
       GUMROAD_PING_SECRET: E2E_PING_SECRET,
       CRON_SECRET: E2E_CRON_SECRET,
+      EINVOICE_PROVIDER: 'sandbox',
+      EINVOICE_WEBHOOK_SECRET: 'einvoice-webhook-secret-e2e',
     },
     },
   ],

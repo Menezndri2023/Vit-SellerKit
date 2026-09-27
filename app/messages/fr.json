@@ -761,5 +761,34 @@
     "deleteConfirm": "Tape ton e-mail ({email}) pour confirmer",
     "deleteMismatch": "L’e-mail ne correspond pas.",
     "deleteButton": "Tout supprimer"
+  },
+  "einvoice": {
+    "title": "Plateforme de facturation électronique",
+    "send": "Envoyer via {provider}",
+    "sending": "Envoi…",
+    "refresh": "Actualiser le statut",
+    "sentHint": "Envoyée via {provider}. Les statuts sont mis à jour par la plateforme.",
+    "notSentHint": "Envoie cette facture en facture électronique structurée via ta plateforme agréée.",
+    "errors": {
+      "noProvider": "Aucune plateforme de facturation électronique n’est configurée.",
+      "notExportable": "Seules les factures et avoirs émis peuvent être envoyés.",
+      "alreadySent": "Ce document a déjà été envoyé.",
+      "invalid": "La facture électronique n’est pas encore valide :"
+    },
+    "statuses": {
+      "submitted": "Déposée",
+      "issued": "Émise par la plateforme",
+      "received": "Reçue",
+      "made_available": "Mise à disposition du client",
+      "in_process": "Prise en charge",
+      "approved": "Approuvée",
+      "partially_approved": "Approuvée partiellement",
+      "disputed": "En litige",
+      "suspended": "Suspendue",
+      "refused": "Refusée",
+      "rejected": "Rejetée",
+      "payment_sent": "Paiement transmis",
+      "cashed": "Encaissée"
+    }
   }
 }
