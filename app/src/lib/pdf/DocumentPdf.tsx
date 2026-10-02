@@ -21,6 +21,10 @@ const INK = '#0F172A';
 const MUTED = '#64748B';
 const LINE = '#E2E8F0';
 
+// fr-FR number formatting uses U+202F, which the Inter latin subset lacks: react-pdf would fall back
+// to a non-embedded Helvetica and break PDF/A-3 (Factur-X). A regular no-break space renders the same.
+const embeddable = (text: string) => text.replace(/\u202F/g, '\u00A0');
+
 const s = StyleSheet.create({
   page: { fontFamily: 'Inter', fontSize: 9, color: INK, padding: 40, paddingBottom: 60, lineHeight: 1.45 },
   row: { flexDirection: 'row' },
@@ -47,9 +51,9 @@ export function DocumentPdf({ doc, extras }: { doc: DocView; extras: PdfExtras }
   const m: Messages = doc.lang === 'fr' ? fr : en;
   const t = (key: keyof Messages['doc'], vars: Record<string, string | number> = {}) => Object.entries(vars).reduce((acc, [k, v]) => acc.replace(`{${k}}`, String(v)), m.doc[key]);
   const intl = doc.lang === 'fr' ? 'fr-FR' : 'en-GB';
-  const money = (minor: number) => formatMinor(minor, doc.currency, intl);
-  const date = (iso?: string) => (iso ? new Intl.DateTimeFormat(intl, { timeZone: 'UTC', dateStyle: 'medium' }).format(new Date(iso)) : '');
-  const qty = (n: number) => new Intl.NumberFormat(intl, { maximumFractionDigits: 3 }).format(n);
+  const money = (minor: number) => embeddable(formatMinor(minor, doc.currency, intl));
+  const date = (iso?: string) => (iso ? embeddable(new Intl.DateTimeFormat(intl, { timeZone: 'UTC', dateStyle: 'medium' }).format(new Date(iso))) : '');
+  const qty = (n: number) => embeddable(new Intl.NumberFormat(intl, { maximumFractionDigits: 3 }).format(n));
   const countries = new Intl.DisplayNames([intl], { type: 'region' });
   const unit = (code: string) => (code === 'C62' ? '' : ` ${(m.catalog.units as Record<string, string>)[code]?.toLowerCase() ?? ''}`);
   const vatLabel = (c: string) => (m.catalog.vat as Record<string, string>)[c] ?? c;

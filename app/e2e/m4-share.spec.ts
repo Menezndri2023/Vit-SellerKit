@@ -1,3 +1,4 @@
+import { writeFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
 import { signUpAndLogin } from './helpers';
 
@@ -51,7 +52,7 @@ test('PDF, public link, regenerate, email', async ({ page, browser, context }) =
   expect(pdf.status()).toBe(200);
   const bytes = await pdf.body();
   expect(bytes.subarray(0, 5).toString()).toBe('%PDF-');
-  require('node:fs').writeFileSync(`/tmp/mk-invoice-${test.info().project.name}.pdf`, bytes);
+  writeFileSync(`/tmp/mk-invoice-${test.info().project.name}.pdf`, bytes);
 
   // Public link works without an account, in the document language
   await page.getByRole('button', { name: 'Copier le lien client' }).click();

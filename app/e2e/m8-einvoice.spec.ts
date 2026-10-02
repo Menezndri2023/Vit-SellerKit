@@ -1,6 +1,23 @@
 import { extractXml, Profile, validateXsd } from '@stackforge-eu/factur-x';
 import { expect, test } from '@playwright/test';
+import { PDFArray, PDFDict, PDFDocument, PDFName } from 'pdf-lib';
 import { createAndIssueQuote, setupBusiness, signUpAndLogin } from './helpers';
+
+/** BaseFont names used by the pages (Type0 descendants included). */
+async function pageFonts(bytes: Buffer): Promise<string[]> {
+  const pdf = await PDFDocument.load(bytes);
+  const names = new Set<string>();
+  const visit = (font: PDFDict) => {
+    const desc = font.lookup(PDFName.of('DescendantFonts'));
+    if (desc instanceof PDFArray) for (let i = 0; i < desc.size(); i++) visit(desc.lookup(i, PDFDict));
+    else names.add(String(font.lookup(PDFName.of('BaseFont'))));
+  };
+  for (const p of pdf.getPages()) {
+    const fonts = p.node.Resources()?.lookup(PDFName.of('Font'));
+    if (fonts instanceof PDFDict) for (const [, ref] of fonts.entries()) visit(pdf.context.lookup(ref) as PDFDict);
+  }
+  return [...names];
+}
 
 test('Factur-X and UBL exports of an issued invoice', async ({ page, playwright }) => {
   page.on('dialog', (d) => d.accept());
@@ -27,6 +44,10 @@ test('Factur-X and UBL exports of an issued invoice', async ({ page, playwright 
   expect(fx.status(), await fx.text().catch(() => '')).toBe(200);
   const pdf = await fx.body();
   expect(pdf.subarray(0, 5).toString()).toBe('%PDF-');
+  // PDF/A-3: only embedded (subset) fonts, no standard-14 fallback such as Helvetica
+  const baseFonts = await pageFonts(pdf);
+  expect(baseFonts.length).toBeGreaterThan(0);
+  expect(baseFonts.filter((f) => !/^\/[A-Z]{6}\+/.test(f))).toEqual([]);
   const { xml, filename } = await extractXml(pdf);
   expect(filename).toBe('factur-x.xml');
   expect(xml).toMatch(/<ram:ID>INV-\d{4}-001<\/ram:ID>/);
