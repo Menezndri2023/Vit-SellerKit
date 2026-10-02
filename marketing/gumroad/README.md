@@ -1,6 +1,6 @@
 # Gumroad — mise en place (≈ 2 h)
 
-Pages de vente prêtes à coller : [tracker.md](tracker.md) · [seller-pack.md](seller-pack.md)
+Pages de vente prêtes à coller : [tracker.md](tracker.md) · [seller-pack.md](seller-pack.md) · [margokit-pro.md](margokit-pro.md) (abonnement de l'app)
 
 Chiffres vérifiés le 26/09/2026 sur [gumroad.com/pricing](https://gumroad.com/pricing) et le [centre d'aide](https://gumroad.com/help/article/327-purchasing-power-parity). Revérifie avant de lancer :
 - **10 % + 0,50 $** par vente directe (ton lien, ton profil) ; **30 %** si la vente vient de la vitrine Gumroad Discover.
