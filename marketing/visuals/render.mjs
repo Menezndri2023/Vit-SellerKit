@@ -6,6 +6,9 @@
  *   node marketing/visuals/render.mjs pin-03       # only names containing "pin-03"
  *   node marketing/visuals/render.mjs --html       # also write the HTML next to each PNG (debug)
  *
+ * The Margokit Pro visuals (pro-*) use the app screenshots in assets/app-*.png and pdf-*.png,
+ * made by shoot-app.mjs against a local build (see that file). They are not re-shot here.
+ *
  * Uses the Playwright + Chromium already installed for the app e2e tests (app/node_modules).
  */
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
@@ -15,7 +18,7 @@ import { fileURLToPath } from 'node:url';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..');
 const { chromium } = await import(join(ROOT, 'app', 'node_modules', 'playwright', 'index.mjs'));
-const { covers, pins } = await import('./visuals.mjs');
+const { covers, pins, proVisuals } = await import('./visuals.mjs');
 
 const OUT = join(HERE, 'out');
 const ASSETS = join(HERE, 'assets');
@@ -80,7 +83,16 @@ for (const lang of ['en', 'fr']) {
   }
 }
 
-const list = [...covers(), ...pins(shots)].filter((v) => !filter || v.name.includes(filter));
+// Margokit Pro: app screenshots from shoot-app.mjs
+const APP_SHOTS = { invoiceEn: 'app-invoice-en', invoiceFr: 'app-invoice-fr', quote: 'app-quote', share: 'app-share', dashboard: 'app-dashboard',
+  listMobile: 'app-list-mobile', publicMobile: 'app-public-mobile', pdfEn: 'pdf-en', pdfFr: 'pdf-fr' };
+const appShots = {};
+for (const [k, f] of Object.entries(APP_SHOTS)) {
+  if (!existsSync(join(ASSETS, `${f}.png`))) throw new Error(`Missing assets/${f}.png — run shoot-app.mjs first.`);
+  appShots[k] = dataUrl(`${f}.png`);
+}
+
+const list = [...covers(), ...proVisuals(appShots), ...pins(shots)].filter((v) => !filter || v.name.includes(filter));
 const page = await browser.newPage({ deviceScaleFactor: 1 });
 for (const v of list) {
   await page.setViewportSize({ width: v.w, height: v.h });

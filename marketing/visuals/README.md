@@ -11,6 +11,21 @@ node marketing/visuals/render.mjs pin-03       # seulement les fichiers dont le 
 node marketing/visuals/render.mjs --html       # écrit aussi le HTML à côté de chaque PNG (débogage)
 ```
 
+Les visuels **Margokit Pro** (`pro-*`) utilisent des captures de la vraie app (`assets/app-*.png`, `assets/pdf-*.png`), faites par `shoot-app.mjs` sur un build **local** avec une base jetable — jamais sur margokit.com. Pour les refaire (après un changement d'interface ou du PDF) :
+
+```bash
+cd app && npm run db                    # MongoDB local (port 27018) — s'il tourne déjà, le réutiliser
+npm run build
+MONGODB_URI='mongodb://127.0.0.1:27018/margokit_visuals?replicaSet=rs0' \
+  BETTER_AUTH_URL=http://localhost:3300 NEXT_PUBLIC_SITE_URL=http://localhost:3300 E2E_DISABLE_RATE_LIMIT=1 \
+  npx next start -p 3300
+# dans un autre terminal, depuis la racine du dépôt :
+node marketing/visuals/shoot-app.mjs --drop   # compte + entreprise de démo fictifs, captures, puis supprime la base margokit_visuals
+node marketing/visuals/render.mjs --no-shots pro-
+```
+
+Données de démo 100 % fictives : « Atelier Nour » (Marseille), clients Studio Lumen SARL, Bloom & Co., Café Zitoun, Maison Sable ; SIREN de démo valides au sens Luhn (123 456 782…), IBAN d'exemple de la documentation (FR76 3000 6000 0112 3456 7890 189), adresses e-mail en `.example`. Le PDF est celui de la route `/api/documents/:id/pdf` de l'app, rastérisé avec pdf.js (chargé depuis jsDelivr).
+
 Le script utilise le Playwright et le Chromium déjà installés pour les tests de `app/` (`cd app && npm ci && npx playwright install chromium` si besoin). Les polices (Plus Jakarta Sans, Inter) viennent de Google Fonts : il faut une connexion. Chaque PNG est rendu à `deviceScaleFactor: 1` et sa taille est vérifiée (le script s'arrête si elle ne correspond pas).
 
 | Fichier | Rôle |
@@ -18,8 +33,9 @@ Le script utilise le Playwright et le Chromium déjà installés pour les tests 
 | `data.mjs` | Données d'exemple et formules portées de `sheets/tracker/Code.gs` (commandes, bénéfice, stock, clients, tableau de bord, pub, contenu, trésorerie, budget, calculateur de prix). Date figée au 30/09/2026. **Si les données d'exemple ou les formules changent dans Code.gs, mets ce fichier à jour.** |
 | `templates.mjs` | Briques HTML : logo, cadre navigateur, téléphone, interface Google Sheets, maquette de chaque onglet. |
 | `visuals.mjs` | Chaque visuel : textes, mise en page, taille. |
+| `shoot-app.mjs` | Captures de l'app Margokit Pro (build local, base `margokit_visuals` jetable) et rendu des PDF en PNG. |
 | `render.mjs` | Captures du calculateur (`margokit.vercel.app/en` et `/fr`, exemple 25 $ → 5,65 $ de bénéfice) puis rendu des PNG. |
-| `assets/` | Captures du calculateur (×2, utilisées dans les épingles 1, 2, 6 et 10). |
+| `assets/` | Captures du calculateur (×2, utilisées dans les épingles 1, 2, 6 et 10), captures de l'app Pro (`app-*.png`, `pdf-*.png`) et logo de démo (`demo-logo.png`). |
 
 ## Où téléverser chaque image
 
@@ -45,6 +61,19 @@ Le script utilise le Playwright et le Chromium déjà installés pour les tests 
 | `pack-cover-5.png` | Cover 5 | « 11 tabs. One file. » : les 11 onglets |
 | `pack-thumb.png` | Thumbnail (600 × 600) | Logo + « Seller Pack » + mini onglet Ads |
 
+### Gumroad — Margokit Pro (`margokit.gumroad.com/l/pro-monthly` **et** `margokit.gumroad.com/l/pro-lifetime`)
+
+Mêmes images pour les deux produits : téléverse-les à l'identique sur **Pro Monthly** et sur **Pro Lifetime**.
+
+| Fichier | Emplacement | Contenu |
+|---|---|---|
+| `pro-cover-1.png` | Cover 1 (héros) | « Quotes & invoices in one minute. » + page facture de l'app (partage PDF / lien / WhatsApp / e-mail, Factur-X, UBL) + PDF, 🇬🇧 English · 🇫🇷 Français |
+| `pro-cover-2.png` | Cover 2 | « Your client said yes? One click. » : devis accepté → bouton « Convert to invoice » → facture créée, statuts Draft → Sent → Accepted → Invoice → Paid |
+| `pro-cover-3.png` | Cover 3 | Le PDF (EN devant, FR derrière) : logo, identifiants fiscaux, QR code SEPA, mentions légales |
+| `pro-cover-4.png` | Cover 4 | « Send it. Get paid. » : panneau Partager, tuiles Facturé / Impayé / En retard, téléphone avec factures Sent / Paid / Overdue |
+| `pro-cover-5.png` | Cover 5 | Tarifs Free 0 $ · Pro monthly 5 $/mois · Pro lifetime 39 $ (textes de `app/messages/en.json`) + « Ready for e-invoicing: Factur-X · UBL/Peppol (EN 16931) » |
+| `pro-thumb.png` | Thumbnail (600 × 600) | Logo + « Pro » + haut du PDF de facture |
+
 ### Pinterest (1000 × 1500) — voir `marketing/content/pinterest.md` pour les titres, descriptions et liens
 
 Lien : **C** = calculateur (`/en` ou `/fr`), **T** = Tracker, **P** = Seller Pack (ajoute `?utm_source=pinterest` aux liens Gumroad). Les fichiers `-en` vont sur les tableaux anglais, les `-fr` sur les tableaux français.
@@ -66,4 +95,6 @@ Lien : **C** = calculateur (`/en` ou `/fr`), **T** = Tracker, **P** = Seller Pac
 
 - Les maquettes de tableur sont du HTML qui reproduit les onglets générés par `Code.gs` (mêmes en-têtes, couleurs, statuts et données d'exemple). Ce ne sont pas des captures de Google Sheets. Certaines colonnes sont masquées pour la lisibilité, ce qui explique les sauts dans les lettres de colonnes (B, C, G…).
 - Les chiffres EN et FR diffèrent légèrement (ex. bénéfice net 157,36 $ contre 200,36 €), car les transporteurs d'exemple ne coûtent pas pareil dans chaque version. C'est aussi le cas dans les vrais fichiers.
+- Captures Pro : prises sur l'app réelle, sans retouche (le bouton « Download PDF », un temps blanc sur blanc, est corrigé dans l'app).
+- Les dates des documents de démo dépendent du jour où tu lances `shoot-app.mjs` (une facture datée d'août sert d'exemple « En retard »).
 - Si le calculateur change d'interface, relance sans `--no-shots` et vérifie les épingles 1, 2, 6 et 10.

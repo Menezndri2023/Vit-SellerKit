@@ -4,6 +4,7 @@
  * and the 10 Pinterest pins (1000 × 1500) in English and French.
  * Copy follows marketing/gumroad/*.md and marketing/content/pinterest.md.
  */
+import { readFileSync } from 'node:fs';
 import { build } from './data.mjs';
 import {
   BRAND, page, logo, LOGO_SVG, browser, sheetsApp, tabBar, phone, mobileSheet, TRACKER_TABS, PACK_TABS,
@@ -323,6 +324,125 @@ export function pins(shots) {
       sub: '', vis: fitImg(S.hlFive) })]);
   }
   return out.map(([n, lang, html]) => ({ name: `pin-${String(n).padStart(2, '0')}-${lang}`, w: 1000, h: 1500, html }));
+}
+
+// ---------------------------------------------------------------------------
+// Margokit Pro covers (Monthly + Lifetime share the same images)
+// Screenshots come from shoot-app.mjs (real app, local build, fictional demo data).
+// ---------------------------------------------------------------------------
+
+const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const PRICING = JSON.parse(readFileSync(new URL('../../app/messages/en.json', import.meta.url), 'utf8')).pricing;
+
+/** Window onto a screenshot: region {x, y, w, h} in CSS px of a capture `srcW` CSS px wide, shown at `scale`. */
+const crop = (src, { srcW, x = 0, y = 0, w, h, scale = 1, style = '' }) =>
+  `<div style="position:relative;overflow:hidden;width:${Math.round(w * scale)}px;height:${Math.round(h * scale)}px;${style}"><img src="${src}" style="position:absolute;left:${-x * scale}px;top:${-y * scale}px;width:${srcW * scale}px;max-width:none"></div>`;
+const DESK = 1280; // desktop captures: 1280 CSS px wide
+const MOB = 390; // phone captures
+const PDF_W = 1240; // PDF rasters (A4 at 150 dpi)
+const sheet = (src, { width, rot = 0, style = '' }) =>
+  `<div style="width:${width}px;background:#fff;border-radius:6px;overflow:hidden;box-shadow:0 30px 80px rgba(2,6,23,.5),0 0 0 1px rgba(15,23,42,.08);transform:rotate(${rot}deg);${style}"><img src="${src}" style="display:block;width:${width}px"></div>`;
+const tick = (html, color = BRAND.lime) => `<div style="display:flex;gap:12px;align-items:flex-start"><span style="flex:none;width:26px;height:26px;border-radius:50%;background:${color};color:${BRAND.ink};font-weight:800;font-size:15px;display:grid;place-items:center;margin-top:1px">✓</span><span>${html}</span></div>`;
+const badge = (text, bg, fg) => `<span style="display:inline-flex;align-items:center;border-radius:999px;padding:6px 14px;font-weight:600;font-size:16px;background:${bg};color:${fg}">${text}</span>`;
+const PRO_URL = 'margokit.com/en/app/documents';
+
+function proCover1(S) {
+  const app = crop(S.invoiceEn, { srcW: DESK, x: 280, y: 60, w: 935, h: 900, scale: 0.767 });
+  return pageCover(`<div class="cv dark">
+    <div class="abs" style="left:72px;top:92px;width:440px"><span class="kick">Margokit Pro · web app</span>
+      <h1 style="font-size:64px;margin-top:24px">Quotes &amp; invoices <em>in one minute.</em></h1>
+      <div class="sub" style="font-size:20px;margin-top:22px">Professional PDFs with your logo, tax IDs and legal mentions. Share by link, email or WhatsApp.</div>
+      <div style="display:flex;gap:10px;margin-top:26px">${badge('🇬🇧 English', 'rgba(255,255,255,.08)', '#fff')}${badge('🇫🇷 Français', 'rgba(255,255,255,.08)', '#fff')}</div>
+      <div style="margin-top:34px">${logo(42, '#fff')}</div></div>
+    <div class="abs" style="left:548px;top:64px">${browser(app, { url: PRO_URL, width: 717, height: 700 })}</div>
+    <div class="abs" style="left:880px;top:470px">${sheet(S.pdfEn, { width: 370, rot: 3 })}</div>
+    <div class="abs callout" style="left:700px;top:560px;font-size:16px;padding:8px 14px;transform:rotate(-2deg)">PDF ready to send →</div>
+  </div>`);
+}
+
+function proCover2(S) {
+  const region = { srcW: DESK, x: 270, y: 60, w: 970, h: 560, scale: 0.58 };
+  const quote = browser(crop(S.quote, region), { url: PRO_URL, width: Math.round(970 * 0.58), height: Math.round(560 * 0.58) + 40 });
+  const invoice = browser(crop(S.invoiceFr, region), { url: PRO_URL, width: Math.round(970 * 0.58), height: Math.round(560 * 0.58) + 40 });
+  // "Convert to invoice" button in the quote crop (CSS 461..641 × 188..232 in the capture)
+  const bx = 48 + (461 - 270) * 0.58, by = 262 + 40 + (188 - 60) * 0.58;
+  const step = (t, bg, fg) => badge(t, bg, fg);
+  const arrow = `<span style="color:#94A3B8;font-weight:700;font-size:20px">→</span>`;
+  return pageCover(`<div class="cv light">
+    <div class="abs" style="left:72px;top:46px"><span class="kick">📄 Quote → invoice</span>
+      <h1 style="font-size:56px;margin-top:16px">Your client said yes? <em>One click.</em></h1></div>
+    <div class="abs" style="left:72px;top:192px;display:flex;align-items:center;gap:10px">
+      ${step('Draft', '#F1F5F9', '#64748B')}${arrow}${step('Sent', '#E0F2FE', '#0369A1')}${arrow}${step('Accepted', '#DCFCE7', '#15803D')}${arrow}${step('Invoice', BRAND.ink, BRAND.lime)}${arrow}${step('Paid', '#DCFCE7', '#15803D')}
+      <span style="margin-left:14px;font-size:17px;color:#475569">Automatic, gap-free numbering</span></div>
+    <div class="abs" style="left:48px;top:262px">${quote}</div>
+    <div class="abs" style="left:${Math.round(bx - 6)}px;top:${Math.round(by - 6)}px;width:${Math.round(180 * 0.58 + 12)}px;height:${Math.round(44 * 0.58 + 12)}px;border:3px solid ${BRAND.ink};border-radius:14px"></div>
+    <div class="abs" style="left:672px;top:308px">${invoice}</div>
+    <svg class="abs" style="left:560px;top:250px" width="150" height="80" viewBox="0 0 150 80"><path d="M6 60 C 50 6, 100 6, 138 40" stroke="${BRAND.ink}" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M118 38 L140 42 L134 20" stroke="${BRAND.ink}" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="abs callout" style="left:720px;top:256px;font-size:16px;padding:8px 14px">Lines, client &amp; totals copied</div>
+  </div>`);
+}
+
+function proCover3(S) {
+  const pill = (text, left, top, arrow = '') => `<div class="abs" style="left:${left}px;top:${top}px;background:${BRAND.lime};color:${BRAND.ink};font-weight:800;font-size:14px;padding:6px 11px;border-radius:8px;box-shadow:0 8px 20px rgba(2,6,23,.35);white-space:nowrap">${arrow}${text}</div>`;
+  return pageCover(`<div class="cv dark">
+    <div class="abs" style="left:72px;top:64px;width:470px"><span class="kick">🧾 The PDF your client receives</span>
+      <h1 style="font-size:54px;margin-top:20px">Looks pro. <em>Ticks the legal boxes.</em></h1>
+      <div class="sub" style="font-size:19px;margin-top:26px;display:flex;flex-direction:column;gap:14px">
+        ${tick('<b style="color:#fff">Your logo</b>, no watermark')}
+        ${tick('<b style="color:#fff">Tax IDs &amp; legal mentions</b> of your country')}
+        ${tick('<b style="color:#fff">SEPA QR code</b> + payment link on EUR invoices')}
+        ${tick('<b style="color:#fff">English or French</b>, multiple tax rates &amp; currencies')}</div></div>
+    <div class="abs" style="left:900px;top:58px">${sheet(S.pdfFr, { width: 400, rot: 5 })}</div>
+    <div class="abs" style="left:610px;top:30px">${sheet(S.pdfEn, { width: 460, rot: 0 })}</div>
+    ${pill('Your logo', 745, 68, '← ')}${pill('Tax IDs', 790, 150, '← ')}${pill('SEPA QR code', 856, 474, '')}${pill('Legal mentions', 846, 588, '← ')}
+    <div class="abs" style="left:620px;top:40px;background:${BRAND.ink};color:#fff;font-weight:800;font-size:15px;padding:5px 10px;border-radius:8px">EN</div>
+    <div class="abs" style="left:1196px;top:596px;background:#fff;color:${BRAND.ink};font-weight:800;font-size:15px;padding:5px 10px;border-radius:8px;transform:rotate(5deg)">FR</div>
+  </div>`);
+}
+
+function proCover4(S) {
+  const share = crop(S.share, { srcW: 896, w: 896, h: 255, scale: 0.66, style: 'border-radius:16px;box-shadow:0 24px 60px rgba(2,6,23,.18),0 0 0 1px #E2E8F0' });
+  const tiles = crop(S.dashboard, { srcW: DESK, x: 262, y: 165, w: 996, h: 130, scale: 0.6, style: 'border-radius:16px;box-shadow:0 24px 60px rgba(2,6,23,.18),0 0 0 1px #E2E8F0' });
+  const list = `<img src="${S.listMobile}" style="display:block;width:390px">`;
+  return pageCover(`<div class="cv light">
+    <div class="abs" style="left:72px;top:52px;width:640px"><span class="kick">💸 Get paid faster</span>
+      <h1 style="font-size:60px;margin-top:18px">Send it. <em>Get paid.</em></h1>
+      <div class="sub" style="font-size:20px;margin-top:16px;width:600px">Share by link, email or WhatsApp — your client views and downloads the PDF, no account needed. See what's paid and what's overdue.</div></div>
+    <div class="abs" style="left:64px;top:330px">${share}</div>
+    <div class="abs" style="left:64px;top:542px">${tiles}</div>
+    <div class="abs" style="right:96px;top:38px;zoom:.8">${phone(list, { width: 390, height: 800 })}</div>
+    <div class="abs callout" style="left:700px;top:632px;font-size:16px;padding:9px 14px;background:#FEE2E2;color:#B91C1C">Overdue at a glance →</div>
+  </div>`);
+}
+
+function proCover5() {
+  const P = PRICING;
+  const card = ({ name, price, period, features, hl, tag }) => `<div style="flex:1;border-radius:22px;padding:26px 26px 22px;${hl ? `background:${BRAND.lime};color:${BRAND.ink};box-shadow:0 24px 60px rgba(163,230,53,.25)` : 'background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:#fff'};position:relative">
+    ${tag ? `<span style="position:absolute;right:20px;top:22px;font-size:13px;font-weight:700;padding:5px 10px;border-radius:999px;${hl ? `background:${BRAND.ink};color:${BRAND.lime}` : `background:${BRAND.lime};color:${BRAND.ink}`}">${tag}</span>` : ''}
+    <div class="jk" style="font-weight:800;font-size:22px">${name}</div>
+    <div style="display:flex;align-items:baseline;gap:8px;margin-top:8px"><span class="jk" style="font-weight:800;font-size:52px;letter-spacing:-.02em">${price}</span><span style="font-size:17px;opacity:.75">${period}</span></div>
+    <div style="margin-top:16px;display:flex;flex-direction:column;gap:9px;font-size:16px;line-height:1.3">${features.map((f) => `<div style="display:flex;gap:9px"><span style="font-weight:800;${hl ? '' : `color:${BRAND.lime}`}">✓</span><span>${esc(f)}</span></div>`).join('')}</div></div>`;
+  return pageCover(`<div class="cv dark">
+    <div class="abs" style="left:0;right:0;top:44px;text-align:center"><span class="kick">Margokit Pro</span>
+      <h1 style="font-size:54px;margin-top:16px">Start free. <em>Go Pro</em> when you need more.</h1></div>
+    <div class="abs" style="left:72px;right:72px;top:216px;display:flex;gap:22px;align-items:stretch">
+      ${card({ name: P.freeName, price: P.freePrice, period: P.freePeriod, features: [P.freeF1, P.freeF2, P.freeF3] })}
+      ${card({ name: P.monthlyName, price: P.monthlyPrice, period: P.monthlyPeriod, features: [P.proF1, P.proF2, P.proF3, P.proF4], hl: true, tag: 'Cancel anytime' })}
+      ${card({ name: P.lifetimeName, price: P.lifetimePrice, period: P.lifetimePeriod, features: [P.lifetimeF1, P.lifetimeF2, P.proF2, P.proF3], tag: 'Pay once' })}</div>
+    <div class="abs" style="left:72px;right:72px;bottom:72px;display:flex;align-items:center;justify-content:center;gap:14px;border-radius:14px;padding:16px 18px;background:rgba(163,230,53,.1);border:1px solid rgba(163,230,53,.4);font-size:18px;color:#E2E8F0">
+      <span style="font-size:22px">⚡</span><b style="color:#fff">Ready for e-invoicing:</b> Factur-X · UBL/Peppol (EN 16931)</div>
+  </div>`);
+}
+
+function proThumb(S) {
+  return thumb({ title: '<em>Pro</em>', sub: 'Quotes &amp; invoices in one minute', shot: `<div style="width:512px;border-radius:14px;overflow:hidden;box-shadow:0 30px 80px rgba(2,6,23,.45)">${crop(S.pdfEn, { srcW: PDF_W, x: 60, y: 60, w: 1120, h: 520, scale: 512 / 1120 })}</div>` });
+}
+
+/** `S` = data URLs of the app screenshots (see render.mjs). */
+export function proVisuals(S) {
+  return [['pro-cover-1', proCover1], ['pro-cover-2', proCover2], ['pro-cover-3', proCover3], ['pro-cover-4', proCover4], ['pro-cover-5', proCover5]]
+    .map(([name, fn]) => ({ name, w: 1280, h: 720, html: fn(S) }))
+    .concat([{ name: 'pro-thumb', w: 600, h: 600, html: proThumb(S) }]);
 }
 
 export function covers() {
