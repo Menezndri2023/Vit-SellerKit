@@ -1,0 +1,6 @@
+# Local-only data and artifacts: never upload with `vercel deploy`
+.devdb
+test-results
+playwright-report
+.env*
+!.env.example
