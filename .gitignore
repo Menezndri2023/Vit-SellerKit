@@ -1,2 +1,5 @@
 # Liens de livraison, RIB, numéros : ne jamais publier (le dépôt est public)
 private/
+
+# macOS Finder
+.DS_Store
