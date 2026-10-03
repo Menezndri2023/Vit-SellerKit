@@ -362,6 +362,8 @@
     "linkUrl": "Link (https://…)",
     "latePenalty": "Late payment penalties",
     "latePenaltyHint": "France (B2B): the rate of late penalties is mandatory; the €40 recovery fee is added automatically.",
+    "latePenaltyEn": "Late payment penalties — English version",
+    "latePenaltyEnHint": "Used on your English documents. Leave empty if you only invoice in French: the text above is used.",
     "documents": "Documents",
     "defaultCurrency": "Default currency",
     "defaultDocLocale": "Default document language",

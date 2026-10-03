@@ -24,6 +24,7 @@ export function sellerSnapshot(p: BusinessProfileDoc): SellerWithPayment {
     vatRegime: (p.vatRegime ?? 'standard') as SellerSnapshot['vatRegime'],
     vatOnDebits: p.vatOnDebits ?? false,
     latePenaltyText: p.latePenaltyText ?? undefined,
+    latePenaltyTextEn: p.latePenaltyTextEn ?? undefined,
     legalMentions: p.legalMentions ?? undefined,
     footer: p.footer ?? undefined,
     logoKey: p.logo?.key ?? undefined,

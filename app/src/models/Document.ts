@@ -39,6 +39,7 @@ const SellerSchema = new Schema(
     vatRegime: String,
     vatOnDebits: Boolean,
     latePenaltyText: String,
+    latePenaltyTextEn: String,
     legalMentions: String,
     footer: String,
     logoKey: String,

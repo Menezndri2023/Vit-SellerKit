@@ -25,6 +25,7 @@ export type ProfileValues = {
   paymentLinks?: { label?: string; url?: string }[];
   paymentTermsDays?: number;
   latePenaltyText?: string;
+  latePenaltyTextEn?: string;
   defaultCurrency?: string;
   defaultDocLocale?: string;
   numbering?: { invoice?: string; quote?: string; credit_note?: string };
@@ -145,6 +146,7 @@ export default function ProfileForm({ initial, isNew, defaultCountry }: { initia
           </div>
         ))}
         <Textarea name="latePenaltyText" label={t('latePenalty')} hint={t('latePenaltyHint')} defaultValue={initial.latePenaltyText} errors={errors} maxLength={500} optional wrapperClass="sm:col-span-2" />
+        <Textarea name="latePenaltyTextEn" label={t('latePenaltyEn')} hint={t('latePenaltyEnHint')} defaultValue={initial.latePenaltyTextEn} errors={errors} maxLength={500} optional wrapperClass="sm:col-span-2" />
       </Section>
 
       <Section title={t('documents')}>

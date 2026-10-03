@@ -362,6 +362,8 @@
     "linkUrl": "Lien (https://…)",
     "latePenalty": "Pénalités de retard",
     "latePenaltyHint": "France (B2B) : le taux des pénalités de retard est obligatoire ; l’indemnité de 40 € est ajoutée automatiquement.",
+    "latePenaltyEn": "Pénalités de retard — version anglaise",
+    "latePenaltyEnHint": "Utilisée sur tes documents en anglais. Laisse vide si tu factures seulement en français.",
     "documents": "Documents",
     "defaultCurrency": "Devise par défaut",
     "defaultDocLocale": "Langue des documents par défaut",

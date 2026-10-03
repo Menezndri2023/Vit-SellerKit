@@ -17,6 +17,8 @@ export type SellerSnapshot = {
   vatRegime: VatRegime;
   vatOnDebits?: boolean;
   latePenaltyText?: string;
+  /** Optional English wording, used on English documents */
+  latePenaltyTextEn?: string;
   legalMentions?: string;
   footer?: string;
   logoKey?: string;
@@ -127,6 +129,10 @@ export type MentionInput = {
   precedingInvoice?: { number: string; date: string } | null;
 };
 
+/** Late-penalty mention in the document's language: the English wording when given, else the main text. */
+export const latePenaltyFor = (seller: Pick<SellerSnapshot, 'latePenaltyText' | 'latePenaltyTextEn'>, lang: Lang) =>
+  (lang === 'en' && seller.latePenaltyTextEn) || seller.latePenaltyText;
+
 /** Legal mentions to print on the document, in the document's language. */
 export function legalMentions({ type, lang, seller, buyer, lines, operationCategory, precedingInvoice }: MentionInput): string[] {
   const out: string[] = [];
@@ -147,7 +153,8 @@ export function legalMentions({ type, lang, seller, buyer, lines, operationCateg
   if (cats.has('O') && seller.vatRegime !== 'franchise') out.push(T.outOfScope[lang]);
 
   if (type !== 'quote' && b2b && rules.b2bRecoveryFee) {
-    if (seller.latePenaltyText) out.push(seller.latePenaltyText);
+    const penalty = latePenaltyFor(seller, lang);
+    if (penalty) out.push(penalty);
     out.push(T.recoveryFee[lang], T.noDiscount[lang]);
   }
   if (seller.legalMentions) out.push(seller.legalMentions);

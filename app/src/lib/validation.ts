@@ -85,6 +85,7 @@ export const profileSchema = z
       .transform((rows) => rows.filter((r) => r.url)),
     paymentTermsDays: z.coerce.number('invalid').int('invalid').min(0, 'invalid').max(365, 'invalid'),
     latePenaltyText: optionalText(500),
+    latePenaltyTextEn: optionalText(500),
     defaultCurrency: currency,
     defaultDocLocale: z.enum(DOC_LOCALES),
     numbering: z.object({ invoice: numberingPattern, quote: numberingPattern, credit_note: numberingPattern }),

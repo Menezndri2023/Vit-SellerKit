@@ -25,6 +25,7 @@ const schema = new Schema(
     paymentLinks: { type: [{ _id: false, label: { type: String, maxlength: 60 }, url: { type: String, maxlength: 500 } }], default: [] },
     paymentTermsDays: { type: Number, min: 0, max: 365, default: 30 },
     latePenaltyText: { type: String, maxlength: 500 },
+    latePenaltyTextEn: { type: String, maxlength: 500 },
     defaultCurrency: { type: String, minlength: 3, maxlength: 3, default: 'EUR' },
     defaultDocLocale: { type: String, enum: DOC_LOCALES, default: 'en' },
     numbering: {

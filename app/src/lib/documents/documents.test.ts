@@ -120,6 +120,14 @@ describe('legalMentions', () => {
     expect(legalMentions({ ...input, type: 'credit_note', precedingInvoice: { number: 'INV-2026-004', date: '12/09/2026' } })[0]).toBe('Avoir sur la facture n° INV-2026-004 du 12/09/2026');
   });
 
+  it('prints the late-penalty wording in the document language', () => {
+    const seller = { ...frSeller, latePenaltyTextEn: 'Late payment penalties: 3 times the legal interest rate' };
+    expect(legalMentions({ ...input, seller, lang: 'en' })).toContain('Late payment penalties: 3 times the legal interest rate');
+    expect(legalMentions({ ...input, seller, lang: 'fr' })).toContain(frSeller.latePenaltyText);
+    // No English wording: English documents fall back to the main text
+    expect(legalMentions({ ...input, lang: 'en' })).toContain(frSeller.latePenaltyText);
+  });
+
   it('keeps quotes free of payment mentions', () => {
     const m = legalMentions({ ...input, type: 'quote' });
     expect(m.some((x) => x.includes('40 €'))).toBe(false);

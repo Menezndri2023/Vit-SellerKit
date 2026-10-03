@@ -32,7 +32,7 @@ export async function setupBusiness(page: Page) {
   await page.getByLabel('Pays').selectOption('FR');
   await page.getByLabel(/^SIREN/).fill('552032534');
   await page.getByLabel(/^N° de TVA intracommunautaire/).fill('FR27552032534');
-  await page.getByLabel(/^Pénalités de retard/).fill('Pénalités de retard : 3 fois le taux d’intérêt légal');
+  await page.getByLabel(/^Pénalités de retard(?! —)/).fill('Pénalités de retard : 3 fois le taux d’intérêt légal');
   await page.getByRole('button', { name: 'Enregistrer' }).click();
   await expect(page.getByText('Enregistré ✓')).toBeVisible();
   await page.goto('/fr/app/clients/new');

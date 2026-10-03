@@ -3,6 +3,7 @@
  * Pure mapping, unit-tested; embedding into the PDF happens in ./facturx.ts (server).
  */
 import type { FacturXInvoiceInput } from '@stackforge-eu/factur-x';
+import { latePenaltyFor } from '../documents/compliance';
 import type { DocView } from '../documents/view-model';
 import { currencyDigits } from '../money';
 
@@ -44,7 +45,7 @@ function party(p: { name: string; address: Party['address']; ids: { label: strin
 
 /** Mentions → CII notes with the subject codes French e-invoices expect. */
 function notes(doc: DocView) {
-  const penalty = doc.seller?.latePenaltyText;
+  const penalty = doc.seller ? latePenaltyFor(doc.seller, doc.lang) : undefined;
   return doc.mentions.map((content) => ({
     content,
     subjectCode: content === penalty ? 'PMD' : /40\s?€|€40/.test(content) ? 'PMT' : /escompte|discount for early/i.test(content) ? 'AAB' : 'AAI',
