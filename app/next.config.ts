@@ -26,7 +26,16 @@ const securityHeaders = [
   { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
 ];
 
+// Once the site runs on margokit.com, www and the vercel.app address redirect to it (one host for
+// SEO, sessions and shared links). Inactive while NEXT_PUBLIC_SITE_URL still points elsewhere.
+const CANONICAL = 'https://margokit.com';
+const aliasHosts = ['www.margokit.com', 'margokit-pro.vercel.app'];
+
 const nextConfig: NextConfig = {
+  async redirects() {
+    if (process.env.NEXT_PUBLIC_SITE_URL !== CANONICAL) return [];
+    return aliasHosts.map((host) => ({ source: '/:path*', has: [{ type: 'host' as const, value: host }], destination: `${CANONICAL}/:path*`, permanent: true }));
+  },
   // The app lives in a monorepo folder: trace files from here, not from a parent lockfile
   outputFileTracingRoot: process.cwd(),
   // PDF generation runs in Node.js with its own font files
