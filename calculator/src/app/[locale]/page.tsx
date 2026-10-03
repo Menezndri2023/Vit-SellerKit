@@ -27,6 +27,17 @@ export default async function Page({ params, searchParams }: PageProps<'/[locale
   const packUrl = withUtm(process.env.GUMROAD_PACK_URL, 'pack');
   const trackerUrl = withUtm(process.env.GUMROAD_TRACKER_URL, 'tracker');
   const faq = [1, 2, 3, 4] as const;
+  // Kept out of the public repo: set WHATSAPP_URL (e.g. https://wa.me/212…) on Vercel
+  const whatsappUrl = (() => {
+    if (!process.env.WHATSAPP_URL) return null;
+    try {
+      const u = new URL(process.env.WHATSAPP_URL);
+      // %20 rather than "+": WhatsApp shows "+" literally in the prefilled message
+      return `${u.origin}${u.pathname}?text=${encodeURIComponent(t('footer.whatsappText'))}`;
+    } catch {
+      return null;
+    }
+  })();
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
   const jsonLd = {
@@ -93,6 +104,11 @@ export default async function Page({ params, searchParams }: PageProps<'/[locale
               </a>
             )}
           </div>
+          {whatsappUrl && (
+            <a href={whatsappUrl} target="_blank" rel="noopener" className="mt-4 inline-block text-sm underline underline-offset-4 opacity-80 hover:opacity-100">
+              {t('cta.whatsapp')}
+            </a>
+          )}
         </section>
       )}
 
@@ -125,6 +141,11 @@ export default async function Page({ params, searchParams }: PageProps<'/[locale
 
       <footer className="flex flex-col gap-1 border-t border-line pt-6 text-sm text-muted sm:flex-row sm:justify-between">
         <span>{t('footer.tagline')}</span>
+        {whatsappUrl && (
+          <a href={whatsappUrl} target="_blank" rel="noopener" className="font-medium text-ink underline underline-offset-4 hover:text-muted">
+            {t('footer.whatsapp')}
+          </a>
+        )}
         <span>{t('footer.rights', { year: new Date().getFullYear() })}</span>
       </footer>
     </div>

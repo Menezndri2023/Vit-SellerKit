@@ -76,7 +76,8 @@
     "packButton": "Get the Seller Pack",
     "trackerButton": "Just the Order Tracker",
     "proTitle": "Coming soon: Margokit Pro",
-    "proText": "Professional quotes and invoices in one minute, in English and French. Join the waitlist below."
+    "proText": "Professional quotes and invoices in one minute, in English and French. Join the waitlist below.",
+    "whatsapp": "Card declined? Pay locally on WhatsApp"
   },
   "subscribe": {
     "title": "Get seller tips & early access",
@@ -101,7 +102,9 @@
   },
   "footer": {
     "tagline": "Know what you really keep.",
-    "rights": "© {year} Margokit"
+    "rights": "© {year} Margokit",
+    "whatsapp": "Questions? Chat with us on WhatsApp",
+    "whatsappText": "Hi Margokit 👋 "
   },
   "image": {
     "headline": "On a {price} sale,",
