@@ -26,7 +26,14 @@ const securityHeaders = [
   { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
 ];
 
+// One canonical host for SEO and shared links: www and the old vercel.app address redirect to it
+const CANONICAL = 'https://margokit.com';
+const aliasHosts = ['www.margokit.com', 'margokit.vercel.app'];
+
 const nextConfig: NextConfig = {
+  async redirects() {
+    return aliasHosts.map((host) => ({ source: '/:path*', has: [{ type: 'host' as const, value: host }], destination: `${CANONICAL}/:path*`, permanent: true }));
+  },
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }];
   },
