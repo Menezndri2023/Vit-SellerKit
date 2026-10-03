@@ -50,7 +50,8 @@ const SELLER = {
   'bankAccounts.0.bankName': 'Banque Exemple',
   'bankAccounts.0.iban': 'FR7630006000011234567890189', // the standard documentation example IBAN
   'paymentLinks.0.url': 'https://pay.ateliernour.example/invoice',
-  latePenaltyText: 'Late payment penalties: 3 times the French legal interest rate',
+  latePenaltyText: 'Pénalités de retard : 3 fois le taux d’intérêt légal',
+  latePenaltyTextEn: 'Late payment penalties: 3 times the French legal interest rate',
 };
 
 const CLIENTS = [
