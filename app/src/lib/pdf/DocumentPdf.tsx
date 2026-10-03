@@ -1,21 +1,10 @@
-import path from 'node:path';
-import { Document as PdfDocument, Font, Image, Link, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
+import { Document as PdfDocument, Image, Link, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
+import type { ComponentProps } from 'react';
 import en from '../../../messages/en.json';
 import fr from '../../../messages/fr.json';
 import type { DocView } from '../documents/view-model';
 import { formatMinor } from '../money';
-
-const fontDir = path.join(process.cwd(), 'assets', 'fonts');
-Font.register({
-  family: 'Inter',
-  fonts: [
-    { src: path.join(fontDir, 'inter-latin-400-normal.woff'), fontWeight: 400 },
-    { src: path.join(fontDir, 'inter-latin-600-normal.woff'), fontWeight: 600 },
-    { src: path.join(fontDir, 'inter-latin-700-normal.woff'), fontWeight: 700 },
-  ],
-});
-// Keep words whole (the default hyphenation cuts French words oddly)
-Font.registerHyphenationCallback((word) => [word]);
+import { PDF_FONT_FAMILY } from './fonts';
 
 const INK = '#0F172A';
 const MUTED = '#64748B';
@@ -26,7 +15,7 @@ const LINE = '#E2E8F0';
 const embeddable = (text: string) => text.replace(/\u202F/g, '\u00A0');
 
 const s = StyleSheet.create({
-  page: { fontFamily: 'Inter', fontSize: 9, color: INK, padding: 40, paddingBottom: 60, lineHeight: 1.45 },
+  page: { fontFamily: PDF_FONT_FAMILY, fontSize: 9, color: INK, padding: 40, paddingBottom: 60, lineHeight: 1.45 },
   row: { flexDirection: 'row' },
   between: { flexDirection: 'row', justifyContent: 'space-between' },
   muted: { color: MUTED },
@@ -43,6 +32,22 @@ const s = StyleSheet.create({
 });
 
 type Messages = typeof en;
+
+/**
+ * Multi-line user text, one <Text> per line: textkit would typeset "\n" itself with the non-embedded
+ * Helvetica. Text styles set on the wrapping View are inherited by the lines.
+ */
+function Multiline({ text, style }: { text: string; style?: ComponentProps<typeof View>['style'] }) {
+  const lines = text.split('\n');
+  if (lines.length === 1) return <Text style={style}>{text}</Text>;
+  return (
+    <View style={style}>
+      {lines.map((line, i) => (
+        <Text key={i}>{line || ' '}</Text>
+      ))}
+    </View>
+  );
+}
 const COLS = { desc: '42%', qty: '10%', price: '15%', disc: '8%', vat: '8%', amount: '17%' };
 
 export type PdfExtras = { logo?: { data: Buffer; format: 'png' | 'jpg' }; epcQr?: string | null };
@@ -166,7 +171,7 @@ export function DocumentPdf({ doc, extras }: { doc: DocView; extras: PdfExtras }
           </View>
           {doc.lines.map((l, i) => (
             <View key={i} style={[s.row, { borderBottomWidth: 0.5, borderBottomColor: LINE }]} wrap={false}>
-              <Text style={[s.td, { width: descWidth, paddingRight: 8 }]}>{l.description}</Text>
+              <Multiline style={[s.td, { width: descWidth, paddingRight: 8 }]} text={l.description} />
               <Text style={[s.td, s.num, { width: COLS.qty }]}>
                 {qty(l.qty)}
                 {unit(l.unitCode)}
@@ -253,22 +258,20 @@ export function DocumentPdf({ doc, extras }: { doc: DocView; extras: PdfExtras }
         {doc.notes && (
           <View style={{ marginTop: 16 }} wrap={false}>
             <Text style={s.label}>{t('notes')}</Text>
-            <Text style={{ marginTop: 2 }}>{doc.notes}</Text>
+            <Multiline style={{ marginTop: 2 }} text={doc.notes} />
           </View>
         )}
 
         {doc.mentions.length > 0 && (
           <View style={{ marginTop: 18, paddingTop: 8, borderTopWidth: 0.5, borderTopColor: LINE }} wrap={false}>
             {doc.mentions.map((line) => (
-              <Text key={line} style={{ fontSize: 7.5, color: MUTED }}>
-                {line}
-              </Text>
+              <Multiline key={line} style={{ fontSize: 7.5, color: MUTED }} text={line} />
             ))}
           </View>
         )}
 
         <View style={s.footer} fixed>
-          {seller?.footer && <Text>{seller.footer}</Text>}
+          {seller?.footer && <Multiline text={seller.footer} />}
           {doc.watermark && <Text style={s.semibold}>{t('madeWith')}</Text>}
           <Text render={({ pageNumber, totalPages }) => (totalPages > 1 ? `${title} — ${pageNumber}/${totalPages}` : '')} />
         </View>

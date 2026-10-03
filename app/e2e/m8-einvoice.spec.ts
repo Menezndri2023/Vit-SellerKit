@@ -25,9 +25,11 @@ test('Factur-X and UBL exports of an issued invoice', async ({ page, playwright 
   await setupBusiness(page);
   await page.goto('/fr/app/documents/new?type=invoice');
   await page.getByLabel('Client', { exact: true }).selectOption({ label: 'Client SAS' });
-  await page.getByLabel('Description', { exact: true }).fill('Conseil en stratégie');
+  // Arabic and multi-line user text must still print with embedded fonts only (PDF/A-3)
+  await page.getByLabel('Description', { exact: true }).fill('Conseil en stratégie — استشارة استراتيجية');
   await page.getByLabel('Qté', { exact: true }).fill('3');
   await page.getByLabel('Prix unitaire', { exact: true }).fill('450');
+  await page.locator('#notes').fill('Merci pour votre confiance.\nشكرا لثقتكم — الدار البيضاء');
   await page.getByRole('button', { name: 'Enregistrer le brouillon' }).click();
   await page.waitForURL(/documents\/[0-9a-f]{24}$/);
   const id = page.url().split('/').pop();
@@ -48,6 +50,7 @@ test('Factur-X and UBL exports of an issued invoice', async ({ page, playwright 
   const baseFonts = await pageFonts(pdf);
   expect(baseFonts.length).toBeGreaterThan(0);
   expect(baseFonts.filter((f) => !/^\/[A-Z]{6}\+/.test(f))).toEqual([]);
+  expect(baseFonts.some((f) => f.includes('IBMPlexSansArabic'))).toBe(true);
   const { xml, filename } = await extractXml(pdf);
   expect(filename).toBe('factur-x.xml');
   expect(xml).toMatch(/<ram:ID>INV-\d{4}-001<\/ram:ID>/);

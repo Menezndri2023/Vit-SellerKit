@@ -6,6 +6,7 @@ import { BusinessProfile } from '@/models/BusinessProfile';
 import { epcPayload } from '../documents/epc-qr';
 import type { DocView } from '../documents/view-model';
 import { DocumentPdf, type PdfExtras } from './DocumentPdf';
+import { pdfSafe, pdfTextCleaner } from './fonts';
 
 async function loadLogo(key: string | undefined): Promise<PdfExtras['logo']> {
   if (!key) return undefined;
@@ -25,8 +26,9 @@ async function epcQr(doc: DocView): Promise<string | null> {
 }
 
 export async function renderDocumentPdf(doc: DocView): Promise<Buffer> {
-  const [logo, qr] = await Promise.all([loadLogo(doc.seller?.logoKey), epcQr(doc)]);
-  return renderToBuffer(createElement(DocumentPdf, { doc, extras: { logo, epcQr: qr } }) as Parameters<typeof renderToBuffer>[0]);
+  const [logo, qr, clean] = await Promise.all([loadLogo(doc.seller?.logoKey), epcQr(doc), pdfTextCleaner()]);
+  // User text may hold Arabic or other scripts: only characters the embedded fonts can draw get through
+  return renderToBuffer(createElement(DocumentPdf, { doc: pdfSafe(doc, clean), extras: { logo, epcQr: qr } }) as Parameters<typeof renderToBuffer>[0]);
 }
 
 export function pdfFileName(doc: DocView): string {
