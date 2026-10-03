@@ -3,3 +3,6 @@ private/
 
 # macOS Finder
 .DS_Store
+
+# Vidéos générées par /brag (lourdes, ne pas publier)
+brag-output*/
