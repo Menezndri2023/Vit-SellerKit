@@ -116,27 +116,36 @@ export default async function DocumentView({ doc }: { doc: DocView }) {
       </section>
 
       <div className="mt-8 overflow-x-auto">
-        <table className="w-full min-w-[560px] border-collapse">
+        <table className="w-full border-collapse sm:min-w-[560px]">
           <thead>
             <tr className="border-b-2 border-slate-900 text-start text-xs uppercase tracking-wide text-slate-500">
               <th className="py-2 pe-3 text-start font-semibold">{t('description')}</th>
-              <th className="px-3 py-2 text-end font-semibold">{t('qty')}</th>
-              <th className="px-3 py-2 text-end font-semibold">{t('unitPrice')}</th>
-              {showDiscount && <th className="px-3 py-2 text-end font-semibold">{t('discount')}</th>}
-              <th className="px-3 py-2 text-end font-semibold">{t('vat')}</th>
+              <th className="px-3 py-2 text-end font-semibold max-sm:hidden">{t('qty')}</th>
+              <th className="px-3 py-2 text-end font-semibold max-sm:hidden">{t('unitPrice')}</th>
+              {showDiscount && <th className="px-3 py-2 text-end font-semibold max-sm:hidden">{t('discount')}</th>}
+              <th className="px-3 py-2 text-end font-semibold max-sm:hidden">{t('vat')}</th>
               <th className="py-2 ps-3 text-end font-semibold">{t('amount')}</th>
             </tr>
           </thead>
           <tbody className="tabular">
             {doc.lines.map((l, i) => (
               <tr key={i} className="border-b border-slate-200 align-top">
-                <td className="py-2.5 pe-3 whitespace-pre-line">{l.description}</td>
-                <td className="px-3 py-2.5 text-end whitespace-nowrap">
+                <td className="py-2.5 pe-3 whitespace-pre-line">
+                  {l.description}
+                  {/* Phones: quantity, unit price, discount and VAT under the description instead of 4 columns */}
+                  <span className="mt-0.5 block text-sm text-slate-500 sm:hidden">
+                    {qty(l.qty)} {l.unitCode !== 'C62' ? tc(`units.${l.unitCode}`).toLowerCase() : ''} × {money(l.unitPrice)}
+                    {l.discountPct ? ` · −${l.discountPct}${c === ':' ? '%' : ' %'}` : ''}
+                    {' · '}
+                    {l.vatCategory === 'S' ? `${t('vat')} ${l.taxRate}${c === ':' ? '%' : ' %'}` : l.vatCategory}
+                  </span>
+                </td>
+                <td className="px-3 py-2.5 text-end whitespace-nowrap max-sm:hidden">
                   {qty(l.qty)} {l.unitCode !== 'C62' ? tc(`units.${l.unitCode}`).toLowerCase() : ''}
                 </td>
-                <td className="px-3 py-2.5 text-end whitespace-nowrap">{money(l.unitPrice)}</td>
-                {showDiscount && <td className="px-3 py-2.5 text-end">{l.discountPct ? `${l.discountPct}${c === ':' ? '%' : ' %'}` : ''}</td>}
-                <td className="px-3 py-2.5 text-end whitespace-nowrap">{l.vatCategory === 'S' ? `${l.taxRate}${c === ':' ? '%' : ' %'}` : l.vatCategory}</td>
+                <td className="px-3 py-2.5 text-end whitespace-nowrap max-sm:hidden">{money(l.unitPrice)}</td>
+                {showDiscount && <td className="px-3 py-2.5 text-end max-sm:hidden">{l.discountPct ? `${l.discountPct}${c === ':' ? '%' : ' %'}` : ''}</td>}
+                <td className="px-3 py-2.5 text-end whitespace-nowrap max-sm:hidden">{l.vatCategory === 'S' ? `${l.taxRate}${c === ':' ? '%' : ' %'}` : l.vatCategory}</td>
                 <td className="py-2.5 ps-3 text-end whitespace-nowrap">{money(l.net)}</td>
               </tr>
             ))}
