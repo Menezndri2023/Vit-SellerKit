@@ -139,6 +139,11 @@ export function countryRules(code: string | undefined): CountryRules {
   };
 }
 
+/** Trade-register entries hold text ("RCS Paris 552 032 534"): keep their spelling instead of normalizing. */
+export const FREE_TEXT_ID_SCHEMES = new Set(['RCS', 'RC', 'RCCM', 'RNE']);
+
+export const normalizeIdFor = (scheme: string, value: string) => (FREE_TEXT_ID_SCHEMES.has(scheme) ? value.trim().replace(/\s+/g, ' ') : normalizeId(value));
+
 /** Validates one identifier against its scheme. Unknown schemes and schemes without a check are accepted. */
 export function validateId(country: string, scheme: string, value: string): boolean {
   const s = countryRules(country).idSchemes.find((x) => x.scheme === scheme);

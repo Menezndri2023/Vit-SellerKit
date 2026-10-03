@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { countryOptions, countryRules, validateId } from '.';
+import { normalizeIdFor } from '.';
 import { isBelgianEnterprise, isFrenchVat, isSiren, isSiret, luhn, normalizeId } from './validators';
 
 describe('identifier validators', () => {
@@ -26,6 +27,9 @@ describe('identifier validators', () => {
   it('normalizes spaces, dots and dashes', () => {
     expect(normalizeId('552 032 534')).toBe('552032534');
     expect(normalizeId('be 0202.239.951')).toBe('BE0202239951');
+    // Trade-register text keeps its spelling; structured numbers are still normalized
+    expect(normalizeIdFor('RCS', '  RCS  Marseille 123 456 782 ')).toBe('RCS Marseille 123 456 782');
+    expect(normalizeIdFor('SIREN', '552 032 534')).toBe('552032534');
   });
 });
 

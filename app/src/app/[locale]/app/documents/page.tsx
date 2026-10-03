@@ -98,7 +98,7 @@ export default async function DocumentsPage({ params, searchParams }: PageProps<
               <Link href={`/app/documents/${d._id}`} className="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-1 px-5 py-4 hover:bg-bg sm:grid-cols-[160px_1fr_auto_auto]">
                 <p className="font-semibold">
                   <span className="me-2 text-xs font-medium uppercase text-muted">{t(`types.${d.type}`)}</span>
-                  <span className="block sm:inline">{d.number ?? t('draftLabel')}</span>
+                  <span className="block whitespace-nowrap sm:inline">{d.number ?? t('draftLabel')}</span>
                 </p>
                 <p className="tabular text-end font-semibold sm:order-3">{formatMinor(d.totals?.totalInclTax ?? 0, d.currency, locale)}</p>
                 <p className="truncate text-sm text-muted sm:order-2">

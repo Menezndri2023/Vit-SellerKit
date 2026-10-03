@@ -8,7 +8,8 @@ import type { FormState } from '@/lib/forms';
 
 type Props = { id: string; isDraft: boolean; exportable?: boolean; docLang: 'en' | 'fr'; buyerEmail?: string; buyerPhone?: string; emailMessage: string; whatsappTemplate: string };
 
-const btn = 'inline-flex h-11 items-center justify-center rounded-xl border border-line bg-surface px-4 font-medium hover:bg-bg disabled:opacity-60';
+const btnBase = 'inline-flex h-11 items-center justify-center rounded-xl border px-4 font-medium disabled:opacity-60';
+const btn = `${btnBase} border-line bg-surface hover:bg-bg`;
 const control = 'w-full rounded-xl border border-line bg-surface px-3 text-base outline-none focus:border-primary-ink focus:ring-2 focus:ring-primary/40';
 
 export default function SharePanel({ id, isDraft, exportable, docLang, buyerEmail, buyerPhone, emailMessage, whatsappTemplate }: Props) {
@@ -58,7 +59,7 @@ export default function SharePanel({ id, isDraft, exportable, docLang, buyerEmai
     <section className="rounded-2xl border border-line bg-surface p-5">
       <h2 className="font-display text-lg font-bold">{t('title')}</h2>
       <div className="mt-3 flex flex-wrap gap-2">
-        <a href={`/api/documents/${id}/pdf?download`} className={`${btn} border-transparent bg-ink text-bg hover:bg-ink hover:opacity-90`}>
+        <a href={`/api/documents/${id}/pdf?download`} className={`${btnBase} border-transparent bg-ink text-bg hover:opacity-90`}>
           {t('pdf')}
         </a>
         <button type="button" disabled={pending} className={btn} onClick={() => withLink(async (url) => (await navigator.clipboard.writeText(url), setCopied(true), setTimeout(() => setCopied(false), 2000)))}>

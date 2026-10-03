@@ -26,7 +26,7 @@ export default function PaymentsPanel({ id, currency, payments, amountDue, canAd
       <div className="flex items-baseline justify-between">
         <h2 className="font-display text-lg font-bold">{t('title')}</h2>
         <p className="text-sm">
-          {t('due')} : <strong className="tabular">{money(amountDue)}</strong>
+          {t('due')}{locale === 'fr' ? ' :' : ':'} <strong className="tabular">{money(amountDue)}</strong>
         </p>
       </div>
       {payments.length === 0 ? (

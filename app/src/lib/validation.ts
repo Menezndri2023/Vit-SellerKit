@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { DOC_LOCALES, UNIT_CODES, VAT_CATEGORIES, VAT_REGIMES } from './catalog';
-import { countryRules, normalizeId, validateId } from './countries';
+import { countryRules, normalizeId, normalizeIdFor, validateId } from './countries';
 import { isBic, isIban } from './countries/validators';
 import { currencyDigits, parseAmount } from './money';
 
@@ -30,7 +30,7 @@ const identifiers = z
   .record(z.string(), z.string().trim().max(40, 'tooLong'))
   .optional()
   .default({})
-  .transform((ids) => Object.entries(ids).filter(([, v]) => v !== '').map(([scheme, value]) => ({ scheme: scheme.slice(0, 20), value: normalizeId(value) })));
+  .transform((ids) => Object.entries(ids).filter(([, v]) => v !== '').map(([scheme, value]) => ({ scheme: scheme.slice(0, 20), value: normalizeIdFor(scheme, value) })));
 
 function checkIds(ctx: z.RefinementCtx, countryCode: string, ids: { scheme: string; value: string }[]) {
   for (const id of ids) {
