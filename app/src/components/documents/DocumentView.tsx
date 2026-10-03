@@ -33,7 +33,7 @@ export default async function DocumentView({ doc }: { doc: DocView }) {
 
 
   return (
-    <article lang={doc.lang} className="relative overflow-hidden rounded-2xl border border-line bg-white p-6 text-[13px] leading-relaxed text-slate-900 shadow-sm sm:p-10">
+    <article lang={doc.lang} dir="ltr" className="relative overflow-hidden rounded-2xl border border-line bg-white p-6 text-[13px] leading-relaxed text-slate-900 shadow-sm sm:p-10">
       {doc.isDraft && (
         <span aria-hidden className="pointer-events-none absolute inset-0 grid select-none place-items-center text-7xl font-extrabold tracking-widest text-slate-900/[0.05] sm:text-9xl">
           {t('draft')}

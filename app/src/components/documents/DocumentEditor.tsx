@@ -224,7 +224,7 @@ export default function DocumentEditor({ initial, clients, products, defaults }:
             <li key={i} className="grid grid-cols-2 gap-3 rounded-xl border border-line p-4 sm:grid-cols-12">
               <div className="col-span-2 sm:col-span-12">
                 <Label htmlFor={`d-${i}`}>{t('description')}</Label>
-                <input id={`d-${i}`} className={control} maxLength={1000} value={l.description} onChange={(e) => setLine(i, { description: e.target.value })} />
+                <input id={`d-${i}`} dir="auto" className={control} maxLength={1000} value={l.description} onChange={(e) => setLine(i, { description: e.target.value })} />
                 {err(`lines.${i}.description`)}
               </div>
               <div className="sm:col-span-2">
@@ -319,7 +319,7 @@ export default function DocumentEditor({ initial, clients, products, defaults }:
 
       <section className="rounded-2xl border border-line bg-surface p-5 sm:p-6">
         <Label htmlFor="notes">{t('notes')}</Label>
-        <textarea id="notes" rows={3} maxLength={2000} className={`${control} h-auto py-3`} value={v.notes ?? ''} onChange={(e) => set('notes', e.target.value)} />
+        <textarea id="notes" dir="auto" rows={3} maxLength={2000} className={`${control} h-auto py-3`} value={v.notes ?? ''} onChange={(e) => set('notes', e.target.value)} />
       </section>
 
       <div className="sticky bottom-20 z-10 flex items-center justify-end gap-3 rounded-2xl border border-line bg-surface/95 p-3 shadow-sm backdrop-blur lg:bottom-4">
