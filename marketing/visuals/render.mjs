@@ -18,7 +18,7 @@ import { fileURLToPath } from 'node:url';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..');
 const { chromium } = await import(join(ROOT, 'app', 'node_modules', 'playwright', 'index.mjs'));
-const { covers, pins, proVisuals } = await import('./visuals.mjs');
+const { covers, pins, proVisuals, whatsappVisuals } = await import('./visuals.mjs');
 
 const OUT = join(HERE, 'out');
 const ASSETS = join(HERE, 'assets');
@@ -92,7 +92,7 @@ for (const [k, f] of Object.entries(APP_SHOTS)) {
   appShots[k] = dataUrl(`${f}.png`);
 }
 
-const list = [...covers(), ...proVisuals(appShots), ...pins(shots)].filter((v) => !filter || v.name.includes(filter));
+const list = [...covers(), ...proVisuals(appShots), ...pins(shots), ...whatsappVisuals()].filter((v) => !filter || v.name.includes(filter));
 const page = await browser.newPage({ deviceScaleFactor: 1 });
 for (const v of list) {
   await page.setViewportSize({ width: v.w, height: v.h });

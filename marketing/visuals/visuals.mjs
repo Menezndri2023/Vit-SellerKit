@@ -5,7 +5,7 @@
  * Copy follows marketing/gumroad/*.md and marketing/content/pinterest.md.
  */
 import { readFileSync } from 'node:fs';
-import { build } from './data.mjs';
+import { build, fmt, COLORS } from './data.mjs';
 import {
   BRAND, page, logo, LOGO_SVG, browser, sheetsApp, tabBar, phone, mobileSheet, TRACKER_TABS, PACK_TABS,
   dashboard, ordersGrid, customersGrid, productsGrid, adsGrid, contentGrid, budgetView, pricingView,
@@ -451,6 +451,145 @@ export function covers() {
     ['pack-cover-1', packCover1], ['pack-cover-2', packCover2], ['pack-cover-3', packCover3], ['pack-cover-4', packCover4], ['pack-cover-5', packCover5],
   ].map(([name, fn]) => ({ name, w: 1280, h: 720, html: fn() }))
     .concat([{ name: 'tracker-thumb', w: 600, h: 600, html: trackerThumb() }, { name: 'pack-thumb', w: 600, h: 600, html: packThumb() }]);
+}
+
+// ---------------------------------------------------------------------------
+// WhatsApp (1080 × 1350) — 3 images sent to a Moroccan COD seller after the DM pitch
+// « J'ai fait un Google Sheet qui calcule le vrai bénéfice par commande… ». Morocco version (FR, MAD → « DH »).
+// Light background (reads in WhatsApp light and dark mode), big type, no product price.
+// ---------------------------------------------------------------------------
+
+const WA_W = 1080;
+const WA_H = 1350;
+const WA_CSS = `
+.wa{position:relative;width:${WA_W}px;height:${WA_H}px;overflow:hidden;display:flex;flex-direction:column;
+  background:radial-gradient(900px 520px at 100% 0%,rgba(163,230,53,.30),transparent 62%),${BRAND.bg};color:${BRAND.ink}}
+.wa-head{padding:58px 56px 0;flex:none}
+.wa-kick{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:24px;letter-spacing:.05em;text-transform:uppercase;padding:10px 18px;border-radius:999px;background:${BRAND.ink};color:${BRAND.lime}}
+.wa h1{font-family:'Plus Jakarta Sans',Inter,sans-serif;font-weight:800;letter-spacing:-0.025em;line-height:1.06;font-size:64px;margin-top:24px}
+.wa h1 em{font-style:normal;background:linear-gradient(transparent 60%,${BRAND.lime} 60%,${BRAND.lime} 92%,transparent 92%);padding:0 .05em}
+.wa-sub{font-size:30px;line-height:1.35;color:#334155;margin-top:18px}
+.wa-body{flex:1;min-height:0;padding:34px 56px 0;display:flex;flex-direction:column;gap:22px}
+.wa-card{flex:none;background:#fff;border-radius:26px;box-shadow:0 18px 50px rgba(15,23,42,.12),0 0 0 1px ${BRAND.line};overflow:hidden;display:flex;flex-direction:column}
+.wa-gs{display:flex;align-items:center;gap:14px;padding:16px 24px;border-bottom:1px solid ${BRAND.line};font-size:22px;color:#475569;flex:none}
+.wa-gs .gs-icon{transform:scale(.9)}
+.wa-gs b{color:${BRAND.ink};font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wa-tabs{display:flex;gap:6px;padding:0 16px;background:#F9FBFD;border-top:1px solid ${BRAND.line};font-size:22px;color:#3C4043;flex:none;height:58px;align-items:stretch;white-space:nowrap;overflow:hidden}
+.wa-tabs span{display:flex;align-items:center;padding:0 16px;border-bottom:4px solid var(--tc)}
+.wa-tabs span.on{font-weight:700;color:#0B57D0;background:#fff}
+.wa-foot{flex:none;height:112px;display:flex;align-items:center;justify-content:space-between;padding:0 56px;border-top:1px solid ${BRAND.line};margin-top:30px}
+.wa-foot .url{font-size:30px;font-weight:700;color:#334155}
+.wa-note{font-size:28px;line-height:1.35;border-radius:20px;padding:22px 26px}
+.wa-note.lime{background:${BRAND.lime};color:${BRAND.ink};font-weight:700}
+.wa-note.soft{background:#fff;border:2px solid ${BRAND.line};color:#334155}
+.wt{display:grid;gap:18px;padding:24px}
+.wt-tile{border:2px solid ${BRAND.line};border-radius:18px;padding:20px 24px 18px;display:flex;flex-direction:column;gap:8px}
+.wt-l{font-size:28px;color:#475569;font-weight:500}
+.wt-v{font-family:'Plus Jakarta Sans',Inter,sans-serif;font-weight:800;font-size:64px;letter-spacing:-.02em;line-height:1.05;font-variant-numeric:tabular-nums;white-space:nowrap}
+.wt-v small{font-size:34px;font-weight:700;margin-left:8px;letter-spacing:0}
+.wt-hint{font-size:24px;color:#64748B}
+table.wa-t{border-collapse:collapse;width:100%;font-size:28px;font-variant-numeric:tabular-nums}
+table.wa-t th{background:${BRAND.lime};color:${BRAND.ink};font-weight:700;font-size:24px;line-height:1.15;text-align:left;padding:14px 14px;vertical-align:bottom}
+table.wa-t th.r,table.wa-t td.r{text-align:right}
+table.wa-t td{padding:var(--tdp,16px) 14px;border-bottom:1px solid ${BRAND.line};vertical-align:middle;line-height:1.2}
+table.wa-t td .s{display:block;font-size:24px;color:#64748B;margin-top:2px}
+table.wa-t tr.dim td{color:#64748B}
+table.wa-t tr.risk td{background:#FEF2F2}
+table.wa-t tr.risk td:first-child{box-shadow:inset 8px 0 0 ${COLORS.loss}}
+table.wa-t tr.loyal td{background:#F0FDF4}
+table.wa-t tr.loyal td:first-child{box-shadow:inset 8px 0 0 ${COLORS.profit}}
+.wa-tag{display:inline-block;font-weight:700;border-radius:10px;padding:6px 12px;white-space:nowrap;font-size:26px}
+`;
+
+const pageWa = (body) => page({ w: WA_W, h: WA_H, body, css: CSS + WA_CSS });
+const WA_FILE = (d, pack) => `${pack ? d.t.packFile : d.t.file} (Maroc)`;
+const waGs = (d, pack) => `<div class="wa-gs"><div class="gs-icon"><div></div></div><b>${esc(WA_FILE(d, pack))}</b></div>`;
+const waTabs = (d, keys, active) => `<div class="wa-tabs">${keys.map((k) => `<span class="${k === active ? 'on' : ''}" style="--tc:${k === 'dashboard' ? COLORS.primary : COLORS.ink}">${esc(d.t.sheets[k])}</span>`).join('')}</div>`;
+const waFoot = () => `<div class="wa-foot">${logo(46)}<span class="url">margokit.com</span></div>`;
+const waShell = ({ kick, title, sub, body }) => pageWa(`<div class="wa">
+  <div class="wa-head"><span class="wa-kick">${kick}</span><h1>${title}</h1>${sub ? `<div class="wa-sub">${sub}</div>` : ''}</div>
+  <div class="wa-body">${body}</div>${waFoot()}</div>`);
+const dh = (s) => `${s}<small>DH</small>`;
+
+function waDashboard() {
+  const d = DATA.ma;
+  const f = fmt(d.lang);
+  const t = d.t.dash;
+  const D = d.dash;
+  const tile = (label, value, color = '', hint = '') => `<div class="wt-tile"><div class="wt-l">${esc(label)}</div><div class="wt-v" style="${color ? `color:${color}` : ''}">${value}</div>${hint ? `<div class="wt-hint">${hint}</div>` : ''}</div>`;
+  const big = `<div class="wt" style="grid-template-columns:1fr 1fr">
+    ${tile(t.revenue, dh(f.money(D.revenue)), '', `${D.orders} ${esc(t.orders.toLowerCase())}`)}
+    ${tile(t.profit, dh(f.money(D.profit)), COLORS.profit, 'après produit, livraison et retours')}
+    ${tile(t.deliveryRate, f.pct1(D.deliveryRate), '', 'des colis expédiés')}
+    ${tile(t.returnRate, f.pct1(D.returnRate), D.returnRate > 0.15 ? COLORS.loss : '', 'colis refusés')}</div>`;
+  const small = (label, value) => `<div style="flex:1;border-top:1px solid ${BRAND.line};padding:18px 24px"><div class="wt-l" style="font-size:26px">${esc(label)}</div><div class="jk tab" style="font-weight:800;font-size:38px;margin-top:4px;white-space:nowrap">${value}</div></div>`;
+  const row = `<div style="display:flex">${small(t.margin, f.pct1(D.margin))}${small(t.aov, `${f.money(D.aov)} DH`)}${small(t.bestChannel, esc(D.bestChannel))}</div>`;
+  const card = `<div class="wa-card">${waGs(d)}
+    <div style="padding:22px 24px 0;font-size:30px;font-weight:700">📊 ${esc(d.t.shop)} · ${esc(d.t.sheets.dashboard)}</div>
+    ${big}${row}${waTabs(d, ['dashboard', 'orders', 'products', 'customers'], 'dashboard')}</div>`;
+  return waShell({
+    kick: '1 · Tableau de bord',
+    title: 'Ce que tu <em>gagnes vraiment</em>, pas juste ce que tu vends.',
+    body: card + `<div class="wa-note soft"><b style="color:${BRAND.ink}">Bénéfice net</b> = ventes − coût produit − emballage − livraison − frais − colis refusés. Calculé tout seul, commande par commande.</div>`,
+  });
+}
+
+function waCustomers() {
+  const d = DATA.ma;
+  const f = fmt(d.lang);
+  const H = d.t.customers;
+  const risky = d.customers.filter((c) => c.tag === 'risky');
+  const rows = d.customers.map((c) => {
+    const tag = c.tag === 'risky' ? `<span class="wa-tag" style="background:#FEE2E2;color:${COLORS.loss}">${esc(c.tagLabel)}</span>`
+      : c.tag === 'loyal' ? `<span class="wa-tag" style="background:#DCFCE7;color:${COLORS.profit}">${esc(c.tagLabel)}</span>` : '';
+    const ret = c.returned ? `<b style="color:${COLORS.loss}">${c.returned}</b>` : c.returned;
+    const profit = c.tag === 'risky' ? `<b style="color:${COLORS.loss}">${f.money(c.profit)}</b>` : f.money(c.profit);
+    return `<tr class="${c.tag === 'risky' ? 'risk' : c.tag === 'loyal' ? 'loyal' : 'dim'}">
+      <td><b style="color:${BRAND.ink}">${esc(c.name)}</b><span class="s">${esc(c.city)}</span></td>
+      <td class="r">${c.delivered}</td><td class="r">${ret}</td><td class="r">${profit}</td><td>${tag}</td></tr>`;
+  }).join('');
+  const table = `<table class="wa-t" style="--tdp:11px"><colgroup><col style="width:300px"><col style="width:118px"><col style="width:150px"><col style="width:170px"><col></colgroup>
+    <tr><th>${esc(H[1])}</th><th class="r">${esc(H[5])}</th><th class="r">${esc(H[6])}</th><th class="r">${esc(H[9])} (DH)</th><th>${esc(H[11])}</th></tr>${rows}</table>`;
+  const r = risky[0];
+  const card = `<div class="wa-card">${waGs(d)}${table}${waTabs(d, ['dashboard', 'orders', 'products', 'customers'], 'customers')}</div>`;
+  const note = `<div class="wa-note soft" style="padding:18px 26px"><b style="color:${COLORS.loss}">${esc(r.name.split(' ')[0])}</b> : ${r.returned} colis refusés → <b style="color:${BRAND.ink}">${f.money(r.profit)} DH</b> gagnés en ${r.orders} commandes.</div>
+    <div class="wa-note lime">💡 Demande un acompte à ces clients avant d’expédier.</div>`;
+  return waShell({
+    kick: '2 · Clients',
+    title: 'Les clients qui <em>refusent tes colis</em>, repérés tout seuls.',
+    sub: '2 colis refusés ou plus → ⚠️ À risque',
+    body: card + note,
+  });
+}
+
+function waAds() {
+  const d = DATA.ma;
+  const f = fmt(d.lang);
+  const P = d.t.pack;
+  const X = d.packDash;
+  const rows = d.ads.map((a) => `<tr>
+    <td><b>${esc(a.campaign)}</b></td>
+    <td class="r">${f.int(a.spend)}</td><td class="r">${f.roas(a.roas)}</td>
+    <td class="r"><b style="color:${a.real > 0 ? COLORS.profit : COLORS.loss}">${f.money(a.real)}</b></td>
+    <td><span class="wa-tag" style="${a.win ? `background:#DCFCE7;color:${COLORS.profit}` : `background:#FEE2E2;color:${COLORS.loss}`}">${esc(a.verdict)}</span></td></tr>`).join('');
+  const table = `<table class="wa-t" style="--tdp:14px"><colgroup><col style="width:270px"><col style="width:100px"><col style="width:108px"><col style="width:168px"><col></colgroup>
+    <tr><th>${esc(P.ads[2])}</th><th class="r">Pub (DH)</th><th class="r">ROAS</th><th class="r">${esc(P.adsCalc[4])} (DH)</th><th>${esc(P.adsCalc[5])}</th></tr>${rows}</table>`;
+  const k = P.dash;
+  const tiles = `<div class="wt" style="grid-template-columns:1fr 1fr;padding:0">
+    <div class="wt-tile" style="background:#fff"><div class="wt-l">${esc(k.adSpend)}</div><div class="wt-v" style="font-size:56px">${dh(f.money(X.adSpend))}</div><div class="wt-hint">${d.ads.length} campagnes</div></div>
+    <div class="wt-tile" style="background:#fff;border-color:${BRAND.lime};box-shadow:0 0 0 2px ${BRAND.lime}"><div class="wt-l">${esc(k.afterAds)}</div><div class="wt-v" style="font-size:56px;color:${X.afterAds >= 0 ? COLORS.profit : COLORS.loss}">${dh(f.money(X.afterAds))}</div><div class="wt-hint">avant pub : ${f.money(d.dash.profit)} DH</div></div></div>`;
+  const card = `<div class="wa-card">${waGs(d, true)}${table}${waTabs(d, ['dashboard', 'orders', 'customers', 'ads', 'cash'], 'ads')}</div>`;
+  return waShell({
+    kick: 'Bonus · Pack Vendeur',
+    title: 'Quelle pub te fait <em>vraiment</em> gagner de l’argent ?',
+    body: tiles + card,
+  });
+}
+
+/** WhatsApp follow-up images (1080 × 1350), Morocco version. */
+export function whatsappVisuals() {
+  return [['wa-capture-1-tableau-de-bord', waDashboard], ['wa-capture-2-clients-a-risque', waCustomers], ['wa-capture-3-pack-pub', waAds]]
+    .map(([name, fn]) => ({ name, w: WA_W, h: WA_H, html: fn() }));
 }
 
 export { LOGO_SVG };

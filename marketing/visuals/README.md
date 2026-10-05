@@ -1,4 +1,4 @@
-# Visuels marketing (Gumroad + Pinterest)
+# Visuels marketing (Gumroad + Pinterest + WhatsApp)
 
 Les PNG prêts à téléverser sont dans `out/`. Ils sont générés à partir de HTML avec Playwright, donc on peut les refaire à l'identique après un changement de texte ou de données.
 
@@ -8,6 +8,7 @@ Les PNG prêts à téléverser sont dans `out/`. Ils sont générés à partir d
 node marketing/visuals/render.mjs              # tout (refait aussi les captures du calculateur en ligne)
 node marketing/visuals/render.mjs --no-shots   # hors ligne : réutilise assets/calc-*.png
 node marketing/visuals/render.mjs pin-03       # seulement les fichiers dont le nom contient « pin-03 »
+node marketing/visuals/render.mjs --no-shots wa-   # seulement les 3 images WhatsApp
 node marketing/visuals/render.mjs --html       # écrit aussi le HTML à côté de chaque PNG (débogage)
 ```
 
@@ -32,7 +33,7 @@ Le script utilise le Playwright et le Chromium déjà installés pour les tests 
 |---|---|
 | `data.mjs` | Données d'exemple et formules portées de `sheets/tracker/Code.gs` (commandes, bénéfice, stock, clients, tableau de bord, pub, contenu, trésorerie, budget, calculateur de prix). Date figée au 30/09/2026. **Si les données d'exemple ou les formules changent dans Code.gs, mets ce fichier à jour.** |
 | `templates.mjs` | Briques HTML : logo, cadre navigateur, téléphone, interface Google Sheets, maquette de chaque onglet. |
-| `visuals.mjs` | Chaque visuel : textes, mise en page, taille. |
+| `visuals.mjs` | Chaque visuel : textes, mise en page, taille (dont `whatsappVisuals()` pour les images `wa-*`). |
 | `shoot-app.mjs` | Captures de l'app Margokit Pro (build local, base `margokit_visuals` jetable) et rendu des PDF en PNG. |
 | `render.mjs` | Captures du calculateur (`margokit.vercel.app/en` et `/fr`, exemple 25 $ → 5,65 $ de bénéfice) puis rendu des PNG. |
 | `assets/` | Captures du calculateur (×2, utilisées dans les épingles 1, 2, 6 et 10), captures de l'app Pro (`app-*.png`, `pdf-*.png`) et logo de démo (`demo-logo.png`). |
@@ -90,6 +91,16 @@ Lien : **C** = calculateur (`/en` ou `/fr`), **T** = Tracker, **P** = Seller Pac
 | 8 | `pin-08-en.png` · `pin-08-fr.png` | P | Content Calendar Google Sheets Template for TikTok, Reels & Pinterest |
 | 9 | `pin-09-en.png` · `pin-09-fr.png` | P | Small Business Budget Spreadsheet — Separate Business and Personal Money |
 | 10 | `pin-10-en.png` · `pin-10-fr.png` | C | Product Launch Checklist: 5 Numbers to Know Before You Order Stock |
+
+### WhatsApp — vendeurs COD au Maroc (1080 × 1350, 4:5)
+
+Les 3 images envoyées après le message « J'ai fait un Google Sheet qui calcule le vrai bénéfice par commande et signale les clients qui refusent les colis. Je vous montre en 2 captures ? ». Version **Maroc** du fichier (libellés FR, montants en MAD affichés « DH »), mêmes données d'exemple et formules que `data.mjs` (`build('ma')`). Fond clair (lisible en mode clair et sombre de WhatsApp), aucun prix du produit.
+
+| Fichier | Ordre d'envoi | Contenu |
+|---|---|---|
+| `wa-capture-1-tableau-de-bord.png` | 1 | Tableau de bord : CA 3 810,00 DH · bénéfice net 2 483,63 DH · taux de livraison 83,3 % · taux de retour 16,7 %, puis marge nette, panier moyen, meilleur canal + formule du bénéfice net |
+| `wa-capture-2-clients-a-risque.png` | 2 | Onglet Clients : ⭐ Fidèle (Salma) et ⚠️ À risque (Imane : 2 colis refusés → 3,00 DH gagnés en 4 commandes) + « Demande un acompte à ces clients avant d'expédier » |
+| `wa-capture-3-pack-pub.png` | 3 (upsell, si intérêt) | Pack Vendeur, onglet Publicité : dépense pub 1 300,00 DH, bénéfice après pub 1 183,63 DH, ROAS et verdict ✅ Rentable / ❌ Perd de l'argent par campagne |
 
 ## Points d'attention
 
