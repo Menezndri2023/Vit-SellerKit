@@ -1,5 +1,9 @@
+import type { Metadata } from 'next';
 import LocaleSwitcher from '@/components/LocaleSwitcher';
 import Logo from '@/components/Logo';
+
+// Sign-in screens stay out of search results; drop the home-page canonical inherited from the layout
+export const metadata: Metadata = { robots: { index: false, follow: true }, alternates: null };
 
 export default function AuthLayout({ children }: LayoutProps<'/[locale]'>) {
   return (

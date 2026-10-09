@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
+import { routing } from '@/i18n/routing';
 import { privacy, publisher, terms } from '@/content/legal';
 
 const PAGES = { terms, privacy } as const;
@@ -13,7 +14,12 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/legal/[p
   const { locale, page } = await params;
   const build = PAGES[page as keyof typeof PAGES];
   if (!build) return {};
-  return { title: `${build(locale === 'fr' ? 'fr' : 'en', publisher()).title} — Margokit` };
+  const languages = Object.fromEntries(routing.locales.map((l) => [l, `/${l}/legal/${page}`]));
+  return {
+    title: `${build(locale === 'fr' ? 'fr' : 'en', publisher()).title} — Margokit`,
+    // Each legal page is its own canonical URL (the layout default points at the home page)
+    alternates: { canonical: `/${locale}/legal/${page}`, languages: { ...languages, 'x-default': `/${routing.defaultLocale}/legal/${page}` } },
+  };
 }
 
 export default async function LegalPage({ params }: PageProps<'/[locale]/legal/[page]'>) {
