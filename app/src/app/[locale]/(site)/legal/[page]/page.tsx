@@ -14,11 +14,13 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/legal/[p
   const { locale, page } = await params;
   const build = PAGES[page as keyof typeof PAGES];
   if (!build) return {};
-  const languages = Object.fromEntries(routing.locales.map((l) => [l, `/${l}/legal/${page}`]));
+  // Written in English and French only: the Arabic URL shows the English text, so it points there
+  const textLocale = locale === 'fr' ? 'fr' : 'en';
+  const languages = { en: `/en/legal/${page}`, fr: `/fr/legal/${page}` };
   return {
     title: `${build(locale === 'fr' ? 'fr' : 'en', publisher()).title} — Margokit`,
     // Each legal page is its own canonical URL (the layout default points at the home page)
-    alternates: { canonical: `/${locale}/legal/${page}`, languages: { ...languages, 'x-default': `/${routing.defaultLocale}/legal/${page}` } },
+    alternates: { canonical: `/${textLocale}/legal/${page}`, languages: { ...languages, 'x-default': `/${routing.defaultLocale}/legal/${page}` } },
   };
 }
 
