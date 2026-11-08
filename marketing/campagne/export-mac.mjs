@@ -37,7 +37,7 @@ const VIDEO_READY = { '01-calculateur-5-65-FR.mp4': '01-calculateur-5-65-FR.mp4'
 // 1. Aperçu (page + visuels + vidéos) à la racine
 cp(join(HERE, 'OUVRIR-apercu-local.html'), 'OUVRIR-apercu-campagne.html');
 for (const f of readdirSync(VIS).filter((f) => f.endsWith('.png'))) cp(join(VIS, f), 'visuels', f);
-for (const f of ['01-calculateur-5-65-FR', '02-les-3-kits-FR']) for (const e of ['.mp4', '.jpg']) cp(join(VIDS, f + e), 'videos', f + e);
+for (const f of readdirSync(join(HERE, 'videos'))) cp(join(HERE, 'videos', f), 'videos', f);
 
 // 2. Stratégie, présentation, kits
 const S = '01 - Strategie et presentation';
@@ -60,7 +60,7 @@ for (const [key, posts] of Object.entries(POSTS)) {
     for (const v of p.visuals ?? []) {
       if (v.startsWith('video:')) {
         const f = v.slice(6);
-        if (VIDEO_READY[f] && existsSync(join(VIDS, f))) { copyFileSync(join(VIDS, f), join(d, `video-${f}`)); files.push(`video-${f}`); }
+        if (existsSync(join(HERE, 'videos', f))) { copyFileSync(join(HERE, 'videos', f), join(d, `video-${f}`)); files.push(`video-${f}`); }
         else files.push(`(vidéo à tourner : ${f})`);
       } else if (v.startsWith('pdf:')) {
         const f = v.slice(4); if (existsSync(join(VIS, f))) { copyFileSync(join(VIS, f), join(d, f)); files.push(f); }
@@ -83,7 +83,7 @@ for (const [key, posts] of Object.entries(POSTS)) {
 // Stories (Instagram + Facebook)
 const st = dir('02 - Instagram', 'Stories');
 for (const f of readdirSync(VIS).filter((f) => f.startsWith('story-'))) copyFileSync(join(VIS, f), join(st, f));
-writeFileSync(join(st, 'planning-stories.txt'), STORIES.map((s) => `SEMAINE ${s.week}\n${s.items.map((x) => `- ${x}`).join('\n')}`).join('\n\n') + '\n\nLes zones en pointillés des images indiquent où poser le sticker (sondage ou lien).\n');
+writeFileSync(join(st, 'planning-stories.txt'), STORIES.map((s) => `SEMAINE ${s.week}\n${s.items.map((x) => `- ${x}`).join('\n')}`).join('\n\n') + '\n\nLaisse l’espace libre sous le texte pour poser le sticker (sondage ou lien) dans Instagram ou Facebook.\n');
 
 // Groupes Facebook
 const g = dir('03 - Facebook', 'Groupes Facebook');
@@ -147,7 +147,7 @@ Généré le ${new Date().toLocaleDateString('fr-FR')} depuis le dépôt (market
 09 - Visuels boutique Gumroad     Couvertures et vignettes des produits
 
 Publier un post : ouvre son dossier → glisse les images dans l'ordre (01, 02…) → copie le texte de texte.txt → colle le 1er commentaire.
-Dossiers marqués « (A TOURNER) » : la vidéo reste à filmer, le script est dans texte.txt.
+Vidéos : format 1080 × 1920 sans voix, ajoute un son tendance dans TikTok / Instagram au moment de publier.
 
 Ce dossier est une copie : il est remplacé à chaque export. Les originaux sont dans Vit-SellerKit/marketing/.
 `);

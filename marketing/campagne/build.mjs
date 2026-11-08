@@ -36,6 +36,9 @@ mkdirSync(VID_DIR, { recursive: true });
 for (const f of ['01-calculateur-5-65-FR.mp4', '01-calculateur-5-65-FR.jpg', '02-les-3-kits-FR.mp4', '02-les-3-kits-FR.jpg']) {
   if (existsSync(join(VID_SRC, f)) && !existsSync(join(VID_DIR, f))) copyFileSync(join(VID_SRC, f), join(VID_DIR, f));
 }
+// Vidéos produites par marketing/visuals/videos-campagne.mjs
+const VID_MADE = join(HERE, 'videos-campagne');
+if (existsSync(VID_MADE)) for (const f of readdirSync(VID_MADE)) copyFileSync(join(VID_MADE, f), join(VID_DIR, f));
 
 // ---------------------------------------------------------------------------
 // Markdown per network
@@ -93,15 +96,15 @@ function calendarMd() {
   const all = Object.entries(POSTS).flatMap(([k, ps]) => ps.map((p) => ({ ...p, net: NETWORKS[k].label })));
   all.sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
   const md = [`# Calendrier — « ${CAMPAIGN.name} »`, '', `Du ${day(CAMPAIGN.start)} au ${day(CAMPAIGN.end)} 2026 · ${all.length} publications · heure du Maroc.`, '',
-    `> Généré par \`build.mjs\`. Statut : ✅ prêt à publier · 🎥 vidéo à tourner.`, ''];
+    `> Généré par \`build.mjs\`. ✅ = prêt à publier.`, ''];
   for (const W of WEEKS) {
     md.push(`## Semaine ${W.n} · ${W.dates} — ${W.theme}`, '', '| Jour | Heure | Réseau | Format | Sujet | Statut |', '|---|---|---|---|---|---|');
     all.filter((p) => p.week === W.n).forEach((p) => md.push(`| ${cap(day(p.date))} | ${p.time} | ${p.net} | ${p.format} | ${p.title} | ${p.status === 'à tourner' ? '🎥' : '✅'} |`));
     md.push('');
   }
-  const toShoot = all.filter((p) => p.status === 'à tourner');
-  md.push('## Vidéos à tourner', '', `${new Set(toShoot.map((p) => p.visuals[0])).size} vidéos différentes (une vidéo sert sur TikTok, Reels et Facebook).`, '',
-    ...[...new Set(toShoot.map((p) => p.visuals[0].slice(6)))].map((v) => `- ${v}`), '');
+  const vids = [...new Set(all.map((p) => p.visuals?.[0]).filter((v) => v?.startsWith('video:')).map((v) => v.slice(6)))];
+  md.push('## Vidéos', '', `${vids.length} vidéos prêtes (une vidéo sert sur TikTok, Reels et Facebook). Format 1080 × 1920 sans voix : ajoute un son tendance au moment de publier.`, '',
+    ...vids.map((v) => `- ${v}`), '');
   writeFileSync(join(HERE, 'calendrier.md'), md.join('\n'));
 }
 
@@ -137,7 +140,7 @@ if (!noPdf) {
 const NET_ORDER = ['instagram', 'facebook', 'tiktok', 'linkedin'];
 const all = NET_ORDER.flatMap((k) => POSTS[k].map((p) => ({ ...p, net: k })));
 all.sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time) || NET_ORDER.indexOf(a.net) - NET_ORDER.indexOf(b.net));
-const VIDEO_FILES = { '01-calculateur-5-65-FR.mp4': 'videos/01-calculateur-5-65-FR', '02-les-3-kits-FR.mp4': 'videos/02-les-3-kits-FR' };
+const VIDEO_FILES = Object.fromEntries(readdirSync(VID_DIR).filter((f) => f.endsWith('.mp4')).map((f) => [f, `videos/${f.replace(/\.mp4$/, '')}`]));
 const isTall = (f) => f.startsWith('story-');
 const isWide = (f) => f.startsWith('deck-');
 
@@ -173,7 +176,8 @@ function card(p) {
 }
 
 const counts = Object.fromEntries(NET_ORDER.map((k) => [k, POSTS[k].length]));
-const toShoot = new Set(all.filter((p) => p.status === 'à tourner').map((p) => p.visuals[0])).size;
+const toShoot = all.filter((p) => p.status === 'à tourner').length;
+const videoCount = new Set(all.map((p) => p.visuals?.[0]).filter((v) => v?.startsWith('video:'))).size;
 const deck = readdirSync(VIS).filter((f) => f.startsWith('deck-') && f.endsWith('.png')).sort();
 const stories = readdirSync(VIS).filter((f) => f.startsWith('story-') && f.endsWith('.png')).sort();
 
@@ -278,7 +282,7 @@ footer{padding-block:30px 50px;color:var(--muted);font-size:13px;border-top:1px 
     <div class="stats" role="list">
       <div role="listitem"><b>${all.length}</b><span>publications</span></div>
       <div role="listitem"><b>${all.length - all.filter((p) => p.status === 'à tourner').length}</b><span>prêtes</span></div>
-      <div role="listitem"><b>${toShoot}</b><span>vidéos à tourner</span></div>
+      <div role="listitem"><b>${videoCount}</b><span>vidéos</span></div>
     </div>
   </div>
 </div>
@@ -290,7 +294,7 @@ footer{padding-block:30px 50px;color:var(--muted);font-size:13px;border-top:1px 
   <span class="sep" aria-hidden="true"></span>
   <span class="lbl">Statut</span>
   <button type="button" class="f" data-status="all" aria-pressed="true">Tous</button>
-  <button type="button" class="f" data-status="shoot" aria-pressed="false">À tourner</button>
+  <button type="button" class="f" data-status="video" aria-pressed="false">Vidéos</button>
 </div></div>
 
 <div class="wrap">
@@ -313,7 +317,7 @@ footer{padding-block:30px 50px;color:var(--muted);font-size:13px;border-top:1px 
   </div>
 
   <div class="panel" id="p-story" role="tabpanel" aria-labelledby="t-story" hidden>
-    <p class="empty" style="padding-bottom:0">Les zones en pointillés indiquent où placer le sticker (sondage ou lien) dans Instagram ou Facebook.</p>
+    <p class="empty" style="padding-bottom:0">Laisse l’espace libre sous le texte pour poser le sticker (sondage ou lien) dans Instagram ou Facebook.</p>
     <div class="storyrow">${stories.map((f) => `<img loading="lazy" src="visuels/${f}" alt="Story ${esc(f.replace('story-', '').replace('.png', ''))}">`).join('')}</div>
   </div>
 
@@ -326,7 +330,7 @@ footer{padding-block:30px 50px;color:var(--muted);font-size:13px;border-top:1px 
   function apply(){
     document.querySelectorAll('.post').forEach(function(el){
       var okNet=state.net==='all'||el.dataset.net===state.net;
-      var okSt=state.status==='all'||el.querySelector('.chip.warn');
+      var okSt=state.status==='all'||el.querySelector('video');
       el.hidden=!(okNet&&okSt);
     });
     document.querySelectorAll('section.week').forEach(function(s){

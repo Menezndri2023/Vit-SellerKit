@@ -270,14 +270,12 @@ function story({ theme, kick, title, size = 110, sub, body = '' }) {
 function stories(S) {
   return [
     { name: 'story-sondage', html: story({ theme: 'dark', kick: 'Question du jour', title: 'Tu connais ta <em>marge nette</em> par commande&nbsp;?', size: 116,
-      sub: 'Livraison, pub et colis refusés compris.',
-      body: `<div style="position:absolute;left:0;right:0;top:80px;height:340px;border:3px dashed rgba(163,230,53,.5);border-radius:32px;display:grid;place-items:center;color:#94A3B8;font-size:30px">zone du sticker Sondage</div>` }) },
+      sub: 'Livraison, pub et colis refusés compris.', }) },
     { name: 'story-calculateur', html: story({ theme: 'light', kick: 'Gratuit · sans inscription', title: '25&nbsp;€ vendu = <em>5,65&nbsp;€</em> gardés', size: 116,
       sub: 'Fais le calcul avec tes chiffres.',
-      body: `${imgFit(S.results, 'max-height:600px')}<div style="position:absolute;left:0;right:0;bottom:30px;height:150px;border:3px dashed #A3E635;border-radius:32px;display:grid;place-items:center;color:#64748B;font-size:30px">zone du sticker Lien</div>` }) },
+      body: imgFit(S.results, 'max-height:600px') }) },
     { name: 'story-black-friday', html: story({ theme: 'lime', kick: 'Black Friday', title: '−30&nbsp;% = <em>−1,63&nbsp;€</em> par vente', size: 124,
-      sub: 'Sur un produit à 25&nbsp;€ qui rapportait 5,65&nbsp;€. Teste ta promo avant de la lancer.',
-      body: `<div style="position:absolute;left:0;right:0;bottom:30px;height:150px;border:3px dashed rgba(15,23,42,.4);border-radius:32px;display:grid;place-items:center;color:#334155;font-size:30px">zone du sticker Lien</div>` }) },
+      sub: 'Sur un produit à 25&nbsp;€ qui rapportait 5,65&nbsp;€. Teste ta promo avant de la lancer.' }) },
     { name: 'story-early', html: story({ theme: 'dark', kick: 'Offre de lancement', title: '<em>−25&nbsp;%</em> sur les Google Sheets Margokit', size: 116,
       sub: 'Code <b style="color:#fff">EARLY</b>, réservé aux 50 premiers. Tracker, Pack Vendeur.',
       body: ticks([['✓', 'Paiement unique, pas d’abonnement'], ['✓', 'Remboursé sous 14 jours'], ['✓', 'Paiement local possible par WhatsApp']], 40, 30) }) },

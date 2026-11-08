@@ -24,7 +24,7 @@ import { makeCompletePdf, day } from './pdf-complet.mjs';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MK = join(HERE, '..');
 const VIS = join(HERE, 'visuels');
-const VIDS = join(homedir(), 'Desktop', 'Margokit-Videos');
+const VIDS = join(HERE, 'videos'); // rempli par build.mjs (vidéos prêtes + vidéos produites)
 const DEST = process.argv[2] ?? join(homedir(), 'Desktop', 'Campagne Ce que tu gardes');
 
 if (existsSync(DEST)) rmSync(DEST, { recursive: true });
@@ -37,7 +37,6 @@ const safe = (s) => {
   return t.replace(/[\s-]+$/, '');
 };
 const pngs = readdirSync(VIS).filter((f) => f.endsWith('.png')).sort((a, b) => a.localeCompare(b, 'en', { numeric: true }));
-const READY = ['01-calculateur-5-65-FR', '02-les-3-kits-FR'];
 const ALL_POSTS = Object.entries(POSTS).flatMap(([k, ps]) => ps.map((p) => ({ ...p, net: k })));
 
 // ── Aperçu (page de l'artefact, hors ligne) ─────────────────────────────────
@@ -45,42 +44,26 @@ const ALL_POSTS = Object.entries(POSTS).flatMap(([k, ps]) => ps.map((p) => ({ ..
   const html = readFileSync(join(HERE, 'OUVRIR-apercu-local.html'), 'utf8').replaceAll('src="visuels/', 'src="_apercu/visuels/').replaceAll('poster="videos/', 'poster="_apercu/videos/').replaceAll('src="videos/', 'src="_apercu/videos/');
   writeFileSync(join(DEST, 'OUVRIR - Apercu de la campagne.html'), html);
   for (const f of pngs) cp(join(VIS, f), '_apercu', 'visuels', f);
-  for (const f of READY) for (const e of ['.mp4', '.jpg']) cp(join(VIDS, f + e), '_apercu', 'videos', f + e);
+  for (const f of readdirSync(VIDS)) cp(join(VIDS, f), '_apercu', 'videos', f);
 }
 
 // ── 01 - Vidéos ─────────────────────────────────────────────────────────────
 {
   const V = '01 - Videos';
-  const usedBy = (file) => ALL_POSTS.filter((p) => p.visuals?.[0] === `video:${file}`).map((p) => `- ${NETWORKS[p.net].label} · ${day(p.date)} · ${p.time}`).join('\n');
-  for (const f of READY) {
-    cp(join(VIDS, `${f}.mp4`), V, 'Pretes a publier', `${f}.mp4`);
-    cp(join(VIDS, `${f}.jpg`), V, 'Pretes a publier', `${f} (miniature).jpg`);
+  const files = [...new Set(ALL_POSTS.map((p) => p.visuals?.[0]).filter((v) => v?.startsWith('video:')).map((v) => v.slice(6)))];
+  const firstDate = (f) => ALL_POSTS.filter((p) => p.visuals?.[0] === `video:${f}`).map((p) => p.date).sort()[0];
+  files.sort((a, b) => firstDate(a).localeCompare(firstDate(b)));
+  const lines = [];
+  for (const f of files) {
+    const base = f.replace(/\.mp4$/, '');
+    cp(join(VIDS, f), V, f);
+    cp(join(VIDS, `${base}.jpg`), V, 'Miniatures', `${base}.jpg`);
+    const uses = ALL_POSTS.filter((p) => p.visuals?.[0] === `video:${f}`).sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+    lines.push(`${f}\n${uses.map((p) => `- ${NETWORKS[p.net].label} · ${day(p.date)} · ${p.time} : « ${p.caption.split('\n')[0]} »`).join('\n')}`);
   }
-  const ready = READY.map((f) => {
-    const p = ALL_POSTS.find((x) => x.visuals?.[0] === `video:${f}.mp4`);
-    return `${f}.mp4\nPubliée le :\n${usedBy(`${f}.mp4`)}\n\nTexte (Instagram) :\n${p?.caption ?? ''}\n${p?.hashtags ?? ''}`;
-  }).join('\n\n────────────\n\n');
-  writeFileSync(join(dir(V, 'Pretes a publier'), 'textes-et-dates.txt'), `VIDÉOS PRÊTES À PUBLIER\n\n${ready}\n`);
-  for (const lang of ['EN', 'AR']) for (const e of ['.mp4', '.jpg']) cp(join(VIDS, `02-les-3-kits-${lang}${e}`), V, 'Pretes a publier', 'Autres langues', `02-les-3-kits-${lang}${e}`);
-
-  // Vidéos à tourner : un fichier par vidéo (les posts TikTok portent les scripts les plus complets)
-  const toShoot = new Map();
-  for (const p of ALL_POSTS.filter((x) => x.status === 'à tourner')) {
-    const key = p.visuals[0].slice(6);
-    const cur = toShoot.get(key) ?? { posts: [], hook: '', screen: '', script: '', title: p.title };
-    cur.posts.push(p);
-    if (p.script && p.script.length > cur.script.length) Object.assign(cur, { hook: p.hook ?? cur.hook, screen: p.screen ?? cur.screen, script: p.script, title: p.title });
-    toShoot.set(key, cur);
-  }
-  const first = (v) => v.posts.map((p) => p.date).sort()[0];
-  [...toShoot.entries()].sort((a, b) => first(a[1]).localeCompare(first(b[1]))).forEach(([src, v], i) => {
-    const txt = [`VIDÉO À TOURNER : ${v.title}`, `Source : ${src}`, '', `ACCROCHE ÉCRITE (0–3 s)\n${v.hook}`, '', `À L’ÉCRAN\n${v.screen}`, '', `VOIX OFF\n${v.script}`, '',
-      'PUBLICATIONS QUI UTILISENT CETTE VIDÉO', ...v.posts.sort((a, b) => a.date.localeCompare(b.date)).map((p) => `- ${NETWORKS[p.net].label} · ${day(p.date)} · ${p.time}\n  Texte : ${p.caption.split('\n')[0]}…`), '',
-      'Format : écran du téléphone + ta voix, 1080 × 1920, 15–30 s, sous-titres CapCut. Méthode complète : methode-de-tournage.md'];
-    writeFileSync(join(dir(V, 'A tourner'), `${String(i + 1).padStart(2, '0')} - ${safe(v.title)}.txt`), txt.join('\n'));
-  });
-  cp(join(MK, 'content', 'tournage-semaine-1.md'), V, 'A tourner', 'methode-de-tournage.md');
-  cp(join(MK, 'content', 'videos.md'), V, 'A tourner', '30-scripts-video (reserve).md');
+  writeFileSync(join(dir(V), '00 - Quelle video, quel jour.txt'), `LES ${files.length} VIDÉOS DE LA CAMPAGNE (prêtes à publier)\n\nFormat 1080 × 1920, sans voix : ajoute un son tendance dans TikTok / Instagram au moment de publier.\nLe texte complet de chaque post est dans 05 - Publications par reseau.\n\n${lines.join('\n\n')}\n`);
+  const OTHER = join(homedir(), 'Desktop', 'Margokit-Videos');
+  for (const lang of ['EN', 'AR']) for (const e of ['.mp4', '.jpg']) cp(join(OTHER, `02-les-3-kits-${lang}${e}`), V, 'Autres langues', `02-les-3-kits-${lang}${e}`);
 }
 
 // ── 02 - Présentation du projet ─────────────────────────────────────────────
@@ -105,7 +88,7 @@ const ALL_POSTS = Object.entries(POSTS).flatMap(([k, ps]) => ps.map((p) => ({ ..
 
 // ── 04 - Stories ────────────────────────────────────────────────────────────
 pngs.filter((f) => f.startsWith('story-')).forEach((f) => cp(join(VIS, f), '04 - Stories', f));
-writeFileSync(join(dir('04 - Stories'), 'planning-des-stories.txt'), `${STORIES.map((s) => `SEMAINE ${s.week}\n${s.items.map((x) => `- ${x}`).join('\n')}`).join('\n\n')}\n\nLes zones en pointillés indiquent où poser le sticker (sondage ou lien).\n`);
+writeFileSync(join(dir('04 - Stories'), 'planning-des-stories.txt'), `${STORIES.map((s) => `SEMAINE ${s.week}\n${s.items.map((x) => `- ${x}`).join('\n')}`).join('\n\n')}\n\nLaisse l’espace libre sous le texte pour poser le sticker (sondage ou lien) dans Instagram ou Facebook.\n`);
 
 // ── 05 - Publications par réseau ────────────────────────────────────────────
 {
@@ -124,7 +107,7 @@ writeFileSync(join(dir('04 - Stories'), 'planning-des-stories.txt'), `${STORIES.
       for (const v of p.visuals ?? []) {
         if (v.startsWith('video:')) {
           const f = v.slice(6);
-          if (existsSync(join(VIDS, f))) { copyFileSync(join(VIDS, f), join(d, f)); files.push(f); } else files.push(`(vidéo à tourner : voir 01 - Videos/A tourner)`);
+          if (existsSync(join(VIDS, f))) { copyFileSync(join(VIDS, f), join(d, f)); files.push(f); } else files.push(`(vidéo manquante : ${f})`);
         } else if (v.startsWith('pdf:')) {
           const f = v.slice(4); if (existsSync(join(VIS, f))) { copyFileSync(join(VIS, f), join(d, f)); files.push(f); }
         } else if (!(hasPdf && v.startsWith('car-'))) {
@@ -159,7 +142,7 @@ Tout le contenu de l'aperçu en ligne : https://claude.ai/artifact/RZQJkBgYV7ypK
 ▶ OUVRIR - Apercu de la campagne.html   La même page que l'aperçu en ligne, sans internet (double-clic)
 ▶ CAMPAGNE-COMPLETE.pdf                  Les ${ALL_POSTS.length} publications en un document : visuels, textes, 1ers commentaires, scripts
 
-01 - Videos                     Prêtes à publier (+ versions EN/AR) · À tourner : un fichier script par vidéo
+01 - Videos                     Les 16 vidéos prêtes à publier (+ miniatures, + versions EN/AR) et quel jour publier chacune
 02 - Presentation du projet     Présentation 10 slides (PDF + images), version texte, guide des kits
 03 - Carrousels                 Les 6 carrousels : images numérotées + PDF à téléverser sur LinkedIn
 04 - Stories                    4 stories + planning semaine par semaine

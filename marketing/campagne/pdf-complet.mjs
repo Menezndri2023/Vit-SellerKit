@@ -29,7 +29,7 @@ export async function makeCompletePdf(pdfPath) {
     const N = NETWORKS[p.net];
     const imgs = (p.visuals ?? []).filter((v) => v.endsWith('.png'));
     const vid = (p.visuals ?? []).find((v) => v.startsWith('video:'));
-    const poster = vid && VIDEO_READY[vid.slice(6)] ? join(VIDS, vid.slice(6).replace('.mp4', '.jpg')) : null;
+    const poster = vid ? join(HERE, 'videos', vid.slice(6).replace('.mp4', '.jpg')) : null;
     return `<section class="post">
       <div class="head"><span class="net" style="background:${COLOR[p.net]}">${N.label}</span><b>${esc(day(p.date))} · ${p.time}</b><span>${esc(p.format)}</span>${p.status === 'à tourner' ? '<span class="shoot">Vidéo à tourner</span>' : '<span class="ok">Prêt</span>'}</div>
       <h3>${esc(p.title)}</h3>

@@ -19,16 +19,12 @@ _Faire découvrir le problème et le calculateur gratuit. Récolter les premiers
 ### 1. Mardi 17 nov. · 08:30 · Texte + image
 **Pourquoi j’ai construit Margokit**
 
-> ⚠️ Récit à ajuster à ton vécu réel avant de publier (comment tu as découvert le problème).
-
 **Visuels** : `visuels/deck-01.png`
 
 **Texte à publier**
 
 ```text
-Il y a quelques mois, j’ai commencé à regarder de près les chiffres de petits vendeurs en ligne au Maroc et ailleurs.
-
-Le même schéma revenait sans arrêt : beaucoup de commandes, un chiffre d’affaires qui monte, et un compte en banque qui ne suit pas.
+Beaucoup de petits vendeurs en ligne vivent la même situation : beaucoup de commandes, un chiffre d’affaires qui monte, et un compte en banque qui ne suit pas.
 
 La raison est presque toujours la même. On calcule « prix − coût du produit ». On oublie la livraison, l’emballage, les frais de paiement, la pub par commande… et surtout les colis refusés en paiement à la livraison.
 
@@ -105,12 +101,11 @@ Calculateur gratuit pour tester une remise : https://margokit.com/fr/calculator?
 **Texte à publier**
 
 ```text
-10 jours de campagne pour Margokit. Ce que j’ai appris, sans filtre :
+Lancer un produit seul, sans audience : ce que je retiens après mes premières semaines avec Margokit.
 
-1. Pinterest seul ne suffit pas pour démarrer. J’avais 17 épingles programmées en octobre : le canal est lent, il faut des mois.
-2. Les conversations rapportent plus que les publications. Un « CALCUL » en commentaire ouvre une vraie discussion.
-3. Les gens ne veulent pas un outil. Ils veulent une réponse à « est-ce que je gagne de l’argent ? ».
-4. [À compléter avec ton vrai chiffre : visites du calculateur, commentaires, inscriptions.]
+1. Pinterest seul ne suffit pas pour démarrer. J’ai programmé 17 épingles en octobre : c’est un canal lent, qui demande des mois.
+2. Je mise maintenant sur les conversations plutôt que sur les publications : chaque post propose de calculer le vrai bénéfice d’un produit en commentaire.
+3. Personne ne cherche « un outil ». Les vendeurs cherchent une réponse à « est-ce que je gagne vraiment de l’argent ? ».
 
 Prochaine étape : les vendeurs en paiement à la livraison, là où la marge se perd le plus.
 
@@ -210,7 +205,7 @@ Essayer Margokit Pro gratuitement : https://margokit.com/fr/signup?utm_source=li
 ```text
 Un mois après le début de la campagne, voici Margokit en 10 slides : le problème, les 4 outils, pour qui, les prix.
 
-Ce que j’en retiens : [à compléter avec ton bilan réel, visites, inscriptions, premières ventes].
+Margokit commence gratuitement (le calculateur et 3 documents par mois sur Margokit Pro), et les Google Sheets se paient une seule fois.
 
 Si vous connaissez un vendeur en ligne ou un freelance qui ne sait pas exactement ce qu’il gagne, partagez-lui ce document. Merci 🙏
 ```

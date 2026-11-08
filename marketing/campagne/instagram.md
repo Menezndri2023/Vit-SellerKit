@@ -128,16 +128,10 @@ Ta livraison, ta pub et tes colis refusés ne baissent pas avec ton prix.
 #ecommerce #vendreenligne #freelance #facturation #petitebusiness
 ```
 
-### 3. Vendredi 27 nov. · 19:00 · Reel · 🎥 à tourner
+### 3. Vendredi 27 nov. · 19:00 · Reel
 **+10 % de prix = +43 % de bénéfice**
 
-**Visuels** : `🎬 script n°4 (videos.md)`
-
-**Accroche écrite (0–3 s)** : +10 % sur ton prix = +43 % de bénéfice.
-
-**À l’écran** : Calculateur avec l’exemple 25 € (lien ci-dessous), puis change le prix en 27,50.
-
-**Voix off** : « Aujourd’hui tout le monde baisse ses prix. Regarde l’inverse. À 25 €, je garde 5,65. À 27,50, je garde 8,08. Dix pour cent de plus sur le prix, quarante-trois pour cent de plus dans la poche. Ton client ne verra pas 2,50 €. Ton compte en banque, si. Calculateur gratuit, lien en bio. »
+**Visuels** : `🎬 05-prix-plus-10.mp4`
 
 **Texte à publier**
 
@@ -186,16 +180,10 @@ Le Tracker Margokit (version Maroc, en DH) repère tout seul les clients ⚠️ 
 #codmaroc #ecommercemaroc #vendreenligne #paiementalalivraison #dropshippingmaroc #youcan
 ```
 
-### 2. Mercredi 2 déc. · 19:00 · Reel · 🎥 à tourner
+### 2. Mercredi 2 déc. · 19:00 · Reel
 **Le colis refusé (COD Maroc)**
 
-**Visuels** : `🎬 script n°3 (tournage-semaine-1.md, vidéo 1)`
-
-**Accroche écrite (0–3 s)** : 30 % de colis refusés → 15 % = +66 % de bénéfice
-
-**À l’écran** : Lien pré-rempli de tournage-semaine-1.md (199 DH, 30 % de refus), puis remplace 30 par 15.
-
-**Voix off** : « Paiement à la livraison, 199 dirhams. Avec 30 % de colis refusés, je garde 32. Même produit, 15 % de refus… 54. Même pub, même prix. Juste : confirme tes commandes avant d’expédier. Lien en bio. »
+**Visuels** : `🎬 07-colis-refuse.mp4`
 
 **Texte à publier**
 
@@ -259,16 +247,10 @@ Gratuit jusqu’à 3 documents par mois. Lien en bio.
 #freelance #autoentrepreneur #facturation #devis #petiteentreprise #factureelectronique
 ```
 
-### 2. Mercredi 9 déc. · 19:00 · Reel · 🎥 à tourner
+### 2. Mercredi 9 déc. · 19:00 · Reel
 **Le devis qui devient facture**
 
-**Visuels** : `🎬 script n°30 mis à jour`
-
-**Accroche écrite (0–3 s)** : Le client a dit oui. La facture prend… 1 clic.
-
-**À l’écran** : Enregistrement d’écran sur margokit.com avec un compte de test : ouvre un devis, clique « Convertir en facture », ouvre le PDF, appuie sur « Envoyer par WhatsApp ».
-
-**Voix off** : « Le client a dit oui. Avant : je recopiais tout dans Word. Maintenant : un clic, la facture est créée, numérotée, avec mes mentions. J’envoie le lien sur WhatsApp. Gratuit jusqu’à 3 documents par mois, lien en bio. »
+**Visuels** : `🎬 12-devis-facture.mp4`
 
 **Texte à publier**
 
@@ -279,16 +261,10 @@ Margokit Pro, gratuit jusqu’à 3 documents par mois. Lien en bio.
 #freelance #facture #devis #autoentrepreneur #entrepreneur
 ```
 
-### 3. Vendredi 11 déc. · 19:00 · Reel · 🎥 à tourner
+### 3. Vendredi 11 déc. · 19:00 · Reel
 **Le tableau de bord en 15 secondes**
 
-**Visuels** : `🎬 script n°20 (videos.md)`
-
-**Accroche écrite (0–3 s)** : Tout vendeur a besoin de ce tableau de bord.
-
-**À l’écran** : Scroll lent du Tableau de bord du Tracker (copie de démonstration), 2 s par tuile, musique tendance, sans voix.
-
-**Voix off** : Sans voix. Texte à l’écran tuile par tuile : CA · Bénéfice net · Taux de livraison · Taux de retour · Panier moyen · Meilleur canal. Fin : « Template Google Sheets, lien en bio ».
+**Visuels** : `🎬 13-tableau-de-bord.mp4`
 
 **Texte à publier**
 
@@ -304,4 +280,4 @@ Lien en bio. 📊
 
 - Lun : repartage carrousel Pro + sticker Lien vers margokit.com/fr/signup.
 - Mer : coulisses : capture d’une facture créée en 1 minute (compte de démo).
-- Ven : bilan « Merci aux X personnes qui ont testé le calculateur ce mois-ci » (vrai chiffre de Vercel Analytics).
+- Ven : « Merci à toutes celles et ceux qui ont testé le calculateur ce mois-ci 🙏 » + sticker Question « Quel outil te manque ? ».

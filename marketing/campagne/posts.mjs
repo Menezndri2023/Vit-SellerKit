@@ -183,7 +183,7 @@ export const STORIES = [
   { week: 4, items: [
     'Lun : repartage carrousel Pro + sticker Lien vers margokit.com/fr/signup.',
     'Mer : coulisses : capture d’une facture créée en 1 minute (compte de démo).',
-    'Ven : bilan « Merci aux X personnes qui ont testé le calculateur ce mois-ci » (vrai chiffre de Vercel Analytics).',
+    'Ven : « Merci à toutes celles et ceux qui ont testé le calculateur ce mois-ci 🙏 » + sticker Question « Quel outil te manque ? ».',
   ] },
 ];
 
@@ -215,7 +215,7 @@ Fais le test avec tes propres chiffres (gratuit) : lien en commentaire.`,
   { date: '2026-11-20', time: '20:00', format: 'Album (6 images)', week: 1, title: 'Les 4 outils Margokit', visuals: car('car-kits', 6),
     caption: `Je vous présente Margokit 💚
 
-J’ai construit ces outils après avoir vu trop de vendeurs vendre beaucoup… et ne rien garder.
+J’ai construit ces outils pour une raison simple : beaucoup de vendeurs vendent beaucoup… et gardent très peu.
 
 1. Calculateur — gratuit. Ton vrai bénéfice par vente, ton prix minimum, ton ROAS rentable.
 2. Tracker — 12 $ une fois. Commandes, stock, clients et tableau de bord dans Google Sheets. Version Maroc en DH incluse.
@@ -225,8 +225,7 @@ J’ai construit ces outils après avoir vu trop de vendeurs vendre beaucoup… 
 Pas d’abonnement pour les Google Sheets. Remboursé sous 14 jours. Paiement local possible par WhatsApp.
 
 Par lequel vous commenceriez ? 👇`,
-    firstComment: `Tout est ici : ${UTM('facebook', 'kits', 'fr')}`, hashtags: '',
-    note: 'La 1re phrase raconte ton histoire : garde-la seulement si elle est vraie pour toi.' },
+    firstComment: `Tout est ici : ${UTM('facebook', 'kits', 'fr')}`, hashtags: '' },
 
   { date: '2026-11-23', time: '20:00', format: 'Album (5 images)', week: 2, title: 'Black Friday : vérifie ta promo', visuals: car('car-black-friday', 5),
     caption: `Avant de mettre −30 % pour le Black Friday, lisez ça.
@@ -434,9 +433,7 @@ const tiktok = [
 // ---------------------------------------------------------------------------
 const linkedin = [
   { date: '2026-11-17', time: '08:30', format: 'Texte + image', week: 1, title: 'Pourquoi j’ai construit Margokit', visuals: ['deck-01.png'],
-    caption: `Il y a quelques mois, j’ai commencé à regarder de près les chiffres de petits vendeurs en ligne au Maroc et ailleurs.
-
-Le même schéma revenait sans arrêt : beaucoup de commandes, un chiffre d’affaires qui monte, et un compte en banque qui ne suit pas.
+    caption: `Beaucoup de petits vendeurs en ligne vivent la même situation : beaucoup de commandes, un chiffre d’affaires qui monte, et un compte en banque qui ne suit pas.
 
 La raison est presque toujours la même. On calcule « prix − coût du produit ». On oublie la livraison, l’emballage, les frais de paiement, la pub par commande… et surtout les colis refusés en paiement à la livraison.
 
@@ -447,8 +444,7 @@ Alors j’ai construit Margokit : un calculateur gratuit, des Google Sheets qui 
 Je partagerai ici, deux fois par semaine, ce que j’apprends en lançant ce projet seul, depuis le Maroc.
 
 Si vous accompagnez des e-commerçants ou des freelances, je serais ravi d’avoir votre regard.`,
-    firstComment: `Le calculateur (gratuit, sans inscription) : ${UTM('linkedin', 'pourquoi')}`,
-    note: 'Récit à ajuster à ton vécu réel avant de publier (comment tu as découvert le problème).' },
+    firstComment: `Le calculateur (gratuit, sans inscription) : ${UTM('linkedin', 'pourquoi')}` },
   { date: '2026-11-19', time: '08:30', format: 'Document PDF (carrousel)', week: 1, title: 'Le calcul complet d’une vente à 25 €', visuals: ['pdf:car-calcul-25.pdf', ...car('car-calcul-25', 6)],
     caption: `Le calcul que la plupart des vendeurs en ligne ne font jamais, en 6 pages. 👇
 
@@ -471,12 +467,11 @@ Les alternatives qui protègent la marge : un cadeau, un lot (la livraison se pa
 Le détail en 5 pages ci-dessous.`,
     firstComment: `Calculateur gratuit pour tester une remise : ${UTM('linkedin', 'black-friday')}` },
   { date: '2026-11-26', time: '08:30', format: 'Texte', week: 2, title: 'Ce que j’ai appris en 10 jours de lancement', visuals: [],
-    caption: `10 jours de campagne pour Margokit. Ce que j’ai appris, sans filtre :
+    caption: `Lancer un produit seul, sans audience : ce que je retiens après mes premières semaines avec Margokit.
 
-1. Pinterest seul ne suffit pas pour démarrer. J’avais 17 épingles programmées en octobre : le canal est lent, il faut des mois.
-2. Les conversations rapportent plus que les publications. Un « CALCUL » en commentaire ouvre une vraie discussion.
-3. Les gens ne veulent pas un outil. Ils veulent une réponse à « est-ce que je gagne de l’argent ? ».
-4. [À compléter avec ton vrai chiffre : visites du calculateur, commentaires, inscriptions.]
+1. Pinterest seul ne suffit pas pour démarrer. J’ai programmé 17 épingles en octobre : c’est un canal lent, qui demande des mois.
+2. Je mise maintenant sur les conversations plutôt que sur les publications : chaque post propose de calculer le vrai bénéfice d’un produit en commentaire.
+3. Personne ne cherche « un outil ». Les vendeurs cherchent une réponse à « est-ce que je gagne vraiment de l’argent ? ».
 
 Prochaine étape : les vendeurs en paiement à la livraison, là où la marge se perd le plus.
 
@@ -520,13 +515,41 @@ Experts-comptables et accompagnateurs d’indépendants : qu’est-ce qui bloque
   { date: '2026-12-10', time: '08:30', format: 'Document PDF (présentation)', week: 4, title: 'Margokit en 10 slides', visuals: ['pdf:presentation-margokit.pdf', 'deck-01.png', 'deck-03.png', 'deck-09.png'],
     caption: `Un mois après le début de la campagne, voici Margokit en 10 slides : le problème, les 4 outils, pour qui, les prix.
 
-Ce que j’en retiens : [à compléter avec ton bilan réel, visites, inscriptions, premières ventes].
+Margokit commence gratuitement (le calculateur et 3 documents par mois sur Margokit Pro), et les Google Sheets se paient une seule fois.
 
 Si vous connaissez un vendeur en ligne ou un freelance qui ne sait pas exactement ce qu’il gagne, partagez-lui ce document. Merci 🙏`,
     firstComment: `margokit.com : ${UTM('linkedin', 'deck', 'fr')}` },
 ];
 
 export const POSTS = { instagram, facebook, tiktok, linkedin };
+
+/** Vidéos produites par marketing/visuals/videos-campagne.mjs (dossier videos-campagne/), à la place d'un tournage. */
+export const RENDERED_VIDEOS = {
+  'script n°12 (videos.md)': '01-ca-benefice.mp4',
+  'script n°11 (videos.md)': '02-3-erreurs.mp4',
+  'script n°6 (videos.md)': '03-prix-minimum.mp4',
+  'script n°18 (videos.md)': '04-vendre-plus.mp4',
+  'script n°4 (videos.md)': '05-prix-plus-10.mp4',
+  'script n°2 (videos.md)': '06-dropshipping-1-euro.mp4',
+  'script n°3 (tournage-semaine-1.md, vidéo 1)': '07-colis-refuse.mp4',
+  'script n°14 (videos.md)': '08-script-confirmation.mp4',
+  'script n°5 (videos.md)': '09-roas-ment.mp4',
+  'script n°21 (videos.md)': '10-quelle-pub-couper.mp4',
+  'script n°29 mis à jour': '11-factures-word.mp4',
+  'script n°30 mis à jour': '12-devis-facture.mp4',
+  'script n°20 (videos.md)': '13-tableau-de-bord.mp4',
+  'script n°27 adapté': '14-routine-dimanche.mp4',
+};
+for (const posts of Object.values(POSTS)) {
+  for (const p of posts) {
+    const src = p.visuals?.[0]?.startsWith('video:') ? p.visuals[0].slice(6) : null;
+    if (p.status === 'à tourner' && RENDERED_VIDEOS[src]) {
+      p.visuals = [`video:${RENDERED_VIDEOS[src]}`];
+      p.status = 'prêt';
+      delete p.hook; delete p.screen; delete p.script;
+    }
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Publicité (petit test, semaine 3)

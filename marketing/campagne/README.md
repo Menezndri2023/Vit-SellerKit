@@ -45,6 +45,4 @@ node marketing/campagne/build.mjs                      # PDF + aperçu
 
 ## À faire par toi avant de publier
 
-- Les posts marqués **⚠️** (récit personnel) : adapte la première phrase à ton vécu réel.
-- Les posts LinkedIn du 26 novembre et du 10 décembre contiennent **[à compléter]** : mets tes vrais chiffres.
-- 14 vidéos sont **à tourner** (liste dans `calendrier.md`) : 5 par dimanche.
+- Les 16 vidéos sont prêtes (`videos/`, non versionné ; les 14 nouvelles se refont avec `node marketing/visuals/videos-campagne.mjs`). Elles sont sans voix : ajoute un son tendance dans TikTok / Instagram au moment de publier.

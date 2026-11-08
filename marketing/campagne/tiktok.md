@@ -30,16 +30,10 @@ Tu vends à 25 €. Tu gardes 5,65 €. Voilà pourquoi 👇 Calculateur gratuit
 #ecommerce #vendreenligne #entrepreneur #codmaroc
 ```
 
-### 2. Mardi 17 nov. · 20:30 · Vidéo · 🎥 à tourner
+### 2. Mardi 17 nov. · 20:30 · Vidéo
 **CA ≠ bénéfice**
 
-**Visuels** : `🎬 script n°12 (videos.md)`
-
-**Accroche écrite (0–3 s)** : « J’ai fait 10 000 € ce mois-ci. » Non.
-
-**À l’écran** : Texte en gros, puis le Tableau de bord du Tracker (CA vs bénéfice net).
-
-**Voix off** : « Tu as VENDU 10 000. Après produits, livraison, pub, frais et retours, il peut te rester 15 à 25 %, ou beaucoup moins. Soit 1 500 à 2 500 au mieux. Connais ton chiffre avant de quitter ton travail. »
+**Visuels** : `🎬 01-ca-benefice.mp4`
 
 **Texte à publier**
 
@@ -49,16 +43,10 @@ Chiffre d’affaires ≠ bénéfice. Calcule le tien, lien en bio.
 #entrepreneur #ecommerce #argent #vendreenligne
 ```
 
-### 3. Mercredi 18 nov. · 20:30 · Vidéo · 🎥 à tourner
+### 3. Mercredi 18 nov. · 20:30 · Vidéo
 **3 erreurs qui tuent ta marge**
 
-**Visuels** : `🎬 script n°11 (videos.md)`
-
-**Accroche écrite (0–3 s)** : 3 erreurs qui tuent ta marge (la 3e est la pire).
-
-**À l’écran** : 3 cartes texte + le calculateur pour chacune.
-
-**Voix off** : « Un : oublier l’emballage, 50 centimes fois 1000 commandes, ça fait 500 euros. Deux : ignorer les frais de paiement, 3 % de chaque vente. Trois : ne pas compter les colis refusés. À 30 % de retours, 5,65 devient 3,42. Lien en bio. »
+**Visuels** : `🎬 02-3-erreurs.mp4`
 
 **Texte à publier**
 
@@ -111,16 +99,10 @@ _Profiter du Black Friday (vendredi 27) : tester sa promo avant de la lancer. Of
 #blackfriday #ecommerce #promo #vendreenligne
 ```
 
-### 2. Mardi 24 nov. · 20:30 · Vidéo · 🎥 à tourner
+### 2. Mardi 24 nov. · 20:30 · Vidéo
 **Le prix minimum**
 
-**Visuels** : `🎬 script n°6 (videos.md)`
-
-**Accroche écrite (0–3 s)** : En dessous de ce prix, tu travailles gratuitement.
-
-**À l’écran** : Calculateur exemple 25 €, zoom sur « Prix minimum (sans perte) » = 19,18 €.
-
-**Voix off** : « Avant ta promo Black Friday, connais ce chiffre : ton prix minimum. Pour ce produit, 19,18 €. Une promo qui descend en dessous, c’est de l’argent perdu à chaque vente. Calcule le tien, lien en bio. »
+**Visuels** : `🎬 03-prix-minimum.mp4`
 
 **Texte à publier**
 
@@ -130,16 +112,10 @@ Ton prix minimum, en 10 secondes. Lien en bio.
 #blackfriday #prix #ecommerce #entrepreneur
 ```
 
-### 3. Mercredi 25 nov. · 20:30 · Vidéo · 🎥 à tourner
+### 3. Mercredi 25 nov. · 20:30 · Vidéo
 **Mythe : il faut vendre plus**
 
-**Visuels** : `🎬 script n°18 (videos.md)`
-
-**Accroche écrite (0–3 s)** : Tu n’as pas besoin de plus de ventes. Tu as besoin de meilleures marges.
-
-**À l’écran** : Les deux calculs en texte, puis le calculateur.
-
-**Voix off** : « 100 ventes à 1 € de bénéfice = 100. 50 ventes à 8 € = 400. Moitié moins de travail, quatre fois plus d’argent. Corrige ta marge, ensuite accélère. »
+**Visuels** : `🎬 04-vendre-plus.mp4`
 
 **Texte à publier**
 
@@ -149,16 +125,10 @@ Marge d’abord, volume ensuite. 🎁 Code EARLY −25 % sur les Google Sheets M
 #ecommerce #entrepreneur #business #vendreenligne
 ```
 
-### 4. Jeudi 26 nov. · 20:30 · Vidéo · 🎥 à tourner
+### 4. Jeudi 26 nov. · 20:30 · Vidéo
 **+10 % de prix = +43 % de bénéfice**
 
-**Visuels** : `🎬 script n°4 (videos.md)`
-
-**Accroche écrite (0–3 s)** : +10 % sur ton prix. Regarde ton bénéfice.
-
-**À l’écran** : Calculateur exemple 25 €, puis prix 27,50.
-
-**Voix off** : « 25 € : je garde 5,65. 27,50 : je garde 8,08. Dix pour cent de plus sur le prix, quarante-trois pour cent de plus dans ma poche. Lien en bio. »
+**Visuels** : `🎬 05-prix-plus-10.mp4`
 
 **Texte à publier**
 
@@ -168,16 +138,10 @@ Petit changement de prix, gros changement de bénéfice.
 #prix #ecommerce #vendreenligne #blackfriday
 ```
 
-### 5. Vendredi 27 nov. · 20:30 · Vidéo · 🎥 à tourner
+### 5. Vendredi 27 nov. · 20:30 · Vidéo
 **Black Friday : le dropshipping à 1 €**
 
-**Visuels** : `🎬 script n°2 (videos.md)`
-
-**Accroche écrite (0–3 s)** : Ce produit en dropshipping rapporte 1,03 € par vente.
-
-**À l’écran** : Préréglage Shopify, prix 29,99, coût 12, livraison 0, pub 15, retours 5 %.
-
-**Voix off** : « Vendu 29,99. Coûte 12. Ça fait 18 euros de marge, non ? Ajoute 15 euros de pub par commande, les frais Shopify, 5 % de remboursements… 1,03 €. Et c’est avant ta promo Black Friday. Vérifie le tien, lien en bio. »
+**Visuels** : `🎬 06-dropshipping-1-euro.mp4`
 
 **Texte à publier**
 
@@ -204,16 +168,10 @@ _Montrer le Tracker (COD, clients à risque) et le Pack Vendeur (ROAS réel). Pr
 #codmaroc #ecommercemaroc #vendreenligne #maroc
 ```
 
-### 2. Mardi 1 déc. · 20:30 · Vidéo · 🎥 à tourner
+### 2. Mardi 1 déc. · 20:30 · Vidéo
 **Le colis refusé**
 
-**Visuels** : `🎬 script n°3 (tournage-semaine-1.md, vidéo 1)`
-
-**Accroche écrite (0–3 s)** : 30 % de colis refusés → 15 % = +66 % de bénéfice
-
-**À l’écran** : Lien pré-rempli dans tournage-semaine-1.md.
-
-**Voix off** : « Paiement à la livraison, 199 dirhams. Avec 30 % de colis refusés, je garde 32. Même produit, 15 % de refus… 54. Même pub, même prix. Juste : confirme tes commandes avant d’expédier. Lien en bio. »
+**Visuels** : `🎬 07-colis-refuse.mp4`
 
 **Texte à publier**
 
@@ -223,16 +181,10 @@ Les colis refusés tuent ta marge en silence. Confirme chaque commande 📞
 #codmaroc #ecommerce #vendreenligne #maroc
 ```
 
-### 3. Mercredi 2 déc. · 20:30 · Vidéo · 🎥 à tourner
+### 3. Mercredi 2 déc. · 20:30 · Vidéo
 **Le script de confirmation**
 
-**Visuels** : `🎬 script n°14 (videos.md)`
-
-**Accroche écrite (0–3 s)** : L’appel de 20 secondes qui réduit tes colis refusés.
-
-**À l’écran** : Le script en texte + l’onglet Commandes avec le statut « Confirmée ».
-
-**Voix off** : « Avant d’expédier : appel ou vocal. "Bonjour, c’est [boutique], je confirme ta commande de X, total Y, livrée demain à [ville]. Tu seras disponible ?" Pas de réponse deux fois ? N’expédie pas. Note-le dans ton tracker. »
+**Visuels** : `🎬 08-script-confirmation.mp4`
 
 **Texte à publier**
 
@@ -242,16 +194,10 @@ Enregistre ce script 📌
 #codmaroc #ecommerce #vendreenligne #conseils
 ```
 
-### 4. Jeudi 3 déc. · 20:30 · Vidéo · 🎥 à tourner
+### 4. Jeudi 3 déc. · 20:30 · Vidéo
 **Le ROAS qui ment**
 
-**Visuels** : `🎬 script n°5 (videos.md)`
-
-**Accroche écrite (0–3 s)** : ROAS de 3. Tu gagnes 23 centimes.
-
-**À l’écran** : Calculateur exemple 25 €, zoom sur « ROAS minimum rentable » = 2,93.
-
-**Voix off** : « Ton gestionnaire de pub affiche un ROAS de 3. Sur ce produit, avec 1 colis sur 5 refusé, ça fait 23 centimes par commande. Ton seuil, c’est 2,93. Calcule le tien, lien en bio. »
+**Visuels** : `🎬 09-roas-ment.mp4`
 
 **Texte à publier**
 
@@ -261,16 +207,10 @@ ROAS ≠ bénéfice. Commente ROAS, je calcule ton seuil.
 #facebookads #tiktokads #roas #ecommerce
 ```
 
-### 5. Vendredi 4 déc. · 20:30 · Vidéo · 🎥 à tourner
+### 5. Vendredi 4 déc. · 20:30 · Vidéo
 **Quelle pub couper ?**
 
-**Visuels** : `🎬 script n°21 (videos.md)`
-
-**Accroche écrite (0–3 s)** : 2 pubs sur 6 perdaient de l’argent. Le ROAS ne le montrait pas.
-
-**À l’écran** : Pack Vendeur (copie de démonstration), onglet Publicité, colonne Verdict.
-
-**Voix off** : « Dans cet exemple : campagne montre, ROAS 1,96. Sac cabas, 0,88. Mais même au-dessus de 2, une campagne peut perdre de l’argent avec les retours. Cette colonne calcule le vrai bénéfice par campagne. Rouge = stop. »
+**Visuels** : `🎬 10-quelle-pub-couper.mp4`
 
 **Texte à publier**
 
@@ -284,16 +224,10 @@ Le verdict ✅/❌ pour chaque campagne. Pack Vendeur, lien en bio.
 
 _Margokit Pro pour les freelances et petites entreprises (gratuit 3 documents/mois). Bilan et relance de l’offre._
 
-### 1. Lundi 7 déc. · 20:30 · Vidéo · 🎥 à tourner
+### 1. Lundi 7 déc. · 20:30 · Vidéo
 **Arrête les factures sur Word**
 
-**Visuels** : `🎬 script n°29 mis à jour`
-
-**Accroche écrite (0–3 s)** : Arrête de faire tes factures sur Word.
-
-**À l’écran** : Un fichier « facture_finale_v3.docx », puis margokit.com : création d’une facture.
-
-**Voix off** : « Mauvais calculs, numéro fiscal oublié, "facture_finale_v3.docx"… Margokit Pro : devis en facture en un clic, PDF en français ou en anglais, envoyé par WhatsApp. Gratuit jusqu’à 3 documents par mois, lien en bio. »
+**Visuels** : `🎬 11-factures-word.mp4`
 
 **Texte à publier**
 
@@ -303,16 +237,10 @@ Freelances, celle-ci est pour vous. 🧾
 #freelance #autoentrepreneur #facture #entrepreneur
 ```
 
-### 2. Mardi 8 déc. · 20:30 · Vidéo · 🎥 à tourner
+### 2. Mardi 8 déc. · 20:30 · Vidéo
 **Le devis qui devient facture**
 
-**Visuels** : `🎬 script n°30 mis à jour`
-
-**Accroche écrite (0–3 s)** : Le client a dit oui. La facture prend… 1 clic.
-
-**À l’écran** : Compte de test sur margokit.com : devis → « Convertir en facture » → PDF → « Envoyer par WhatsApp ».
-
-**Voix off** : « Le client a dit oui. Un clic : la facture est créée, numérotée, avec mes mentions. J’envoie le lien sur WhatsApp. C’est tout. »
+**Visuels** : `🎬 12-devis-facture.mp4`
 
 **Texte à publier**
 
@@ -335,16 +263,10 @@ Ton client a dit oui ? Facture en 1 clic 👉
 #freelance #facturation #petiteentreprise #factureelectronique
 ```
 
-### 4. Jeudi 10 déc. · 20:30 · Vidéo · 🎥 à tourner
+### 4. Jeudi 10 déc. · 20:30 · Vidéo
 **Le tableau de bord en 15 secondes**
 
-**Visuels** : `🎬 script n°20 (videos.md)`
-
-**Accroche écrite (0–3 s)** : Tout vendeur a besoin de ce tableau de bord.
-
-**À l’écran** : Scroll lent du Tableau de bord du Tracker, musique tendance, sans voix.
-
-**Voix off** : Sans voix. Texte tuile par tuile, fin : « Template Google Sheets, lien en bio ».
+**Visuels** : `🎬 13-tableau-de-bord.mp4`
 
 **Texte à publier**
 
@@ -354,16 +276,10 @@ Tout se calcule depuis tes commandes. 📊
 #googlesheets #ecommerce #organisation #vendreenligne
 ```
 
-### 5. Vendredi 11 déc. · 20:30 · Vidéo · 🎥 à tourner
+### 5. Vendredi 11 déc. · 20:30 · Vidéo
 **La routine du dimanche**
 
-**Visuels** : `🎬 script n°27 adapté`
-
-**Accroche écrite (0–3 s)** : La routine du dimanche d’un vendeur qui connaît ses chiffres (5 minutes).
-
-**À l’écran** : 4 écrans du Pack Vendeur (copie de démonstration), un par étape.
-
-**Voix off** : « Un : mets à jour le statut de tes commandes. Deux : ajoute ta dépense pub par campagne. Trois : regarde ton bénéfice après pub. Quatre : coupe les campagnes en rouge. Terminé. »
+**Visuels** : `🎬 14-routine-dimanche.mp4`
 
 **Texte à publier**
 

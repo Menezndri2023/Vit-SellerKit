@@ -68,8 +68,6 @@ Fais le test avec tes propres chiffres (gratuit) : lien en commentaire.
 ### 3. Vendredi 20 nov. · 20:00 · Album (6 images)
 **Les 4 outils Margokit**
 
-> ⚠️ La 1re phrase raconte ton histoire : garde-la seulement si elle est vraie pour toi.
-
 **Visuels** : `visuels/car-kits-1.png` · `visuels/car-kits-2.png` · `visuels/car-kits-3.png` · `visuels/car-kits-4.png` · `visuels/car-kits-5.png` · `visuels/car-kits-6.png`
 
 **Texte à publier**
@@ -77,7 +75,7 @@ Fais le test avec tes propres chiffres (gratuit) : lien en commentaire.
 ```text
 Je vous présente Margokit 💚
 
-J’ai construit ces outils après avoir vu trop de vendeurs vendre beaucoup… et ne rien garder.
+J’ai construit ces outils pour une raison simple : beaucoup de vendeurs vendent beaucoup… et gardent très peu.
 
 1. Calculateur — gratuit. Ton vrai bénéfice par vente, ton prix minimum, ton ROAS rentable.
 2. Tracker — 12 $ une fois. Commandes, stock, clients et tableau de bord dans Google Sheets. Version Maroc en DH incluse.
@@ -219,10 +217,10 @@ Les 3 réflexes qui font baisser les refus :
 Le Tracker Margokit (version Maroc en DH) signale automatiquement les clients ⚠️ à risque. Écrivez COLIS en commentaire, je vous envoie les captures en privé.
 ```
 
-### 2. Mercredi 2 déc. · 20:00 · Vidéo · 🎥 à tourner
+### 2. Mercredi 2 déc. · 20:00 · Vidéo
 **Le colis refusé (COD Maroc)**
 
-**Visuels** : `🎬 script n°3 (tournage-semaine-1.md, vidéo 1)`
+**Visuels** : `🎬 07-colis-refuse.mp4`
 
 **Texte à publier**
 
@@ -306,10 +304,10 @@ Gratuit jusqu’à 3 documents par mois.
 Créer un compte gratuit : https://margokit.com/fr/signup?utm_source=facebook&utm_medium=social&utm_campaign=ce-que-tu-gardes&utm_content=pro
 ```
 
-### 2. Mercredi 9 déc. · 20:00 · Vidéo · 🎥 à tourner
+### 2. Mercredi 9 déc. · 20:00 · Vidéo
 **Le devis qui devient facture**
 
-**Visuels** : `🎬 script n°30 mis à jour`
+**Visuels** : `🎬 12-devis-facture.mp4`
 
 **Texte à publier**
 
