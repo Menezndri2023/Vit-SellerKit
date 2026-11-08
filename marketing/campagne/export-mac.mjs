@@ -11,6 +11,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { homedir } from 'node:os';
 import { CAMPAIGN, WEEKS, NETWORKS, POSTS, STORIES, FB_GROUPS } from './posts.mjs';
+import { makeCompletePdf } from './pdf-complet.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MK = join(HERE, '..');
@@ -105,10 +106,33 @@ if (existsSync(VIDS)) for (const f of readdirSync(VIDS).filter((f) => !f.startsW
 
 for (const f of readdirSync(OLD).filter((f) => /^(tracker|pack|pro)-/.test(f))) cp(join(OLD, f), '09 - Visuels boutique Gumroad', f);
 
+// 4b. Tout le contenu d'un coup : un fichier texte par réseau + un PDF complet
+const postText = (p, N) => {
+  const out = [`■ ${day(p.date).toUpperCase()} · ${p.time} · ${N.label} · ${p.format}${p.status === 'à tourner' ? ' · VIDÉO À TOURNER' : ''}`, `Sujet : ${p.title}`];
+  if (p.note) out.push(`⚠️ ${p.note}`);
+  const vis = (p.visuals ?? []).map((v) => (v.startsWith('video:') ? `vidéo ${v.slice(6)}` : v.startsWith('pdf:') ? `PDF ${v.slice(4)}` : v)).filter((v) => !(p.visuals.some((x) => x.startsWith('pdf:')) && v.startsWith('car-')));
+  if (vis.length) out.push(`Visuels : ${vis.join(' · ')}`);
+  if (p.hook) out.push(`Accroche écrite : ${p.hook}`);
+  if (p.screen) out.push(`À l’écran : ${p.screen}`);
+  if (p.script) out.push(`Voix off : ${p.script}`);
+  out.push('', '--- TEXTE À PUBLIER ---', p.caption + (p.hashtags ? `\n\n${p.hashtags}` : ''));
+  if (p.firstComment) out.push('', '--- 1er COMMENTAIRE ---', p.firstComment);
+  return out.join('\n');
+};
+for (const [key, posts] of Object.entries(POSTS)) {
+  const N = NETWORKS[key];
+  const body = WEEKS.map((W) => [`\n══════════ SEMAINE ${W.n} · ${W.dates} · ${W.theme} ══════════\n`, ...posts.filter((p) => p.week === W.n).map((p) => postText(p, N))].join('\n\n')).join('\n');
+  writeFileSync(join(DEST, NET_DIR[key], `00 - TOUS LES TEXTES - ${N.label}.txt`), `${N.label.toUpperCase()} — campagne « ${CAMPAIGN.name} »\nProfil : ${N.handle} · ${N.rhythm}\nLien du profil : ${N.link}\n${body}\n`);
+}
+
+await makeCompletePdf(join(DEST, 'CAMPAGNE-COMPLETE.pdf'));
+
 // 5. Lisez-moi
 writeFileSync(join(DEST, '00 - LISEZ-MOI.txt'), `MARGOKIT — TOUTES LES CAMPAGNES
 Généré le ${new Date().toLocaleDateString('fr-FR')} depuis le dépôt (marketing/campagne/export-mac.mjs).
 
+▶ TOUT LE CONTENU EN UN SEUL DOCUMENT : « CAMPAGNE-COMPLETE.pdf » (52 publications, visuels, textes, 1ers commentaires, scripts).
+▶ TOUS LES TEXTES À COPIER : dans chaque dossier réseau, le fichier « 00 - TOUS LES TEXTES - <réseau>.txt ».
 ▶ Double-clique sur « OUVRIR-apercu-campagne.html » pour voir toute la campagne « ${CAMPAIGN.name} » (${day(CAMPAIGN.start)} → ${day(CAMPAIGN.end)}).
   Aperçu en ligne : https://claude.ai/artifact/RZQJkBgYV7ypK9ZottEUkc
 

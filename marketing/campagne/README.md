@@ -22,13 +22,15 @@ Tout ce qu'il faut pour lancer Margokit sur Instagram, Facebook, TikTok et Linke
 | `videos/` | Copie locale des 2 vidéos déjà prêtes (non versionnée) |
 | `posts.mjs` | **Source unique** de tous les textes |
 | `build.mjs` | Régénère les `.md`, les PDF et l'aperçu à partir de `posts.mjs` |
+| `export-campagne.mjs` | Exporte **toute cette campagne** (aperçu hors ligne, PDF complet, vidéos, présentation, carrousels, stories, posts par réseau) dans `~/Desktop/Campagne Ce que tu gardes` |
+| `pdf-complet.mjs` | Génère `CAMPAGNE-COMPLETE.pdf` (utilisé par les deux exports) |
 | `export-mac.mjs` | Copie toutes les campagnes (celle-ci + Pinterest, prospection, vidéos, visuels Gumroad) dans `~/Desktop/Margokit-Campagnes`, un dossier par publication avec images numérotées et `texte.txt` |
 
 ## Modifier un post
 
 1. Modifie le texte dans `posts.mjs`.
 2. `node marketing/campagne/build.mjs` (ajoute `--no-pdf` si les visuels n'ont pas changé).
-3. `node marketing/campagne/export-mac.mjs` pour mettre à jour le dossier du Bureau.
+3. `node marketing/campagne/export-campagne.mjs` pour mettre à jour le dossier « Campagne Ce que tu gardes » du Bureau (et `export-mac.mjs` pour le dossier de toutes les campagnes).
 
 ## Modifier un visuel
 
