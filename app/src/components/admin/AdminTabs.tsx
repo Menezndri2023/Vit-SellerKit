@@ -8,6 +8,7 @@ const TABS = [
   { key: 'users', href: '/admin/users' },
   { key: 'codes', href: '/admin/codes' },
   { key: 'sales', href: '/admin/sales' },
+  { key: 'reviews', href: '/admin/reviews' },
 ] as const;
 
 export default function AdminTabs() {

@@ -116,6 +116,13 @@ export default async function Dashboard({ params }: PageProps<'/[locale]/app'>) 
           </ul>
         </section>
       )}
+
+      <aside className="flex flex-col gap-3 rounded-2xl border border-line bg-surface p-5 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-muted">{td('reviewPrompt')}</p>
+        <Link href={{ pathname: '/reviews', query: { kit: 'pro' }, hash: 'write' }} className="shrink-0 text-sm font-semibold text-primary-ink hover:underline">
+          {td('reviewLink')}
+        </Link>
+      </aside>
     </div>
   );
 }

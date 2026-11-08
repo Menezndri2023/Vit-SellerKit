@@ -9,6 +9,7 @@ import { connectDb, mongoClient } from '@/lib/db';
 import { actionAdmin } from '@/lib/session';
 import { ActivationCode } from '@/models/ActivationCode';
 import { audit } from '@/models/AuditLog';
+import { Review } from '@/models/Review';
 import { Subscription } from '@/models/Subscription';
 
 const DAY = 86_400_000;
@@ -78,5 +79,20 @@ export async function revokeCode(id: string) {
   await connectDb();
   await ActivationCode.updateOne({ _id: id, usedBy: { $exists: false } }, { $set: { revokedAt: new Date() } });
   await audit({ userId: admin.id, actorId: admin.id, action: 'admin.codes.revoke', targetType: 'code', targetId: id });
+  refresh();
+}
+
+/** Review moderation: only approved reviews are ever shown publicly. */
+export async function moderateReview(id: string, decision: 'approve' | 'reject' | 'delete') {
+  const admin = await actionAdmin();
+  if (!ObjectId.isValid(id) || !['approve', 'reject', 'delete'].includes(decision)) return;
+  await connectDb();
+  if (decision === 'delete') await Review.deleteOne({ _id: id });
+  else
+    await Review.updateOne(
+      { _id: id, status: { $in: ['pending', 'approved', 'rejected'] } },
+      { $set: { status: decision === 'approve' ? 'approved' : 'rejected', approvedAt: decision === 'approve' ? new Date() : null, moderatedBy: admin.id } },
+    );
+  await audit({ userId: admin.id, actorId: admin.id, action: `admin.review.${decision}`, targetType: 'review', targetId: id });
   refresh();
 }

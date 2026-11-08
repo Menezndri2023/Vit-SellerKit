@@ -6,6 +6,7 @@ const site = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
 const pages = [
   { path: '', locales: routing.locales },
   { path: '/calculator', locales: routing.locales },
+  { path: '/reviews', locales: routing.locales },
   { path: '/legal/terms', locales: ['en', 'fr'] },
   { path: '/legal/privacy', locales: ['en', 'fr'] },
 ] as const;

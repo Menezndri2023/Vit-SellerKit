@@ -198,6 +198,12 @@ Le Seller Pack ajoute le suivi pub & ROAS, un planning de contenu, la trésoreri
 
 Your code / Ton code : UPGRADE → {{LIEN_SELLER_PACK}}
 
+━━ ⭐ Your review / Ton avis ━━
+
+After a week of use, tell us what changed for you (verified purchase badge with the email you used here):
+Après une semaine d'utilisation, dis-nous ce que ça a changé pour toi (badge « Achat vérifié » avec l'e-mail utilisé ici) :
+https://margokit.com/fr/reviews?kit=tracker#write
+
 Questions? Reply to your receipt email or WhatsApp {{LIEN_WHATSAPP}}.
 Une question ? Réponds à l'e-mail de reçu ou écris sur WhatsApp {{LIEN_WHATSAPP}}.
 ```

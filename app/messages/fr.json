@@ -122,7 +122,10 @@
     "sheetsPack": "Voir le Pack Vendeur",
     "sheetsTracker": "Juste le Tracker de commandes",
     "testimonialsTitle": "Ce qu’en disent les vendeurs",
-    "whatsapp": "Une question ? Écris-nous sur WhatsApp"
+    "whatsapp": "Une question ? Écris-nous sur WhatsApp",
+    "reviewsAll": "Voir tous les avis",
+    "reviewsFirst": "Donner mon avis",
+    "reviewsEmpty": "Les premiers avis arrivent. Tu utilises un outil Margokit ? Dis-nous ce que tu en penses."
   },
   "pricing": {
     "title": "Des prix simples",
@@ -224,7 +227,8 @@
     "tagline": "Sache ce que tu gardes vraiment.",
     "rights": "© {year} Margokit",
     "terms": "CGU",
-    "privacy": "Confidentialité"
+    "privacy": "Confidentialité",
+    "reviews": "Avis clients"
   },
   "calcCta": {
     "packTitle": "Suis ça sur chaque commande, automatiquement",
@@ -615,7 +619,9 @@
     "recent": "Documents récents",
     "none": "—",
     "exclTax": "HT",
-    "seeAll": "Tout voir"
+    "seeAll": "Tout voir",
+    "reviewPrompt": "Margokit Pro te fait gagner du temps ? Ton avis aide d’autres indépendants à choisir.",
+    "reviewLink": "Donner mon avis →"
   },
   "docShare": {
     "title": "Partager",
@@ -684,7 +690,8 @@
       "stats": "Statistiques",
       "users": "Utilisateurs",
       "codes": "Codes",
-      "sales": "Ventes"
+      "sales": "Ventes",
+      "reviews": "Avis"
     },
     "stats": {
       "users": "Utilisateurs",
@@ -753,6 +760,24 @@
       "linked": "Compte lié",
       "test": "test",
       "none": "Aucune vente reçue. Configure le Ping Gumroad (voir README)."
+    },
+    "reviews": {
+      "filter": "Filtrer par statut",
+      "status": {
+        "pending": "À modérer",
+        "approved": "Publiés",
+        "rejected": "Refusés",
+        "unconfirmed": "E-mail non confirmé"
+      },
+      "unconfirmedHelp": "Ces avis attendent que leur auteur clique sur le lien reçu par e-mail. Ils sont supprimés automatiquement après 7 jours.",
+      "none": "Aucun avis ici.",
+      "notVerified": "achat non vérifié",
+      "account": "compte Margokit",
+      "approve": "Publier",
+      "reject": "Refuser",
+      "unpublish": "Retirer",
+      "delete": "Supprimer",
+      "confirmDelete": "Supprimer définitivement cet avis ?"
     }
   },
   "account": {
@@ -792,6 +817,83 @@
       "rejected": "Rejetée",
       "payment_sent": "Paiement transmis",
       "cashed": "Encaissée"
+    }
+  },
+  "reviews": {
+    "metaTitle": "Avis clients sur les outils Margokit",
+    "metaDescription": "Ce que les vendeurs en ligne et les freelances pensent du calculateur, du Tracker, du Pack Vendeur et de Margokit Pro. Avis vérifiés et modérés.",
+    "title": "Avis sur les outils Margokit",
+    "subtitle": "Les retours de celles et ceux qui utilisent le calculateur, le Tracker, le Pack Vendeur et Margokit Pro. Chaque avis est lu avant publication, et les achats sont vérifiés quand c’est possible.",
+    "write": "Donner mon avis",
+    "summaryLabel": "Note moyenne par outil",
+    "averageLabel": "Note moyenne {average} sur 5",
+    "count": "{count, plural, one {# avis} other {# avis}}",
+    "noneYet": "Pas encore d’avis",
+    "listAll": "Tous les avis",
+    "listFor": "Avis sur {kit}",
+    "showAll": "Voir tous les outils",
+    "empty": "Aucun avis publié pour l’instant. Tu utilises cet outil ? Ton avis sera le premier.",
+    "formTitle": "Donne ton avis",
+    "formText": "Dis-nous ce que l’outil a changé pour toi, ce qui t’a aidé et ce qui manque. Les avis négatifs sont publiés aussi.",
+    "rule1": "Ton e-mail n’est jamais publié.",
+    "rule2": "Seuls ton prénom et l’initiale de ton nom apparaissent.",
+    "rule3": "Badge « Achat vérifié » si ton e-mail correspond à un achat.",
+    "starsLabel": "{rating} sur 5",
+    "verifiedPurchase": "Achat vérifié",
+    "verifiedUser": "Utilisateur vérifié",
+    "thanksTitle": "Merci pour ton avis !",
+    "thanksConfirm": "On vient de t’envoyer un e-mail : clique sur le lien pour confirmer ton avis. Il sera publié après relecture.",
+    "thanksPending": "Ton avis sera publié après relecture, en général sous 48 heures.",
+    "calcPrompt": "Le calculateur t’a été utile ?",
+    "calcLink": "Donne ton avis",
+    "kits": {
+      "calculator": {
+        "name": "Calculateur de bénéfice",
+        "what": "Gratuit · le vrai bénéfice par vente"
+      },
+      "tracker": {
+        "name": "Tracker Commandes & Stock",
+        "what": "Google Sheets · commandes, stock, clients"
+      },
+      "pack": {
+        "name": "Pack Vendeur",
+        "what": "Google Sheets · pub, contenu, trésorerie"
+      },
+      "pro": {
+        "name": "Margokit Pro",
+        "what": "Application · devis et factures"
+      }
+    },
+    "form": {
+      "kit": "Outil",
+      "rating": "Ta note",
+      "comment": "Ton avis",
+      "commentPlaceholder": "Ex. : je ne savais pas que les colis refusés me coûtaient autant…",
+      "name": "Prénom et nom",
+      "nameHint": "Publié sous la forme « Salma B. »",
+      "location": "Ville ou activité (facultatif)",
+      "locationPlaceholder": "Ex. : Casablanca, vendeuse Instagram",
+      "email": "E-mail",
+      "emailHint": "Pour confirmer ton avis et vérifier ton achat. Jamais publié.",
+      "signedIn": "Tu es connecté avec {email} : pas besoin de confirmer par e-mail.",
+      "consent": "J’accepte que mon avis, mon prénom avec l’initiale de mon nom et ma ville soient publiés sur margokit.com. Je peux demander leur suppression à tout moment.",
+      "submit": "Envoyer mon avis",
+      "sending": "Envoi…"
+    },
+    "errors": {
+      "rating": "Choisis une note de 1 à 5 étoiles.",
+      "commentTooShort": "Écris au moins 20 caractères.",
+      "consent": "Coche la case pour accepter la publication."
+    },
+    "confirm": {
+      "askTitle": "Confirme ton avis",
+      "askText": "Un dernier clic pour confirmer que c’est bien toi. Ton avis sera ensuite relu, puis publié.",
+      "button": "Confirmer mon avis",
+      "doneTitle": "Avis confirmé, merci !",
+      "doneText": "On le relit et on le publie, en général sous 48 heures.",
+      "errorTitle": "Lien invalide ou expiré",
+      "errorText": "Ce lien a déjà été utilisé ou il a plus de 7 jours. Tu peux renvoyer ton avis depuis la page des avis.",
+      "back": "Retour aux avis"
     }
   }
 }

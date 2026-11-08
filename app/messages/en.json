@@ -122,7 +122,10 @@
     "sheetsPack": "See the Seller Pack",
     "sheetsTracker": "Just the Order Tracker",
     "testimonialsTitle": "What sellers say",
-    "whatsapp": "Questions? Chat with us on WhatsApp"
+    "whatsapp": "Questions? Chat with us on WhatsApp",
+    "reviewsAll": "See all reviews",
+    "reviewsFirst": "Write a review",
+    "reviewsEmpty": "The first reviews are on their way. Using a Margokit tool? Tell us what you think."
   },
   "pricing": {
     "title": "Simple pricing",
@@ -224,7 +227,8 @@
     "tagline": "Know what you really keep.",
     "rights": "© {year} Margokit",
     "terms": "Terms",
-    "privacy": "Privacy"
+    "privacy": "Privacy",
+    "reviews": "Reviews"
   },
   "calcCta": {
     "packTitle": "Track this on every order, automatically",
@@ -615,7 +619,9 @@
     "recent": "Recent documents",
     "none": "—",
     "exclTax": "excl. tax",
-    "seeAll": "See all"
+    "seeAll": "See all",
+    "reviewPrompt": "Is Margokit Pro saving you time? Your review helps other freelancers choose.",
+    "reviewLink": "Write a review →"
   },
   "docShare": {
     "title": "Share",
@@ -684,7 +690,8 @@
       "stats": "Stats",
       "users": "Users",
       "codes": "Codes",
-      "sales": "Sales"
+      "sales": "Sales",
+      "reviews": "Reviews"
     },
     "stats": {
       "users": "Users",
@@ -753,6 +760,24 @@
       "linked": "Linked account",
       "test": "test",
       "none": "No sales received yet. Configure the Gumroad Ping (see README)."
+    },
+    "reviews": {
+      "filter": "Filter by status",
+      "status": {
+        "pending": "To moderate",
+        "approved": "Published",
+        "rejected": "Rejected",
+        "unconfirmed": "Email not confirmed"
+      },
+      "unconfirmedHelp": "These reviews are waiting for their author to click the link sent by email. They are deleted automatically after 7 days.",
+      "none": "No reviews here.",
+      "notVerified": "purchase not verified",
+      "account": "Margokit account",
+      "approve": "Publish",
+      "reject": "Reject",
+      "unpublish": "Unpublish",
+      "delete": "Delete",
+      "confirmDelete": "Permanently delete this review?"
     }
   },
   "account": {
@@ -792,6 +817,83 @@
       "rejected": "Rejected",
       "payment_sent": "Payment sent",
       "cashed": "Cashed"
+    }
+  },
+  "reviews": {
+    "metaTitle": "Customer reviews of Margokit tools",
+    "metaDescription": "What online sellers and freelancers think of the calculator, the Tracker, the Seller Pack and Margokit Pro. Verified, moderated reviews.",
+    "title": "Reviews of Margokit tools",
+    "subtitle": "Feedback from people who use the calculator, the Tracker, the Seller Pack and Margokit Pro. Every review is read before it is published, and purchases are verified when possible.",
+    "write": "Write a review",
+    "summaryLabel": "Average rating per tool",
+    "averageLabel": "Average rating {average} out of 5",
+    "count": "{count, plural, one {# review} other {# reviews}}",
+    "noneYet": "No reviews yet",
+    "listAll": "All reviews",
+    "listFor": "Reviews of {kit}",
+    "showAll": "See all tools",
+    "empty": "No published reviews yet. Using this tool? Yours will be the first.",
+    "formTitle": "Write a review",
+    "formText": "Tell us what the tool changed for you, what helped and what is missing. Negative reviews are published too.",
+    "rule1": "Your email is never published.",
+    "rule2": "Only your first name and last-name initial appear.",
+    "rule3": "“Verified purchase” badge when your email matches a purchase.",
+    "starsLabel": "{rating} out of 5",
+    "verifiedPurchase": "Verified purchase",
+    "verifiedUser": "Verified user",
+    "thanksTitle": "Thanks for your review!",
+    "thanksConfirm": "We just sent you an email: click the link to confirm your review. It will be published after we read it.",
+    "thanksPending": "Your review will be published after we read it, usually within 48 hours.",
+    "calcPrompt": "Was the calculator useful?",
+    "calcLink": "Write a review",
+    "kits": {
+      "calculator": {
+        "name": "Profit calculator",
+        "what": "Free · real profit per sale"
+      },
+      "tracker": {
+        "name": "Order & Inventory Tracker",
+        "what": "Google Sheets · orders, stock, customers"
+      },
+      "pack": {
+        "name": "Seller Pack",
+        "what": "Google Sheets · ads, content, cash"
+      },
+      "pro": {
+        "name": "Margokit Pro",
+        "what": "Web app · quotes and invoices"
+      }
+    },
+    "form": {
+      "kit": "Tool",
+      "rating": "Your rating",
+      "comment": "Your review",
+      "commentPlaceholder": "E.g. I had no idea refused parcels were costing me that much…",
+      "name": "First and last name",
+      "nameHint": "Published as “Salma B.”",
+      "location": "City or business (optional)",
+      "locationPlaceholder": "E.g. Casablanca, Instagram seller",
+      "email": "Email",
+      "emailHint": "To confirm your review and check your purchase. Never published.",
+      "signedIn": "You are signed in as {email}: no email confirmation needed.",
+      "consent": "I agree that my review, my first name with last-name initial and my city are published on margokit.com. I can ask for their removal at any time.",
+      "submit": "Send my review",
+      "sending": "Sending…"
+    },
+    "errors": {
+      "rating": "Choose a rating from 1 to 5 stars.",
+      "commentTooShort": "Write at least 20 characters.",
+      "consent": "Tick the box to accept publication."
+    },
+    "confirm": {
+      "askTitle": "Confirm your review",
+      "askText": "One last click to confirm it’s you. Your review will then be read and published.",
+      "button": "Confirm my review",
+      "doneTitle": "Review confirmed, thank you!",
+      "doneText": "We will read and publish it, usually within 48 hours.",
+      "errorTitle": "Invalid or expired link",
+      "errorText": "This link was already used or is more than 7 days old. You can send your review again from the reviews page.",
+      "back": "Back to reviews"
     }
   }
 }

@@ -105,3 +105,15 @@ export function planEmail(kind: 'j7' | 'j1' | 'expired', locale: string | null |
   const body = c[kind].body.replace('{date}', new Intl.DateTimeFormat(lang === 'ar' ? 'ar-u-nu-latn' : lang, { dateStyle: 'long' }).format(date));
   return { to, subject: c[kind].subject, html: layout(c[kind].subject, body, { label: c.button, url }, c.footer, lang), text: `${body}\n\n${url}` };
 }
+
+const reviewCopy = {
+  en: { subject: 'Confirm your review — Margokit', title: 'Confirm your review', body: 'Thanks for your review of {kit}! Click the button to confirm it. We read every review before publishing it. This link is valid for 7 days.', button: 'Confirm my review', footer: "If you didn't write a review, ignore this email: nothing will be published." },
+  ar: { subject: 'أكّد تقييمك — Margokit', title: 'أكّد تقييمك', body: 'شكرًا على تقييمك لـ {kit}! انقر على الزر لتأكيده. نقرأ كل تقييم قبل نشره. الرابط صالح لمدة 7 أيام.', button: 'تأكيد تقييمي', footer: 'إن لم تكتب تقييمًا، تجاهل هذه الرسالة: لن يُنشر شيء.' },
+  fr: { subject: 'Confirme ton avis — Margokit', title: 'Confirme ton avis', body: 'Merci pour ton avis sur {kit} ! Clique sur le bouton pour le confirmer. On lit chaque avis avant de le publier. Ce lien est valable 7 jours.', button: 'Confirmer mon avis', footer: 'Si tu n’as pas écrit d’avis, ignore cet e-mail : rien ne sera publié.' },
+} as const;
+
+export function reviewConfirmEmail(locale: string | null | undefined, to: string, kitName: string, url: string): Email {
+  const c = reviewCopy[langOf(locale)];
+  const body = c.body.replace('{kit}', kitName);
+  return { to, subject: c.subject, html: layout(c.title, body, { label: c.button, url }, c.footer, langOf(locale)), text: `${c.title}\n\n${body}\n\n${url}\n\n${c.footer}` };
+}

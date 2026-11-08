@@ -175,6 +175,12 @@ Clique sur la version de ton choix → « Créer une copie ». Le fichier arrive
 3. Delete the sample rows (Orders, Products, Ads, Content, Cash) and add your real data. / Supprime les lignes d'exemple (Commandes, Produits, Publicité, Contenu, Trésorerie) et ajoute tes vraies données.
 4. Before your next product launch, open the Price calculator. / Avant ton prochain lancement produit, ouvre le Calculateur de prix.
 
+━━ ⭐ Your review / Ton avis ━━
+
+After a week of use, tell us what changed for you (verified purchase badge with the email you used here):
+Après une semaine d'utilisation, dis-nous ce que ça a changé pour toi (badge « Achat vérifié » avec l'e-mail utilisé ici) :
+https://margokit.com/fr/reviews?kit=pack#write
+
 Questions? Reply to your receipt email or WhatsApp {{LIEN_WHATSAPP}}.
 Une question ? Réponds à l'e-mail de reçu ou écris sur WhatsApp {{LIEN_WHATSAPP}}.
 ```

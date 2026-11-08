@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Calculator from '@/components/Calculator';
 import { routing } from '@/i18n/routing';
 import { parseState } from '@/lib/calculator-state';
+import { Link } from '@/i18n/navigation';
 import { links } from '@/lib/links';
 
 export async function generateMetadata({ params }: PageProps<'/[locale]/calculator'>): Promise<Metadata> {
@@ -31,6 +32,12 @@ export default async function CalculatorPage({ params, searchParams }: PageProps
         <p className="mt-4 text-lg text-muted">{t('hero.subtitle')}</p>
       </section>
       <Calculator initial={initial} />
+      <p className="text-sm text-muted">
+        {t('reviews.calcPrompt')}{' '}
+        <Link href={{ pathname: '/reviews', query: { kit: 'calculator' }, hash: 'write' }} className="font-medium text-primary-ink hover:underline">
+          {t('reviews.calcLink')}
+        </Link>
+      </p>
       {pack && (
         <section className="rounded-2xl bg-ink p-6 text-bg sm:p-8">
           <h2 className="font-display text-2xl font-bold">{t('calcCta.packTitle')}</h2>

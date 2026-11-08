@@ -6,16 +6,17 @@ import Pricing from '@/components/Pricing';
 import SheetsCta from '@/components/SheetsCta';
 import SubscribeForm from '@/components/SubscribeForm';
 import WhatsAppButton from '@/components/WhatsAppButton';
-import { testimonials } from '@/content/testimonials';
+import ReviewCard from '@/components/reviews/ReviewCard';
 import { parseState } from '@/lib/calculator-state';
 import { links } from '@/lib/links';
+import { approvedReviews } from '@/lib/reviews';
 
 export default async function Home({ params, searchParams }: PageProps<'/[locale]'>) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations('landing');
   const initial = parseState(await searchParams, locale);
-  const lang = locale === 'fr' ? 'fr' : 'en';
+  const reviews = await approvedReviews({ limit: 3 });
   const features = [1, 2, 3, 4] as const;
 
   return (
@@ -56,21 +57,23 @@ export default async function Home({ params, searchParams }: PageProps<'/[locale
 
       <SheetsCta />
 
-      {testimonials.length > 0 && (
-        <section className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+      <section className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+        <div className="flex flex-wrap items-baseline justify-between gap-3">
           <h2 className="font-display text-3xl font-bold">{t('testimonialsTitle')}</h2>
+          <Link href="/reviews" className="text-sm font-medium text-primary-ink hover:underline">
+            {reviews.length ? t('reviewsAll') : t('reviewsFirst')}
+          </Link>
+        </div>
+        {reviews.length > 0 ? (
           <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {testimonials.map((x) => (
-              <figure key={x.name} className="rounded-2xl border border-line bg-surface p-6">
-                <blockquote className="text-ink">“{x.quote[lang]}”</blockquote>
-                <figcaption className="mt-4 text-sm text-muted">
-                  <strong className="text-ink">{x.name}</strong> · {x.role[lang]}
-                </figcaption>
-              </figure>
+            {reviews.map((r) => (
+              <ReviewCard key={r.id} review={r} locale={locale} showKit />
             ))}
           </div>
-        </section>
-      )}
+        ) : (
+          <p className="mt-4 text-muted">{t('reviewsEmpty')}</p>
+        )}
+      </section>
 
       <Faq />
 

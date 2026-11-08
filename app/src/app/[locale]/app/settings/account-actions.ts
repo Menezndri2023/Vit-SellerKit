@@ -9,6 +9,7 @@ import { BusinessProfile } from '@/models/BusinessProfile';
 import { Client } from '@/models/Client';
 import { Document } from '@/models/Document';
 import { Product } from '@/models/Product';
+import { Review } from '@/models/Review';
 import { Subscription } from '@/models/Subscription';
 
 export type DeleteState = { error?: string };
@@ -31,6 +32,7 @@ export async function deleteAccount(_prev: DeleteState, form: FormData): Promise
     Document.deleteMany({ userId }),
     Subscription.deleteMany({ userId }),
     AuditLog.deleteMany({ userId }),
+    Review.deleteMany({ $or: [{ userId }, { email: user.email.toLowerCase() }] }),
   ]);
   const db = mongoClient().db();
   const oid = ObjectId.isValid(userId) ? new ObjectId(userId) : null;

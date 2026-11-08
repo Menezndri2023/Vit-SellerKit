@@ -6,7 +6,10 @@ export default async function SiteFooter() {
   return (
     <footer className="mx-auto flex max-w-6xl flex-col gap-3 border-t border-line px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
       <span>{t('tagline')}</span>
-      <div className="flex gap-4">
+      <div className="flex flex-wrap gap-x-4 gap-y-2">
+        <Link href="/reviews" className="hover:text-ink">
+          {t('reviews')}
+        </Link>
         <Link href="/legal/terms" className="hover:text-ink">
           {t('terms')}
         </Link>

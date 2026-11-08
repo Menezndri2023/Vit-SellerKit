@@ -4,6 +4,7 @@ import { BusinessProfile } from '@/models/BusinessProfile';
 import { Client } from '@/models/Client';
 import { Document } from '@/models/Document';
 import { Product } from '@/models/Product';
+import { Review } from '@/models/Review';
 import { Subscription } from '@/models/Subscription';
 
 /** Full export of the user's data (GDPR right of access / portability), as JSON. */
@@ -12,12 +13,13 @@ export async function GET() {
   if (!session) return new Response('Unauthorized', { status: 401 });
   const userId = session.user.id;
   await connectDb();
-  const [profile, clients, products, documents, subscriptions] = await Promise.all([
+  const [profile, clients, products, documents, subscriptions, reviews] = await Promise.all([
     BusinessProfile.findOne({ userId }).select('-logo.data -userId -__v').lean(),
     Client.find({ userId }).select('-userId -__v').lean(),
     Product.find({ userId }).select('-userId -__v').lean(),
     Document.find({ userId }).select('-userId -__v -publicTokenHash -publicTokenEnc').lean(),
     Subscription.find({ userId }).select('plan provider status startsAt expiresAt createdAt').lean(),
+    Review.find({ $or: [{ userId }, { email: session.user.email.toLowerCase() }] }).select('kit rating name location comment status createdAt').lean(),
   ]);
   const data = {
     exportedAt: new Date().toISOString(),
@@ -27,6 +29,7 @@ export async function GET() {
     products,
     documents,
     subscriptions,
+    reviews,
   };
   return new Response(JSON.stringify(data, null, 2), {
     headers: {
