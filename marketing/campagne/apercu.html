@@ -1,0 +1,1257 @@
+<title>Campagne Ce que tu gardes</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+<style>
+/* Margokit brand: lime on ink, slate neutrals. Layout: sticky filter bar, then a week-by-week feed of post cards. */
+:root{
+  --bg:#F8FAFC; --surface:#FFFFFF; --ink:#0F172A; --muted:#64748B; --line:#E2E8F0;
+  --lime:#A3E635; --lime-ink:#4D7C0F; --lime-soft:#F7FEE7; --warn:#B45309; --warn-soft:#FEF3C7;
+  --ig:#C13584; --fb:#1877F2; --tt:#0F172A; --li:#0A66C2;
+  --display:'Plus Jakarta Sans',Inter,system-ui,sans-serif; --body:Inter,system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B1120; --surface:#111A2E; --ink:#E2E8F0; --muted:#94A3B8; --line:#1E293B;
+  --lime-ink:#A3E635; --lime-soft:#1A2E05; --warn:#FBBF24; --warn-soft:#3B2A06; --tt:#E2E8F0; --ig:#E879B9; --fb:#60A5FA; --li:#38BDF8; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B1120; --surface:#111A2E; --ink:#E2E8F0; --muted:#94A3B8; --line:#1E293B;
+  --lime-ink:#A3E635; --lime-soft:#1A2E05; --warn:#FBBF24; --warn-soft:#3B2A06; --tt:#E2E8F0; --ig:#E879B9; --fb:#60A5FA; --li:#38BDF8; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);letter-spacing:-.02em;text-wrap:balance;margin:0}
+.hero{padding-block:40px 28px;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:32px;align-items:end}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:18px}
+.brand svg{width:32px;height:32px}
+.hero h1{font-size:clamp(32px,5vw,54px);line-height:1.04;margin-top:18px}
+.hero h1 em{font-style:normal;background:var(--lime);color:#0F172A;padding:0 .12em;border-radius:6px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.hero p{color:var(--muted);max-width:60ch;margin:14px 0 0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.stats div{background:var(--surface);padding:14px 16px}
+.stats b{display:block;font-family:var(--display);font-size:28px;font-variant-numeric:tabular-nums}
+.stats span{color:var(--muted);font-size:13px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;flex-wrap:wrap;gap:8px;padding-block:12px;align-items:center}
+.bar .lbl{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.f{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 13px var(--body);padding:7px 12px;border-radius:999px;cursor:pointer}
+.f[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.f:focus-visible,.copy:focus-visible,.strip:focus-visible,summary:focus-visible,.tab:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
+.sep{width:1px;height:22px;background:var(--line);margin:0 6px}
+.tabs{display:flex;gap:4px;padding-block:20px 4px;flex-wrap:wrap}
+.tab{appearance:none;border:0;background:none;color:var(--muted);font:700 15px var(--display);padding:8px 14px;border-radius:10px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--lime);color:#0F172A}
+section.week{padding-block:26px 8px}
+.wk{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;margin-bottom:16px}
+.wk h2{font-size:24px}
+.wk .d{font-weight:700;color:var(--lime-ink);font-variant-numeric:tabular-nums}
+.wk p{flex-basis:100%;margin:0;color:var(--muted);max-width:75ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;align-items:start}
+.post{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.post>header{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;gap:8px}
+.net{font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px}
+.net::before{content:"";width:9px;height:9px;border-radius:50%;background:currentColor}
+.net-instagram{color:var(--ig)}.net-facebook{color:var(--fb)}.net-tiktok{color:var(--tt)}.net-linkedin{color:var(--li)}
+.when{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.media{position:relative;background:var(--line)}
+.media.portrait{aspect-ratio:4/5}.media.tall{aspect-ratio:9/16;max-height:520px}.media.wide{aspect-ratio:16/9}
+.media.textonly{aspect-ratio:auto;padding:22px 14px;color:var(--muted);text-align:center}
+.strip{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;height:100%;scrollbar-width:thin}
+.strip img{flex:0 0 100%;width:100%;height:100%;object-fit:contain;scroll-snap-align:start;display:block}
+.media video{width:100%;height:100%;object-fit:cover;display:block;background:#000}
+.count{position:absolute;right:10px;top:10px;background:rgba(15,23,42,.78);color:#fff;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;pointer-events:none}
+.media.script{background:var(--warn-soft);overflow:auto}
+.shoot{padding:16px;display:flex;flex-direction:column;gap:10px;font-size:13.5px}
+.shoot p{margin:0}.shoot .hook{font-family:var(--display);font-weight:800;font-size:20px;line-height:1.2}
+.shoot .src{color:var(--muted);font-size:12px}
+.body{padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.fmt{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.chip{font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;align-self:flex-start}
+.chip.ok{background:var(--lime-soft);color:var(--lime-ink)}.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.post h3{font-size:17px;line-height:1.25}
+.note{margin:0;font-size:13px;background:var(--warn-soft);color:var(--warn);padding:8px 10px;border-radius:8px}
+.caption{white-space:pre-wrap;overflow-wrap:anywhere;margin:0;font-size:14px;max-height:240px;overflow:auto;padding-right:4px}
+.caption.small{font-size:13px;color:var(--muted);max-height:none}
+.copy{appearance:none;align-self:flex-start;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:600 13px var(--body);padding:7px 12px;border-radius:8px;cursor:pointer}
+.copy.done{background:var(--lime);color:#0F172A;border-color:var(--lime)}
+details summary{cursor:pointer;font-weight:600;font-size:13px;color:var(--muted)}
+details[open]{display:flex;flex-direction:column;gap:8px}
+.panel[hidden]{display:none}
+.deck{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:16px;padding-block:20px 40px}
+.deck img{width:100%;border-radius:12px;border:1px solid var(--line);display:block}
+.deck figure{margin:0}.deck figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.storyrow{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;padding-block:10px 40px}
+.storyrow img{width:100%;border-radius:12px;border:1px solid var(--line);display:block}
+.empty{color:var(--muted);padding:30px 0}
+footer{padding-block:30px 50px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);margin-top:30px}
+@media (max-width:760px){.hero{grid-template-columns:1fr}.deck{grid-template-columns:1fr}.bar{position:static}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <div class="brand"><svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#A3E635"/><path d="M16 46V18h7l9 14 9-14h7v28h-7V30l-9 13-9-13v16z" fill="#0F172A"/></svg>Margokit</div>
+      <h1>Campagne « <em>Ce que tu gardes vraiment</em> »</h1>
+      <p>Aperçu de toutes les publications avant mise en ligne, du lundi 16 nov. au dimanche 13 déc. 2026, sur Instagram, Facebook, TikTok et LinkedIn. Chaque carte montre les visuels (fais défiler les carrousels), le texte prêt à copier et le statut.</p>
+    </div>
+    <div class="stats" role="list">
+      <div role="listitem"><b>52</b><span>publications</span></div>
+      <div role="listitem"><b>32</b><span>prêtes</span></div>
+      <div role="listitem"><b>14</b><span>vidéos à tourner</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="bar"><div class="wrap">
+  <span class="lbl">Réseau</span>
+  <button type="button" class="f" data-net="all" aria-pressed="true">Tous · 52</button>
+  <button type="button" class="f" data-net="instagram" aria-pressed="false">Instagram · 12</button><button type="button" class="f" data-net="facebook" aria-pressed="false">Facebook · 12</button><button type="button" class="f" data-net="tiktok" aria-pressed="false">TikTok · 20</button><button type="button" class="f" data-net="linkedin" aria-pressed="false">LinkedIn · 8</button>
+  <span class="sep" aria-hidden="true"></span>
+  <span class="lbl">Statut</span>
+  <button type="button" class="f" data-status="all" aria-pressed="true">Tous</button>
+  <button type="button" class="f" data-status="shoot" aria-pressed="false">À tourner</button>
+</div></div>
+
+<div class="wrap">
+  <div class="tabs" role="tablist">
+    <button type="button" class="tab" role="tab" id="t-cal" aria-controls="p-cal" aria-selected="true">Calendrier</button>
+    <button type="button" class="tab" role="tab" id="t-deck" aria-controls="p-deck" aria-selected="false">Présentation du projet</button>
+    <button type="button" class="tab" role="tab" id="t-story" aria-controls="p-story" aria-selected="false">Stories</button>
+  </div>
+
+  <div class="panel" id="p-cal" role="tabpanel" aria-labelledby="t-cal">
+    <section class="week" data-week="1">
+      <div class="wk"><h2>Semaine 1 · Combien tu gardes vraiment ?</h2><span class="d">16 → 22 nov.</span><p>Faire découvrir le problème et le calculateur gratuit. Récolter les premiers « CALCUL » en commentaire.</p></div>
+      <div class="grid"><article class="post" data-net="instagram" data-week="1">
+  <header><span class="net net-instagram">Instagram</span><span class="when">Lundi 16 nov. · 19:00</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-calcul-25-1.png" alt="Tu vends à 25 €, tu gardes combien ?, image 1 sur 6"><img loading="lazy" src="visuels/car-calcul-25-2.png" alt="Tu vends à 25 €, tu gardes combien ?, image 2 sur 6"><img loading="lazy" src="visuels/car-calcul-25-3.png" alt="Tu vends à 25 €, tu gardes combien ?, image 3 sur 6"><img loading="lazy" src="visuels/car-calcul-25-4.png" alt="Tu vends à 25 €, tu gardes combien ?, image 4 sur 6"><img loading="lazy" src="visuels/car-calcul-25-5.png" alt="Tu vends à 25 €, tu gardes combien ?, image 5 sur 6"><img loading="lazy" src="visuels/car-calcul-25-6.png" alt="Tu vends à 25 €, tu gardes combien ?, image 6 sur 6"></div><span class="count">6 images</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Carrousel</span><span class="chip ok">Prêt</span></div>
+    <h3>Tu vends à 25 €, tu gardes combien ?</h3>
+    
+    <p class="caption">Tu vends à 25 €. Tu crois garder 19 €.
+Tu gardes 5,65 €. 😬
+
+Livraison, emballage, pub, frais de paiement… et surtout les colis refusés. Chaque colis qui revient, tu paies la livraison, le retour et la pub pour 0 € encaissé.
+
+Glisse pour voir le calcul complet 👉
+
+💬 Commente CALCUL avec ton prix de vente et ton coût produit : je te réponds avec ton vrai bénéfice.
+🔗 Calculateur gratuit, sans inscription : lien en bio.
+
+#ecommerce #vendreenligne #entrepreneur #petitebusiness #codmaroc #CeQueTuGardes</p>
+    <button type="button" class="copy" data-copy="Tu vends à 25 €. Tu crois garder 19 €.
+Tu gardes 5,65 €. 😬
+
+Livraison, emballage, pub, frais de paiement… et surtout les colis refusés. Chaque colis qui revient, tu paies la livraison, le retour et la pub pour 0 € encaissé.
+
+Glisse pour voir le calcul complet 👉
+
+💬 Commente CALCUL avec ton prix de vente et ton coût produit : je te réponds avec ton vrai bénéfice.
+🔗 Calculateur gratuit, sans inscription : lien en bio.
+
+#ecommerce #vendreenligne #entrepreneur #petitebusiness #codmaroc #CeQueTuGardes">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="facebook" data-week="1">
+  <header><span class="net net-facebook">Facebook</span><span class="when">Lundi 16 nov. · 20:00</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-calcul-25-1.png" alt="Tu vends à 25 €, tu gardes combien ?, image 1 sur 6"><img loading="lazy" src="visuels/car-calcul-25-2.png" alt="Tu vends à 25 €, tu gardes combien ?, image 2 sur 6"><img loading="lazy" src="visuels/car-calcul-25-3.png" alt="Tu vends à 25 €, tu gardes combien ?, image 3 sur 6"><img loading="lazy" src="visuels/car-calcul-25-4.png" alt="Tu vends à 25 €, tu gardes combien ?, image 4 sur 6"><img loading="lazy" src="visuels/car-calcul-25-5.png" alt="Tu vends à 25 €, tu gardes combien ?, image 5 sur 6"><img loading="lazy" src="visuels/car-calcul-25-6.png" alt="Tu vends à 25 €, tu gardes combien ?, image 6 sur 6"></div><span class="count">6 images</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Album (6 images)</span><span class="chip ok">Prêt</span></div>
+    <h3>Tu vends à 25 €, tu gardes combien ?</h3>
+    
+    <p class="caption">Question honnête aux vendeurs en ligne : sur une vente à 25 €, vous gardez combien ?
+
+La plupart répondent 19 € (25 − 6 € de produit).
+La vraie réponse, une fois tout compté : 5,65 €.
+
+Ce qui manque dans le calcul :
+→ emballage 0,50 €
+→ livraison 5 €
+→ pub 4 € par commande
+→ frais de paiement 2,9 %
+→ 1 colis sur 5 refusé, avec 3 € de frais de retour
+
+Le prix minimum pour ne rien perdre : 19,18 €. Pour 30 % de marge : 27,76 €.
+
+J’ai mis ce calcul dans un outil gratuit, sans inscription. Écrivez CALCUL en commentaire avec votre prix et votre coût produit, je vous réponds avec votre vrai bénéfice.</p>
+    <button type="button" class="copy" data-copy="Question honnête aux vendeurs en ligne : sur une vente à 25 €, vous gardez combien ?
+
+La plupart répondent 19 € (25 − 6 € de produit).
+La vraie réponse, une fois tout compté : 5,65 €.
+
+Ce qui manque dans le calcul :
+→ emballage 0,50 €
+→ livraison 5 €
+→ pub 4 € par commande
+→ frais de paiement 2,9 %
+→ 1 colis sur 5 refusé, avec 3 € de frais de retour
+
+Le prix minimum pour ne rien perdre : 19,18 €. Pour 30 % de marge : 27,76 €.
+
+J’ai mis ce calcul dans un outil gratuit, sans inscription. Écrivez CALCUL en commentaire avec votre prix et votre coût produit, je vous réponds avec votre vrai bénéfice.">Copier le texte</button>
+    <details><summary>1er commentaire</summary><p class="caption small">Le calculateur gratuit : https://margokit.com/fr/calculator?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=calcul-25</p><button type="button" class="copy" data-copy="Le calculateur gratuit : https://margokit.com/fr/calculator?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=calcul-25">Copier le commentaire</button></details>
+  </div></article><article class="post" data-net="tiktok" data-week="1">
+  <header><span class="net net-tiktok">TikTok</span><span class="when">Lundi 16 nov. · 20:30</span></header>
+  <div class="media tall"><video controls preload="none" playsinline poster="videos/01-calculateur-5-65-FR.jpg" src="videos/01-calculateur-5-65-FR.mp4"></video></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Vidéo</span><span class="chip ok">Prêt</span></div>
+    <h3>Ce que tu gardes sur 25 €</h3>
+    
+    <p class="caption">Tu vends à 25 €. Tu gardes 5,65 €. Voilà pourquoi 👇 Calculateur gratuit en bio.
+
+#ecommerce #vendreenligne #entrepreneur #codmaroc</p>
+    <button type="button" class="copy" data-copy="Tu vends à 25 €. Tu gardes 5,65 €. Voilà pourquoi 👇 Calculateur gratuit en bio.
+
+#ecommerce #vendreenligne #entrepreneur #codmaroc">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="linkedin" data-week="1">
+  <header><span class="net net-linkedin">LinkedIn</span><span class="when">Mardi 17 nov. · 08:30</span></header>
+  <div class="media wide"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/deck-01.png" alt="Pourquoi j’ai construit Margokit, image 1 sur 1"></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Texte + image</span><span class="chip ok">Prêt</span></div>
+    <h3>Pourquoi j’ai construit Margokit</h3>
+    <p class="note">Récit à ajuster à ton vécu réel avant de publier (comment tu as découvert le problème).</p>
+    <p class="caption">Il y a quelques mois, j’ai commencé à regarder de près les chiffres de petits vendeurs en ligne au Maroc et ailleurs.
+
+Le même schéma revenait sans arrêt : beaucoup de commandes, un chiffre d’affaires qui monte, et un compte en banque qui ne suit pas.
+
+La raison est presque toujours la même. On calcule « prix − coût du produit ». On oublie la livraison, l’emballage, les frais de paiement, la pub par commande… et surtout les colis refusés en paiement à la livraison.
+
+Sur un produit vendu 25 €, ce vendeur pense garder 19 €. Il garde 5,65 €.
+
+Alors j’ai construit Margokit : un calculateur gratuit, des Google Sheets qui suivent le vrai bénéfice de chaque commande, et une app de devis et factures pour les indépendants.
+
+Je partagerai ici, deux fois par semaine, ce que j’apprends en lançant ce projet seul, depuis le Maroc.
+
+Si vous accompagnez des e-commerçants ou des freelances, je serais ravi d’avoir votre regard.</p>
+    <button type="button" class="copy" data-copy="Il y a quelques mois, j’ai commencé à regarder de près les chiffres de petits vendeurs en ligne au Maroc et ailleurs.
+
+Le même schéma revenait sans arrêt : beaucoup de commandes, un chiffre d’affaires qui monte, et un compte en banque qui ne suit pas.
+
+La raison est presque toujours la même. On calcule « prix − coût du produit ». On oublie la livraison, l’emballage, les frais de paiement, la pub par commande… et surtout les colis refusés en paiement à la livraison.
+
+Sur un produit vendu 25 €, ce vendeur pense garder 19 €. Il garde 5,65 €.
+
+Alors j’ai construit Margokit : un calculateur gratuit, des Google Sheets qui suivent le vrai bénéfice de chaque commande, et une app de devis et factures pour les indépendants.
+
+Je partagerai ici, deux fois par semaine, ce que j’apprends en lançant ce projet seul, depuis le Maroc.
+
+Si vous accompagnez des e-commerçants ou des freelances, je serais ravi d’avoir votre regard.">Copier le texte</button>
+    <details><summary>1er commentaire</summary><p class="caption small">Le calculateur (gratuit, sans inscription) : https://margokit.com/fr/calculator?utm_source=linkedin&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=pourquoi</p><button type="button" class="copy" data-copy="Le calculateur (gratuit, sans inscription) : https://margokit.com/fr/calculator?utm_source=linkedin&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=pourquoi">Copier le commentaire</button></details>
+  </div></article><article class="post" data-net="tiktok" data-week="1">
+  <header><span class="net net-tiktok">TikTok</span><span class="when">Mardi 17 nov. · 20:30</span></header>
+  <div class="media tall script"><div class="shoot"><span class="chip warn">Vidéo à tourner</span><p class="hook">« J’ai fait 10 000 € ce mois-ci. » Non.</p><p><b>À l’écran</b> Texte en gros, puis le Tableau de bord du Tracker (CA vs bénéfice net).</p><p><b>Voix off</b> « Tu as VENDU 10 000. Après produits, livraison, pub, frais et retours, il peut te rester 15 à 25 %, ou beaucoup moins. Soit 1 500 à 2 500 au mieux. Connais ton chiffre avant de quitter ton travail. »</p><p class="src">script n°12 (videos.md)</p></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Vidéo</span><span class="chip warn">À tourner</span></div>
+    <h3>CA ≠ bénéfice</h3>
+    
+    <p class="caption">Chiffre d’affaires ≠ bénéfice. Calcule le tien, lien en bio.
+
+#entrepreneur #ecommerce #argent #vendreenligne</p>
+    <button type="button" class="copy" data-copy="Chiffre d’affaires ≠ bénéfice. Calcule le tien, lien en bio.
+
+#entrepreneur #ecommerce #argent #vendreenligne">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="instagram" data-week="1">
+  <header><span class="net net-instagram">Instagram</span><span class="when">Mercredi 18 nov. · 19:00</span></header>
+  <div class="media tall"><video controls preload="none" playsinline poster="videos/01-calculateur-5-65-FR.jpg" src="videos/01-calculateur-5-65-FR.mp4"></video></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Reel</span><span class="chip ok">Prêt</span></div>
+    <h3>Le calcul en 20 secondes</h3>
+    
+    <p class="caption">Tu vends à 25 €, tu crois garder 19 €… tu gardes 5,65 €.
+Livraison, pub et colis refusés compris : vérifie tes vrais chiffres en 10 secondes, gratuitement.
+👉 Lien en bio.
+
+#ecommerce #vendreenligne #entrepreneur #codmaroc #petitebusiness</p>
+    <button type="button" class="copy" data-copy="Tu vends à 25 €, tu crois garder 19 €… tu gardes 5,65 €.
+Livraison, pub et colis refusés compris : vérifie tes vrais chiffres en 10 secondes, gratuitement.
+👉 Lien en bio.
+
+#ecommerce #vendreenligne #entrepreneur #codmaroc #petitebusiness">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="facebook" data-week="1">
+  <header><span class="net net-facebook">Facebook</span><span class="when">Mercredi 18 nov. · 20:00</span></header>
+  <div class="media tall"><video controls preload="none" playsinline poster="videos/01-calculateur-5-65-FR.jpg" src="videos/01-calculateur-5-65-FR.mp4"></video></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Vidéo</span><span class="chip ok">Prêt</span></div>
+    <h3>Le calcul en 20 secondes</h3>
+    
+    <p class="caption">20 secondes pour comprendre pourquoi ton compte en banque ne suit pas ton chiffre d’affaires. 👇
+Fais le test avec tes propres chiffres (gratuit) : lien en commentaire.</p>
+    <button type="button" class="copy" data-copy="20 secondes pour comprendre pourquoi ton compte en banque ne suit pas ton chiffre d’affaires. 👇
+Fais le test avec tes propres chiffres (gratuit) : lien en commentaire.">Copier le texte</button>
+    <details><summary>1er commentaire</summary><p class="caption small">👉 https://margokit.com/fr/calculator?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=video-calcul</p><button type="button" class="copy" data-copy="👉 https://margokit.com/fr/calculator?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=video-calcul">Copier le commentaire</button></details>
+  </div></article><article class="post" data-net="tiktok" data-week="1">
+  <header><span class="net net-tiktok">TikTok</span><span class="when">Mercredi 18 nov. · 20:30</span></header>
+  <div class="media tall script"><div class="shoot"><span class="chip warn">Vidéo à tourner</span><p class="hook">3 erreurs qui tuent ta marge (la 3e est la pire).</p><p><b>À l’écran</b> 3 cartes texte + le calculateur pour chacune.</p><p><b>Voix off</b> « Un : oublier l’emballage, 50 centimes fois 1000 commandes, ça fait 500 euros. Deux : ignorer les frais de paiement, 3 % de chaque vente. Trois : ne pas compter les colis refusés. À 30 % de retours, 5,65 devient 3,42. Lien en bio. »</p><p class="src">script n°11 (videos.md)</p></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Vidéo</span><span class="chip warn">À tourner</span></div>
+    <h3>3 erreurs qui tuent ta marge</h3>
+    
+    <p class="caption">Laquelle tu fais ? 👇
+
+#ecommerce #entrepreneur #vendreenligne #conseilsbusiness</p>
+    <button type="button" class="copy" data-copy="Laquelle tu fais ? 👇
+
+#ecommerce #entrepreneur #vendreenligne #conseilsbusiness">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="linkedin" data-week="1">
+  <header><span class="net net-linkedin">LinkedIn</span><span class="when">Jeudi 19 nov. · 08:30</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-calcul-25-1.png" alt="Le calcul complet d’une vente à 25 €, image 1 sur 6"><img loading="lazy" src="visuels/car-calcul-25-2.png" alt="Le calcul complet d’une vente à 25 €, image 2 sur 6"><img loading="lazy" src="visuels/car-calcul-25-3.png" alt="Le calcul complet d’une vente à 25 €, image 3 sur 6"><img loading="lazy" src="visuels/car-calcul-25-4.png" alt="Le calcul complet d’une vente à 25 €, image 4 sur 6"><img loading="lazy" src="visuels/car-calcul-25-5.png" alt="Le calcul complet d’une vente à 25 €, image 5 sur 6"><img loading="lazy" src="visuels/car-calcul-25-6.png" alt="Le calcul complet d’une vente à 25 €, image 6 sur 6"></div><span class="count">6 images · PDF</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Document PDF (carrousel)</span><span class="chip ok">Prêt</span></div>
+    <h3>Le calcul complet d’une vente à 25 €</h3>
+    
+    <p class="caption">Le calcul que la plupart des vendeurs en ligne ne font jamais, en 6 pages. 👇
+
+Le chiffre qui surprend le plus : le prix minimum. Pour ce produit, en dessous de 19,18 €, chaque vente fait perdre de l’argent. Beaucoup vendent à 19,99 € « parce que ça fait pas cher ».
+
+Vous accompagnez des marques ou des e-commerçants : est-ce que vous voyez ce calcul fait correctement chez vos clients ?</p>
+    <button type="button" class="copy" data-copy="Le calcul que la plupart des vendeurs en ligne ne font jamais, en 6 pages. 👇
+
+Le chiffre qui surprend le plus : le prix minimum. Pour ce produit, en dessous de 19,18 €, chaque vente fait perdre de l’argent. Beaucoup vendent à 19,99 € « parce que ça fait pas cher ».
+
+Vous accompagnez des marques ou des e-commerçants : est-ce que vous voyez ce calcul fait correctement chez vos clients ?">Copier le texte</button>
+    <details><summary>1er commentaire</summary><p class="caption small">Pour refaire le calcul avec vos chiffres : https://margokit.com/fr/calculator?utm_source=linkedin&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=calcul-25</p><button type="button" class="copy" data-copy="Pour refaire le calcul avec vos chiffres : https://margokit.com/fr/calculator?utm_source=linkedin&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=calcul-25">Copier le commentaire</button></details>
+  </div></article><article class="post" data-net="tiktok" data-week="1">
+  <header><span class="net net-tiktok">TikTok</span><span class="when">Jeudi 19 nov. · 20:30</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-calcul-25-1.png" alt="Carrousel photo : le calcul complet, image 1 sur 6"><img loading="lazy" src="visuels/car-calcul-25-2.png" alt="Carrousel photo : le calcul complet, image 2 sur 6"><img loading="lazy" src="visuels/car-calcul-25-3.png" alt="Carrousel photo : le calcul complet, image 3 sur 6"><img loading="lazy" src="visuels/car-calcul-25-4.png" alt="Carrousel photo : le calcul complet, image 4 sur 6"><img loading="lazy" src="visuels/car-calcul-25-5.png" alt="Carrousel photo : le calcul complet, image 5 sur 6"><img loading="lazy" src="visuels/car-calcul-25-6.png" alt="Carrousel photo : le calcul complet, image 6 sur 6"></div><span class="count">6 images</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Carrousel photo</span><span class="chip ok">Prêt</span></div>
+    <h3>Carrousel photo : le calcul complet</h3>
+    
+    <p class="caption">Le calcul que personne ne fait. Glisse 👉 Commente CALCUL avec ton prix, je te réponds avec ton vrai bénéfice.
+
+#ecommerce #vendreenligne #petitebusiness #CeQueTuGardes</p>
+    <button type="button" class="copy" data-copy="Le calcul que personne ne fait. Glisse 👉 Commente CALCUL avec ton prix, je te réponds avec ton vrai bénéfice.
+
+#ecommerce #vendreenligne #petitebusiness #CeQueTuGardes">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="instagram" data-week="1">
+  <header><span class="net net-instagram">Instagram</span><span class="when">Vendredi 20 nov. · 19:00</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-kits-1.png" alt="Les 4 outils Margokit, image 1 sur 6"><img loading="lazy" src="visuels/car-kits-2.png" alt="Les 4 outils Margokit, image 2 sur 6"><img loading="lazy" src="visuels/car-kits-3.png" alt="Les 4 outils Margokit, image 3 sur 6"><img loading="lazy" src="visuels/car-kits-4.png" alt="Les 4 outils Margokit, image 4 sur 6"><img loading="lazy" src="visuels/car-kits-5.png" alt="Les 4 outils Margokit, image 5 sur 6"><img loading="lazy" src="visuels/car-kits-6.png" alt="Les 4 outils Margokit, image 6 sur 6"></div><span class="count">6 images</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Carrousel</span><span class="chip ok">Prêt</span></div>
+    <h3>Les 4 outils Margokit</h3>
+    
+    <p class="caption">Margokit, c’est 4 outils pour savoir ce que tu gardes vraiment :
+
+1️⃣ Calculateur (gratuit) : ton vrai bénéfice avant de lancer un produit
+2️⃣ Tracker (12 $) : chaque commande, son vrai bénéfice, dans Google Sheets
+3️⃣ Pack Vendeur (34 $) : quelle pub te rapporte vraiment
+4️⃣ Margokit Pro (gratuit pour commencer) : devis et factures en 1 minute
+
+Paiement unique pour les Google Sheets, pas d’abonnement. Remboursé sous 14 jours.
+
+📌 Enregistre ce post pour savoir par où commencer.
+
+#googlesheets #ecommerce #freelance #petitebusiness #outilsentrepreneur</p>
+    <button type="button" class="copy" data-copy="Margokit, c’est 4 outils pour savoir ce que tu gardes vraiment :
+
+1️⃣ Calculateur (gratuit) : ton vrai bénéfice avant de lancer un produit
+2️⃣ Tracker (12 $) : chaque commande, son vrai bénéfice, dans Google Sheets
+3️⃣ Pack Vendeur (34 $) : quelle pub te rapporte vraiment
+4️⃣ Margokit Pro (gratuit pour commencer) : devis et factures en 1 minute
+
+Paiement unique pour les Google Sheets, pas d’abonnement. Remboursé sous 14 jours.
+
+📌 Enregistre ce post pour savoir par où commencer.
+
+#googlesheets #ecommerce #freelance #petitebusiness #outilsentrepreneur">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="facebook" data-week="1">
+  <header><span class="net net-facebook">Facebook</span><span class="when">Vendredi 20 nov. · 20:00</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-kits-1.png" alt="Les 4 outils Margokit, image 1 sur 6"><img loading="lazy" src="visuels/car-kits-2.png" alt="Les 4 outils Margokit, image 2 sur 6"><img loading="lazy" src="visuels/car-kits-3.png" alt="Les 4 outils Margokit, image 3 sur 6"><img loading="lazy" src="visuels/car-kits-4.png" alt="Les 4 outils Margokit, image 4 sur 6"><img loading="lazy" src="visuels/car-kits-5.png" alt="Les 4 outils Margokit, image 5 sur 6"><img loading="lazy" src="visuels/car-kits-6.png" alt="Les 4 outils Margokit, image 6 sur 6"></div><span class="count">6 images</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Album (6 images)</span><span class="chip ok">Prêt</span></div>
+    <h3>Les 4 outils Margokit</h3>
+    <p class="note">La 1re phrase raconte ton histoire : garde-la seulement si elle est vraie pour toi.</p>
+    <p class="caption">Je vous présente Margokit 💚
+
+J’ai construit ces outils après avoir vu trop de vendeurs vendre beaucoup… et ne rien garder.
+
+1. Calculateur — gratuit. Ton vrai bénéfice par vente, ton prix minimum, ton ROAS rentable.
+2. Tracker — 12 $ une fois. Commandes, stock, clients et tableau de bord dans Google Sheets. Version Maroc en DH incluse.
+3. Pack Vendeur — 34 $ une fois. Le Tracker + suivi des pubs avec verdict par campagne, planning de contenu, trésorerie, budget.
+4. Margokit Pro — gratuit jusqu’à 3 documents/mois. Devis et factures en ligne, envoi par WhatsApp.
+
+Pas d’abonnement pour les Google Sheets. Remboursé sous 14 jours. Paiement local possible par WhatsApp.
+
+Par lequel vous commenceriez ? 👇</p>
+    <button type="button" class="copy" data-copy="Je vous présente Margokit 💚
+
+J’ai construit ces outils après avoir vu trop de vendeurs vendre beaucoup… et ne rien garder.
+
+1. Calculateur — gratuit. Ton vrai bénéfice par vente, ton prix minimum, ton ROAS rentable.
+2. Tracker — 12 $ une fois. Commandes, stock, clients et tableau de bord dans Google Sheets. Version Maroc en DH incluse.
+3. Pack Vendeur — 34 $ une fois. Le Tracker + suivi des pubs avec verdict par campagne, planning de contenu, trésorerie, budget.
+4. Margokit Pro — gratuit jusqu’à 3 documents/mois. Devis et factures en ligne, envoi par WhatsApp.
+
+Pas d’abonnement pour les Google Sheets. Remboursé sous 14 jours. Paiement local possible par WhatsApp.
+
+Par lequel vous commenceriez ? 👇">Copier le texte</button>
+    <details><summary>1er commentaire</summary><p class="caption small">Tout est ici : https://margokit.com/fr?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=kits</p><button type="button" class="copy" data-copy="Tout est ici : https://margokit.com/fr?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=kits">Copier le commentaire</button></details>
+  </div></article><article class="post" data-net="tiktok" data-week="1">
+  <header><span class="net net-tiktok">TikTok</span><span class="when">Vendredi 20 nov. · 20:30</span></header>
+  <div class="media tall"><video controls preload="none" playsinline poster="videos/02-les-3-kits-FR.jpg" src="videos/02-les-3-kits-FR.mp4"></video></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Vidéo</span><span class="chip ok">Prêt</span></div>
+    <h3>Les 3 kits</h3>
+    
+    <p class="caption">3 outils pour vendre et facturer, sur un seul site. Commence gratuitement 👉 lien en bio.
+
+#ecommerce #freelance #facturation #googlesheets</p>
+    <button type="button" class="copy" data-copy="3 outils pour vendre et facturer, sur un seul site. Commence gratuitement 👉 lien en bio.
+
+#ecommerce #freelance #facturation #googlesheets">Copier le texte</button>
+    
+  </div></article></div>
+      <p class="empty" hidden>Aucune publication pour ce filtre cette semaine.</p>
+    </section><section class="week" data-week="2">
+      <div class="wk"><h2>Semaine 2 · Black Friday sans perdre d’argent</h2><span class="d">23 → 29 nov.</span><p>Profiter du Black Friday (vendredi 27) : tester sa promo avant de la lancer. Offre de lancement EARLY −25 %.</p></div>
+      <div class="grid"><article class="post" data-net="instagram" data-week="2">
+  <header><span class="net net-instagram">Instagram</span><span class="when">Lundi 23 nov. · 19:00</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-black-friday-1.png" alt="Black Friday : vérifie ta promo, image 1 sur 5"><img loading="lazy" src="visuels/car-black-friday-2.png" alt="Black Friday : vérifie ta promo, image 2 sur 5"><img loading="lazy" src="visuels/car-black-friday-3.png" alt="Black Friday : vérifie ta promo, image 3 sur 5"><img loading="lazy" src="visuels/car-black-friday-4.png" alt="Black Friday : vérifie ta promo, image 4 sur 5"><img loading="lazy" src="visuels/car-black-friday-5.png" alt="Black Friday : vérifie ta promo, image 5 sur 5"></div><span class="count">5 images</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Carrousel</span><span class="chip ok">Prêt</span></div>
+    <h3>Black Friday : vérifie ta promo</h3>
+    
+    <p class="caption">−30 % pour le Black Friday ? Fais ce calcul avant. ⚠️
+
+Sur un produit à 25 € qui rapporte 5,65 € :
+• −15 % → tu gardes 2,01 €
+• −20 % → 0,79 €
+• −30 % → tu PERDS 1,63 € par vente
+
+Ta livraison, ta pub et tes colis refusés ne baissent pas avec ton prix.
+
+👉 Mets ton prix promo dans le calculateur gratuit (lien en bio) avant de lancer ta promo.
+📤 Envoie ce post à un vendeur qui prépare son Black Friday.
+
+#blackfriday #ecommerce #vendreenligne #promo #entrepreneur #CeQueTuGardes</p>
+    <button type="button" class="copy" data-copy="−30 % pour le Black Friday ? Fais ce calcul avant. ⚠️
+
+Sur un produit à 25 € qui rapporte 5,65 € :
+• −15 % → tu gardes 2,01 €
+• −20 % → 0,79 €
+• −30 % → tu PERDS 1,63 € par vente
+
+Ta livraison, ta pub et tes colis refusés ne baissent pas avec ton prix.
+
+👉 Mets ton prix promo dans le calculateur gratuit (lien en bio) avant de lancer ta promo.
+📤 Envoie ce post à un vendeur qui prépare son Black Friday.
+
+#blackfriday #ecommerce #vendreenligne #promo #entrepreneur #CeQueTuGardes">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="facebook" data-week="2">
+  <header><span class="net net-facebook">Facebook</span><span class="when">Lundi 23 nov. · 20:00</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-black-friday-1.png" alt="Black Friday : vérifie ta promo, image 1 sur 5"><img loading="lazy" src="visuels/car-black-friday-2.png" alt="Black Friday : vérifie ta promo, image 2 sur 5"><img loading="lazy" src="visuels/car-black-friday-3.png" alt="Black Friday : vérifie ta promo, image 3 sur 5"><img loading="lazy" src="visuels/car-black-friday-4.png" alt="Black Friday : vérifie ta promo, image 4 sur 5"><img loading="lazy" src="visuels/car-black-friday-5.png" alt="Black Friday : vérifie ta promo, image 5 sur 5"></div><span class="count">5 images</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Album (5 images)</span><span class="chip ok">Prêt</span></div>
+    <h3>Black Friday : vérifie ta promo</h3>
+    
+    <p class="caption">Avant de mettre −30 % pour le Black Friday, lisez ça.
+
+Produit à 25 €, qui rapporte 5,65 € par vente.
+• Promo −15 % : il reste 2,01 €
+• Promo −20 % : il reste 0,79 €
+• Promo −30 % : vous perdez 1,63 € à chaque vente
+
+À −20 %, il faut 7 fois plus de ventes pour gagner la même chose.
+
+Ce qui marche mieux : un cadeau, un lot avec livraison offerte, ou une remise calculée qui reste au-dessus de votre prix minimum.
+
+Testez votre promo dans le calculateur gratuit avant de la lancer (lien en commentaire).</p>
+    <button type="button" class="copy" data-copy="Avant de mettre −30 % pour le Black Friday, lisez ça.
+
+Produit à 25 €, qui rapporte 5,65 € par vente.
+• Promo −15 % : il reste 2,01 €
+• Promo −20 % : il reste 0,79 €
+• Promo −30 % : vous perdez 1,63 € à chaque vente
+
+À −20 %, il faut 7 fois plus de ventes pour gagner la même chose.
+
+Ce qui marche mieux : un cadeau, un lot avec livraison offerte, ou une remise calculée qui reste au-dessus de votre prix minimum.
+
+Testez votre promo dans le calculateur gratuit avant de la lancer (lien en commentaire).">Copier le texte</button>
+    <details><summary>1er commentaire</summary><p class="caption small">🧮 https://margokit.com/fr/calculator?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=black-friday</p><button type="button" class="copy" data-copy="🧮 https://margokit.com/fr/calculator?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=black-friday">Copier le commentaire</button></details>
+  </div></article><article class="post" data-net="tiktok" data-week="2">
+  <header><span class="net net-tiktok">TikTok</span><span class="when">Lundi 23 nov. · 20:30</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-black-friday-1.png" alt="Carrousel photo : Black Friday, image 1 sur 5"><img loading="lazy" src="visuels/car-black-friday-2.png" alt="Carrousel photo : Black Friday, image 2 sur 5"><img loading="lazy" src="visuels/car-black-friday-3.png" alt="Carrousel photo : Black Friday, image 3 sur 5"><img loading="lazy" src="visuels/car-black-friday-4.png" alt="Carrousel photo : Black Friday, image 4 sur 5"><img loading="lazy" src="visuels/car-black-friday-5.png" alt="Carrousel photo : Black Friday, image 5 sur 5"></div><span class="count">5 images</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Carrousel photo</span><span class="chip ok">Prêt</span></div>
+    <h3>Carrousel photo : Black Friday</h3>
+    
+    <p class="caption">−30 % pour le Black Friday = −1,63 € par vente. Vérifie ta promo avant de la lancer 👇
+
+#blackfriday #ecommerce #promo #vendreenligne</p>
+    <button type="button" class="copy" data-copy="−30 % pour le Black Friday = −1,63 € par vente. Vérifie ta promo avant de la lancer 👇
+
+#blackfriday #ecommerce #promo #vendreenligne">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="linkedin" data-week="2">
+  <header><span class="net net-linkedin">LinkedIn</span><span class="when">Mardi 24 nov. · 08:30</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-black-friday-1.png" alt="Black Friday : la promo qui coûte de l’argent, image 1 sur 5"><img loading="lazy" src="visuels/car-black-friday-2.png" alt="Black Friday : la promo qui coûte de l’argent, image 2 sur 5"><img loading="lazy" src="visuels/car-black-friday-3.png" alt="Black Friday : la promo qui coûte de l’argent, image 3 sur 5"><img loading="lazy" src="visuels/car-black-friday-4.png" alt="Black Friday : la promo qui coûte de l’argent, image 4 sur 5"><img loading="lazy" src="visuels/car-black-friday-5.png" alt="Black Friday : la promo qui coûte de l’argent, image 5 sur 5"></div><span class="count">5 images · PDF</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Document PDF (carrousel)</span><span class="chip ok">Prêt</span></div>
+    <h3>Black Friday : la promo qui coûte de l’argent</h3>
+    
+    <p class="caption">Le Black Friday est vendredi. Petit rappel de calcul pour les e-commerçants.
+
+Une remise s’applique au prix. Pas aux coûts fixes par commande.
+
+Produit à 25 €, 5,65 € de bénéfice :
+• −20 % → 0,79 € de bénéfice. Il faut 7 fois plus de ventes pour gagner autant.
+• −30 % → −1,63 € par vente.
+
+Les alternatives qui protègent la marge : un cadeau, un lot (la livraison se paie une fois), ou une remise calculée au-dessus du prix minimum.
+
+Le détail en 5 pages ci-dessous.</p>
+    <button type="button" class="copy" data-copy="Le Black Friday est vendredi. Petit rappel de calcul pour les e-commerçants.
+
+Une remise s’applique au prix. Pas aux coûts fixes par commande.
+
+Produit à 25 €, 5,65 € de bénéfice :
+• −20 % → 0,79 € de bénéfice. Il faut 7 fois plus de ventes pour gagner autant.
+• −30 % → −1,63 € par vente.
+
+Les alternatives qui protègent la marge : un cadeau, un lot (la livraison se paie une fois), ou une remise calculée au-dessus du prix minimum.
+
+Le détail en 5 pages ci-dessous.">Copier le texte</button>
+    <details><summary>1er commentaire</summary><p class="caption small">Calculateur gratuit pour tester une remise : https://margokit.com/fr/calculator?utm_source=linkedin&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=black-friday</p><button type="button" class="copy" data-copy="Calculateur gratuit pour tester une remise : https://margokit.com/fr/calculator?utm_source=linkedin&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=black-friday">Copier le commentaire</button></details>
+  </div></article><article class="post" data-net="tiktok" data-week="2">
+  <header><span class="net net-tiktok">TikTok</span><span class="when">Mardi 24 nov. · 20:30</span></header>
+  <div class="media tall script"><div class="shoot"><span class="chip warn">Vidéo à tourner</span><p class="hook">En dessous de ce prix, tu travailles gratuitement.</p><p><b>À l’écran</b> Calculateur exemple 25 €, zoom sur « Prix minimum (sans perte) » = 19,18 €.</p><p><b>Voix off</b> « Avant ta promo Black Friday, connais ce chiffre : ton prix minimum. Pour ce produit, 19,18 €. Une promo qui descend en dessous, c’est de l’argent perdu à chaque vente. Calcule le tien, lien en bio. »</p><p class="src">script n°6 (videos.md)</p></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Vidéo</span><span class="chip warn">À tourner</span></div>
+    <h3>Le prix minimum</h3>
+    
+    <p class="caption">Ton prix minimum, en 10 secondes. Lien en bio.
+
+#blackfriday #prix #ecommerce #entrepreneur</p>
+    <button type="button" class="copy" data-copy="Ton prix minimum, en 10 secondes. Lien en bio.
+
+#blackfriday #prix #ecommerce #entrepreneur">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="instagram" data-week="2">
+  <header><span class="net net-instagram">Instagram</span><span class="when">Mercredi 25 nov. · 19:00</span></header>
+  <div class="media tall"><video controls preload="none" playsinline poster="videos/02-les-3-kits-FR.jpg" src="videos/02-les-3-kits-FR.mp4"></video></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Reel</span><span class="chip ok">Prêt</span></div>
+    <h3>Les 3 kits en 22 secondes</h3>
+    
+    <p class="caption">3 outils pour vendre et facturer, sur un seul site : un calculateur gratuit qui te montre ce que tu gardes vraiment, des Google Sheets qui suivent chaque commande, et Margokit Pro pour passer du devis à la facture en un clic.
+
+🎁 Cette semaine : −25 % sur les Google Sheets avec le code EARLY (50 premiers).
+👉 Lien en bio.
+
+#ecommerce #vendreenligne #freelance #facturation #petitebusiness</p>
+    <button type="button" class="copy" data-copy="3 outils pour vendre et facturer, sur un seul site : un calculateur gratuit qui te montre ce que tu gardes vraiment, des Google Sheets qui suivent chaque commande, et Margokit Pro pour passer du devis à la facture en un clic.
+
+🎁 Cette semaine : −25 % sur les Google Sheets avec le code EARLY (50 premiers).
+👉 Lien en bio.
+
+#ecommerce #vendreenligne #freelance #facturation #petitebusiness">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="facebook" data-week="2">
+  <header><span class="net net-facebook">Facebook</span><span class="when">Mercredi 25 nov. · 20:00</span></header>
+  <div class="media tall"><video controls preload="none" playsinline poster="videos/02-les-3-kits-FR.jpg" src="videos/02-les-3-kits-FR.mp4"></video></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Vidéo</span><span class="chip ok">Prêt</span></div>
+    <h3>Les 3 kits en 22 secondes + offre EARLY</h3>
+    
+    <p class="caption">Offre de lancement 🎁
+−25 % sur le Tracker et le Pack Vendeur avec le code EARLY, réservé aux 50 premiers, jusqu’au 30 novembre.
+
+Paiement unique, remboursé sous 14 jours. Carte refusée ? Écrivez-moi sur WhatsApp, on trouve une solution locale.</p>
+    <button type="button" class="copy" data-copy="Offre de lancement 🎁
+−25 % sur le Tracker et le Pack Vendeur avec le code EARLY, réservé aux 50 premiers, jusqu’au 30 novembre.
+
+Paiement unique, remboursé sous 14 jours. Carte refusée ? Écrivez-moi sur WhatsApp, on trouve une solution locale.">Copier le texte</button>
+    <details><summary>1er commentaire</summary><p class="caption small">Tracker : https://margokit.gumroad.com/l/tracker?utm_source=facebook&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=early
+Pack Vendeur : https://margokit.gumroad.com/l/seller-pack?utm_source=facebook&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=early</p><button type="button" class="copy" data-copy="Tracker : https://margokit.gumroad.com/l/tracker?utm_source=facebook&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=early
+Pack Vendeur : https://margokit.gumroad.com/l/seller-pack?utm_source=facebook&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=early">Copier le commentaire</button></details>
+  </div></article><article class="post" data-net="tiktok" data-week="2">
+  <header><span class="net net-tiktok">TikTok</span><span class="when">Mercredi 25 nov. · 20:30</span></header>
+  <div class="media tall script"><div class="shoot"><span class="chip warn">Vidéo à tourner</span><p class="hook">Tu n’as pas besoin de plus de ventes. Tu as besoin de meilleures marges.</p><p><b>À l’écran</b> Les deux calculs en texte, puis le calculateur.</p><p><b>Voix off</b> « 100 ventes à 1 € de bénéfice = 100. 50 ventes à 8 € = 400. Moitié moins de travail, quatre fois plus d’argent. Corrige ta marge, ensuite accélère. »</p><p class="src">script n°18 (videos.md)</p></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Vidéo</span><span class="chip warn">À tourner</span></div>
+    <h3>Mythe : il faut vendre plus</h3>
+    
+    <p class="caption">Marge d’abord, volume ensuite. 🎁 Code EARLY −25 % sur les Google Sheets Margokit cette semaine.
+
+#ecommerce #entrepreneur #business #vendreenligne</p>
+    <button type="button" class="copy" data-copy="Marge d’abord, volume ensuite. 🎁 Code EARLY −25 % sur les Google Sheets Margokit cette semaine.
+
+#ecommerce #entrepreneur #business #vendreenligne">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="linkedin" data-week="2">
+  <header><span class="net net-linkedin">LinkedIn</span><span class="when">Jeudi 26 nov. · 08:30</span></header>
+  <div class="media textonly"><p>Post texte seul</p></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Texte</span><span class="chip ok">Prêt</span></div>
+    <h3>Ce que j’ai appris en 10 jours de lancement</h3>
+    
+    <p class="caption">10 jours de campagne pour Margokit. Ce que j’ai appris, sans filtre :
+
+1. Pinterest seul ne suffit pas pour démarrer. J’avais 17 épingles programmées en octobre : le canal est lent, il faut des mois.
+2. Les conversations rapportent plus que les publications. Un « CALCUL » en commentaire ouvre une vraie discussion.
+3. Les gens ne veulent pas un outil. Ils veulent une réponse à « est-ce que je gagne de l’argent ? ».
+4. [À compléter avec ton vrai chiffre : visites du calculateur, commentaires, inscriptions.]
+
+Prochaine étape : les vendeurs en paiement à la livraison, là où la marge se perd le plus.
+
+Fondateurs solo : quel canal vous a apporté vos 10 premiers clients ?</p>
+    <button type="button" class="copy" data-copy="10 jours de campagne pour Margokit. Ce que j’ai appris, sans filtre :
+
+1. Pinterest seul ne suffit pas pour démarrer. J’avais 17 épingles programmées en octobre : le canal est lent, il faut des mois.
+2. Les conversations rapportent plus que les publications. Un « CALCUL » en commentaire ouvre une vraie discussion.
+3. Les gens ne veulent pas un outil. Ils veulent une réponse à « est-ce que je gagne de l’argent ? ».
+4. [À compléter avec ton vrai chiffre : visites du calculateur, commentaires, inscriptions.]
+
+Prochaine étape : les vendeurs en paiement à la livraison, là où la marge se perd le plus.
+
+Fondateurs solo : quel canal vous a apporté vos 10 premiers clients ?">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="tiktok" data-week="2">
+  <header><span class="net net-tiktok">TikTok</span><span class="when">Jeudi 26 nov. · 20:30</span></header>
+  <div class="media tall script"><div class="shoot"><span class="chip warn">Vidéo à tourner</span><p class="hook">+10 % sur ton prix. Regarde ton bénéfice.</p><p><b>À l’écran</b> Calculateur exemple 25 €, puis prix 27,50.</p><p><b>Voix off</b> « 25 € : je garde 5,65. 27,50 : je garde 8,08. Dix pour cent de plus sur le prix, quarante-trois pour cent de plus dans ma poche. Lien en bio. »</p><p class="src">script n°4 (videos.md)</p></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Vidéo</span><span class="chip warn">À tourner</span></div>
+    <h3>+10 % de prix = +43 % de bénéfice</h3>
+    
+    <p class="caption">Petit changement de prix, gros changement de bénéfice.
+
+#prix #ecommerce #vendreenligne #blackfriday</p>
+    <button type="button" class="copy" data-copy="Petit changement de prix, gros changement de bénéfice.
+
+#prix #ecommerce #vendreenligne #blackfriday">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="instagram" data-week="2">
+  <header><span class="net net-instagram">Instagram</span><span class="when">Vendredi 27 nov. · 19:00</span></header>
+  <div class="media tall script"><div class="shoot"><span class="chip warn">Vidéo à tourner</span><p class="hook">+10 % sur ton prix = +43 % de bénéfice.</p><p><b>À l’écran</b> Calculateur avec l’exemple 25 € (lien ci-dessous), puis change le prix en 27,50.</p><p><b>Voix off</b> « Aujourd’hui tout le monde baisse ses prix. Regarde l’inverse. À 25 €, je garde 5,65. À 27,50, je garde 8,08. Dix pour cent de plus sur le prix, quarante-trois pour cent de plus dans la poche. Ton client ne verra pas 2,50 €. Ton compte en banque, si. Calculateur gratuit, lien en bio. »</p><p class="src">script n°4 (videos.md)</p></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Reel</span><span class="chip warn">À tourner</span></div>
+    <h3>+10 % de prix = +43 % de bénéfice</h3>
+    
+    <p class="caption">Black Friday : tout le monde baisse ses prix. Et si tu faisais l’inverse ?
+À 25 € tu gardes 5,65 €. À 27,50 € tu gardes 8,08 €. +43 %.
+Teste avec tes chiffres, lien en bio.
+🎁 Code EARLY : −25 % sur les Google Sheets Margokit jusqu’au 30 novembre.
+
+#blackfriday #prix #ecommerce #vendreenligne #entrepreneur</p>
+    <button type="button" class="copy" data-copy="Black Friday : tout le monde baisse ses prix. Et si tu faisais l’inverse ?
+À 25 € tu gardes 5,65 €. À 27,50 € tu gardes 8,08 €. +43 %.
+Teste avec tes chiffres, lien en bio.
+🎁 Code EARLY : −25 % sur les Google Sheets Margokit jusqu’au 30 novembre.
+
+#blackfriday #prix #ecommerce #vendreenligne #entrepreneur">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="facebook" data-week="2">
+  <header><span class="net net-facebook">Facebook</span><span class="when">Vendredi 27 nov. · 20:00</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-black-friday-2.png" alt="Black Friday : le tableau qui résume tout, image 1 sur 1"></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Image</span><span class="chip ok">Prêt</span></div>
+    <h3>Black Friday : le tableau qui résume tout</h3>
+    
+    <p class="caption">C’est le Black Friday. Avant d’appuyer sur « publier » pour votre promo, gardez ce tableau en tête. 👆
+
+Et si vous voulez suivre le vrai bénéfice de chaque commande ce week-end, le code EARLY (−25 %) marche encore jusqu’à lundi.</p>
+    <button type="button" class="copy" data-copy="C’est le Black Friday. Avant d’appuyer sur « publier » pour votre promo, gardez ce tableau en tête. 👆
+
+Et si vous voulez suivre le vrai bénéfice de chaque commande ce week-end, le code EARLY (−25 %) marche encore jusqu’à lundi.">Copier le texte</button>
+    <details><summary>1er commentaire</summary><p class="caption small">Calculateur : https://margokit.com/fr/calculator?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=bf-jour-j</p><button type="button" class="copy" data-copy="Calculateur : https://margokit.com/fr/calculator?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=bf-jour-j">Copier le commentaire</button></details>
+  </div></article><article class="post" data-net="tiktok" data-week="2">
+  <header><span class="net net-tiktok">TikTok</span><span class="when">Vendredi 27 nov. · 20:30</span></header>
+  <div class="media tall script"><div class="shoot"><span class="chip warn">Vidéo à tourner</span><p class="hook">Ce produit en dropshipping rapporte 1,03 € par vente.</p><p><b>À l’écran</b> Préréglage Shopify, prix 29,99, coût 12, livraison 0, pub 15, retours 5 %.</p><p><b>Voix off</b> « Vendu 29,99. Coûte 12. Ça fait 18 euros de marge, non ? Ajoute 15 euros de pub par commande, les frais Shopify, 5 % de remboursements… 1,03 €. Et c’est avant ta promo Black Friday. Vérifie le tien, lien en bio. »</p><p class="src">script n°2 (videos.md)</p></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Vidéo</span><span class="chip warn">À tourner</span></div>
+    <h3>Black Friday : le dropshipping à 1 €</h3>
+    
+    <p class="caption">Produit à 29,99 €, 1,03 € de bénéfice. Ta pub mange tout.
+
+#dropshipping #shopify #blackfriday #ecommerce</p>
+    <button type="button" class="copy" data-copy="Produit à 29,99 €, 1,03 € de bénéfice. Ta pub mange tout.
+
+#dropshipping #shopify #blackfriday #ecommerce">Copier le texte</button>
+    
+  </div></article></div>
+      <p class="empty" hidden>Aucune publication pour ce filtre cette semaine.</p>
+    </section><section class="week" data-week="3">
+      <div class="wk"><h2>Semaine 3 · Colis refusés et pubs qui mentent</h2><span class="d">30 nov. → 6 déc.</span><p>Montrer le Tracker (COD, clients à risque) et le Pack Vendeur (ROAS réel). Premiers petits tests publicitaires.</p></div>
+      <div class="grid"><article class="post" data-net="instagram" data-week="3">
+  <header><span class="net net-instagram">Instagram</span><span class="when">Lundi 30 nov. · 19:00</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-cod-1.png" alt="COD : 30 % de colis refusés, image 1 sur 5"><img loading="lazy" src="visuels/car-cod-2.png" alt="COD : 30 % de colis refusés, image 2 sur 5"><img loading="lazy" src="visuels/car-cod-3.png" alt="COD : 30 % de colis refusés, image 3 sur 5"><img loading="lazy" src="visuels/car-cod-4.png" alt="COD : 30 % de colis refusés, image 4 sur 5"><img loading="lazy" src="visuels/car-cod-5.png" alt="COD : 30 % de colis refusés, image 5 sur 5"></div><span class="count">5 images</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Carrousel</span><span class="chip ok">Prêt</span></div>
+    <h3>COD : 30 % de colis refusés</h3>
+    
+    <p class="caption">Paiement à la livraison : 30 % de colis refusés.
+Sur un produit à 199 DH, tu gardes 32 DH.
+
+Même produit, même pub, 15 % de refus → 54 DH. +66 %. 📈
+
+3 réflexes :
+1. Confirme chaque commande par appel ou WhatsApp
+2. Demande un acompte aux clients qui ont déjà refusé un colis
+3. Compare tes transporteurs
+
+Le Tracker Margokit (version Maroc, en DH) repère tout seul les clients ⚠️ à risque.
+💬 Écris COLIS en DM, je t’envoie 2 captures.
+
+#codmaroc #ecommercemaroc #vendreenligne #paiementalalivraison #dropshippingmaroc #youcan</p>
+    <button type="button" class="copy" data-copy="Paiement à la livraison : 30 % de colis refusés.
+Sur un produit à 199 DH, tu gardes 32 DH.
+
+Même produit, même pub, 15 % de refus → 54 DH. +66 %. 📈
+
+3 réflexes :
+1. Confirme chaque commande par appel ou WhatsApp
+2. Demande un acompte aux clients qui ont déjà refusé un colis
+3. Compare tes transporteurs
+
+Le Tracker Margokit (version Maroc, en DH) repère tout seul les clients ⚠️ à risque.
+💬 Écris COLIS en DM, je t’envoie 2 captures.
+
+#codmaroc #ecommercemaroc #vendreenligne #paiementalalivraison #dropshippingmaroc #youcan">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="facebook" data-week="3">
+  <header><span class="net net-facebook">Facebook</span><span class="when">Lundi 30 nov. · 20:00</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-cod-1.png" alt="COD : 30 % de colis refusés, image 1 sur 5"><img loading="lazy" src="visuels/car-cod-2.png" alt="COD : 30 % de colis refusés, image 2 sur 5"><img loading="lazy" src="visuels/car-cod-3.png" alt="COD : 30 % de colis refusés, image 3 sur 5"><img loading="lazy" src="visuels/car-cod-4.png" alt="COD : 30 % de colis refusés, image 4 sur 5"><img loading="lazy" src="visuels/car-cod-5.png" alt="COD : 30 % de colis refusés, image 5 sur 5"></div><span class="count">5 images</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Album (5 images)</span><span class="chip ok">Prêt</span></div>
+    <h3>COD : 30 % de colis refusés</h3>
+    
+    <p class="caption">Vendeurs en paiement à la livraison 🇲🇦🇨🇮🇸🇳 : quel est votre taux de colis refusés ?
+
+Sur un produit à 199 DH :
+• 30 % de refus → vous gardez 32 DH par commande
+• 15 % de refus → 54 DH. +66 %, sans changer de prix ni de pub.
+
+Les 3 réflexes qui font baisser les refus :
+1. Confirmer chaque commande par appel ou vocal WhatsApp
+2. Demander un acompte aux clients qui ont déjà refusé
+3. Comparer le taux de livraison de chaque transporteur
+
+Le Tracker Margokit (version Maroc en DH) signale automatiquement les clients ⚠️ à risque. Écrivez COLIS en commentaire, je vous envoie les captures en privé.</p>
+    <button type="button" class="copy" data-copy="Vendeurs en paiement à la livraison 🇲🇦🇨🇮🇸🇳 : quel est votre taux de colis refusés ?
+
+Sur un produit à 199 DH :
+• 30 % de refus → vous gardez 32 DH par commande
+• 15 % de refus → 54 DH. +66 %, sans changer de prix ni de pub.
+
+Les 3 réflexes qui font baisser les refus :
+1. Confirmer chaque commande par appel ou vocal WhatsApp
+2. Demander un acompte aux clients qui ont déjà refusé
+3. Comparer le taux de livraison de chaque transporteur
+
+Le Tracker Margokit (version Maroc en DH) signale automatiquement les clients ⚠️ à risque. Écrivez COLIS en commentaire, je vous envoie les captures en privé.">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="tiktok" data-week="3">
+  <header><span class="net net-tiktok">TikTok</span><span class="when">Lundi 30 nov. · 20:30</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-cod-1.png" alt="Carrousel photo : COD, image 1 sur 5"><img loading="lazy" src="visuels/car-cod-2.png" alt="Carrousel photo : COD, image 2 sur 5"><img loading="lazy" src="visuels/car-cod-3.png" alt="Carrousel photo : COD, image 3 sur 5"><img loading="lazy" src="visuels/car-cod-4.png" alt="Carrousel photo : COD, image 4 sur 5"><img loading="lazy" src="visuels/car-cod-5.png" alt="Carrousel photo : COD, image 5 sur 5"></div><span class="count">5 images</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Carrousel photo</span><span class="chip ok">Prêt</span></div>
+    <h3>Carrousel photo : COD</h3>
+    
+    <p class="caption">30 % de colis refusés → tu gardes 32 DH sur 199. Glisse pour les 3 réflexes 👉
+
+#codmaroc #ecommercemaroc #vendreenligne #maroc</p>
+    <button type="button" class="copy" data-copy="30 % de colis refusés → tu gardes 32 DH sur 199. Glisse pour les 3 réflexes 👉
+
+#codmaroc #ecommercemaroc #vendreenligne #maroc">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="linkedin" data-week="3">
+  <header><span class="net net-linkedin">LinkedIn</span><span class="when">Mardi 1 déc. · 08:30</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-cod-1.png" alt="COD : le colis refusé, tueur de marge, image 1 sur 5"><img loading="lazy" src="visuels/car-cod-2.png" alt="COD : le colis refusé, tueur de marge, image 2 sur 5"><img loading="lazy" src="visuels/car-cod-3.png" alt="COD : le colis refusé, tueur de marge, image 3 sur 5"><img loading="lazy" src="visuels/car-cod-4.png" alt="COD : le colis refusé, tueur de marge, image 4 sur 5"><img loading="lazy" src="visuels/car-cod-5.png" alt="COD : le colis refusé, tueur de marge, image 5 sur 5"></div><span class="count">5 images · PDF</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Document PDF (carrousel)</span><span class="chip ok">Prêt</span></div>
+    <h3>COD : le colis refusé, tueur de marge</h3>
+    
+    <p class="caption">En Afrique et au Maroc, une grande partie du e-commerce se paie à la livraison.
+
+C’est un levier de confiance énorme pour le client. Et une source de pertes que peu de vendeurs mesurent : chaque colis refusé coûte la livraison, le retour et la pub, pour 0 encaissé.
+
+Sur un produit à 199 DH, passer de 30 % à 15 % de colis refusés fait passer le bénéfice de 32 à 54 DH par commande. +66 %, sans toucher au prix ni à la pub.
+
+Le détail et les 3 réflexes en 5 pages. 👇</p>
+    <button type="button" class="copy" data-copy="En Afrique et au Maroc, une grande partie du e-commerce se paie à la livraison.
+
+C’est un levier de confiance énorme pour le client. Et une source de pertes que peu de vendeurs mesurent : chaque colis refusé coûte la livraison, le retour et la pub, pour 0 encaissé.
+
+Sur un produit à 199 DH, passer de 30 % à 15 % de colis refusés fait passer le bénéfice de 32 à 54 DH par commande. +66 %, sans toucher au prix ni à la pub.
+
+Le détail et les 3 réflexes en 5 pages. 👇">Copier le texte</button>
+    <details><summary>1er commentaire</summary><p class="caption small">Version Maroc (DH) du Tracker : https://margokit.gumroad.com/l/tracker?utm_source=linkedin&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=cod</p><button type="button" class="copy" data-copy="Version Maroc (DH) du Tracker : https://margokit.gumroad.com/l/tracker?utm_source=linkedin&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=cod">Copier le commentaire</button></details>
+  </div></article><article class="post" data-net="tiktok" data-week="3">
+  <header><span class="net net-tiktok">TikTok</span><span class="when">Mardi 1 déc. · 20:30</span></header>
+  <div class="media tall script"><div class="shoot"><span class="chip warn">Vidéo à tourner</span><p class="hook">30 % de colis refusés → 15 % = +66 % de bénéfice</p><p><b>À l’écran</b> Lien pré-rempli dans tournage-semaine-1.md.</p><p><b>Voix off</b> « Paiement à la livraison, 199 dirhams. Avec 30 % de colis refusés, je garde 32. Même produit, 15 % de refus… 54. Même pub, même prix. Juste : confirme tes commandes avant d’expédier. Lien en bio. »</p><p class="src">script n°3 (tournage-semaine-1.md, vidéo 1)</p></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Vidéo</span><span class="chip warn">À tourner</span></div>
+    <h3>Le colis refusé</h3>
+    
+    <p class="caption">Les colis refusés tuent ta marge en silence. Confirme chaque commande 📞
+
+#codmaroc #ecommerce #vendreenligne #maroc</p>
+    <button type="button" class="copy" data-copy="Les colis refusés tuent ta marge en silence. Confirme chaque commande 📞
+
+#codmaroc #ecommerce #vendreenligne #maroc">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="instagram" data-week="3">
+  <header><span class="net net-instagram">Instagram</span><span class="when">Mercredi 2 déc. · 19:00</span></header>
+  <div class="media tall script"><div class="shoot"><span class="chip warn">Vidéo à tourner</span><p class="hook">30 % de colis refusés → 15 % = +66 % de bénéfice</p><p><b>À l’écran</b> Lien pré-rempli de tournage-semaine-1.md (199 DH, 30 % de refus), puis remplace 30 par 15.</p><p><b>Voix off</b> « Paiement à la livraison, 199 dirhams. Avec 30 % de colis refusés, je garde 32. Même produit, 15 % de refus… 54. Même pub, même prix. Juste : confirme tes commandes avant d’expédier. Lien en bio. »</p><p class="src">script n°3 (tournage-semaine-1.md, vidéo 1)</p></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Reel</span><span class="chip warn">À tourner</span></div>
+    <h3>Le colis refusé (COD Maroc)</h3>
+    
+    <p class="caption">Les colis refusés tuent ta marge en silence.
+Confirme chaque commande 📞 avant d’expédier.
+Calcule ton taux limite gratuitement : lien en bio.
+
+#codmaroc #ecommerce #vendreenligne #maroc #entrepreneur</p>
+    <button type="button" class="copy" data-copy="Les colis refusés tuent ta marge en silence.
+Confirme chaque commande 📞 avant d’expédier.
+Calcule ton taux limite gratuitement : lien en bio.
+
+#codmaroc #ecommerce #vendreenligne #maroc #entrepreneur">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="facebook" data-week="3">
+  <header><span class="net net-facebook">Facebook</span><span class="when">Mercredi 2 déc. · 20:00</span></header>
+  <div class="media tall script"><div class="shoot"><span class="chip warn">Vidéo à tourner</span><p class="hook"></p><p class="src">script n°3 (tournage-semaine-1.md, vidéo 1)</p></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Vidéo</span><span class="chip warn">À tourner</span></div>
+    <h3>Le colis refusé (COD Maroc)</h3>
+    
+    <p class="caption">30 % → 15 % de colis refusés = +66 % de bénéfice. La démonstration en 25 secondes. 👇</p>
+    <button type="button" class="copy" data-copy="30 % → 15 % de colis refusés = +66 % de bénéfice. La démonstration en 25 secondes. 👇">Copier le texte</button>
+    <details><summary>1er commentaire</summary><p class="caption small">Faites le calcul en DH : https://margokit.com/fr/calculator?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=cod-video</p><button type="button" class="copy" data-copy="Faites le calcul en DH : https://margokit.com/fr/calculator?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=cod-video">Copier le commentaire</button></details>
+  </div></article><article class="post" data-net="tiktok" data-week="3">
+  <header><span class="net net-tiktok">TikTok</span><span class="when">Mercredi 2 déc. · 20:30</span></header>
+  <div class="media tall script"><div class="shoot"><span class="chip warn">Vidéo à tourner</span><p class="hook">L’appel de 20 secondes qui réduit tes colis refusés.</p><p><b>À l’écran</b> Le script en texte + l’onglet Commandes avec le statut « Confirmée ».</p><p><b>Voix off</b> « Avant d’expédier : appel ou vocal. &quot;Bonjour, c’est [boutique], je confirme ta commande de X, total Y, livrée demain à [ville]. Tu seras disponible ?&quot; Pas de réponse deux fois ? N’expédie pas. Note-le dans ton tracker. »</p><p class="src">script n°14 (videos.md)</p></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Vidéo</span><span class="chip warn">À tourner</span></div>
+    <h3>Le script de confirmation</h3>
+    
+    <p class="caption">Enregistre ce script 📌
+
+#codmaroc #ecommerce #vendreenligne #conseils</p>
+    <button type="button" class="copy" data-copy="Enregistre ce script 📌
+
+#codmaroc #ecommerce #vendreenligne #conseils">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="linkedin" data-week="3">
+  <header><span class="net net-linkedin">LinkedIn</span><span class="when">Jeudi 3 déc. · 08:30</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-roas-1.png" alt="Il n’y a pas de bon ROAS, image 1 sur 5"><img loading="lazy" src="visuels/car-roas-2.png" alt="Il n’y a pas de bon ROAS, image 2 sur 5"><img loading="lazy" src="visuels/car-roas-3.png" alt="Il n’y a pas de bon ROAS, image 3 sur 5"><img loading="lazy" src="visuels/car-roas-4.png" alt="Il n’y a pas de bon ROAS, image 4 sur 5"><img loading="lazy" src="visuels/car-roas-5.png" alt="Il n’y a pas de bon ROAS, image 5 sur 5"></div><span class="count">5 images · PDF</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Document PDF (carrousel)</span><span class="chip ok">Prêt</span></div>
+    <h3>Il n’y a pas de bon ROAS</h3>
+    
+    <p class="caption">« Quel est un bon ROAS ? » est la mauvaise question.
+
+La bonne : quel est MON ROAS minimum ?
+
+Il dépend de la marge brute, des frais, de la livraison et du taux de retour. Pour un produit à 25 € avec 20 % de colis refusés, il est de 2,93. Une campagne à ROAS 3 rapporte 0,23 € par commande. Une campagne à 2,5 en perd 1,85.
+
+Si vous gérez des budgets pub pour des e-commerçants, ce seuil devrait être la première ligne de chaque rapport.</p>
+    <button type="button" class="copy" data-copy="« Quel est un bon ROAS ? » est la mauvaise question.
+
+La bonne : quel est MON ROAS minimum ?
+
+Il dépend de la marge brute, des frais, de la livraison et du taux de retour. Pour un produit à 25 € avec 20 % de colis refusés, il est de 2,93. Une campagne à ROAS 3 rapporte 0,23 € par commande. Une campagne à 2,5 en perd 1,85.
+
+Si vous gérez des budgets pub pour des e-commerçants, ce seuil devrait être la première ligne de chaque rapport.">Copier le texte</button>
+    <details><summary>1er commentaire</summary><p class="caption small">Calculer un ROAS minimum : https://margokit.com/fr/calculator?utm_source=linkedin&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=roas</p><button type="button" class="copy" data-copy="Calculer un ROAS minimum : https://margokit.com/fr/calculator?utm_source=linkedin&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=roas">Copier le commentaire</button></details>
+  </div></article><article class="post" data-net="tiktok" data-week="3">
+  <header><span class="net net-tiktok">TikTok</span><span class="when">Jeudi 3 déc. · 20:30</span></header>
+  <div class="media tall script"><div class="shoot"><span class="chip warn">Vidéo à tourner</span><p class="hook">ROAS de 3. Tu gagnes 23 centimes.</p><p><b>À l’écran</b> Calculateur exemple 25 €, zoom sur « ROAS minimum rentable » = 2,93.</p><p><b>Voix off</b> « Ton gestionnaire de pub affiche un ROAS de 3. Sur ce produit, avec 1 colis sur 5 refusé, ça fait 23 centimes par commande. Ton seuil, c’est 2,93. Calcule le tien, lien en bio. »</p><p class="src">script n°5 (videos.md)</p></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Vidéo</span><span class="chip warn">À tourner</span></div>
+    <h3>Le ROAS qui ment</h3>
+    
+    <p class="caption">ROAS ≠ bénéfice. Commente ROAS, je calcule ton seuil.
+
+#facebookads #tiktokads #roas #ecommerce</p>
+    <button type="button" class="copy" data-copy="ROAS ≠ bénéfice. Commente ROAS, je calcule ton seuil.
+
+#facebookads #tiktokads #roas #ecommerce">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="instagram" data-week="3">
+  <header><span class="net net-instagram">Instagram</span><span class="when">Vendredi 4 déc. · 19:00</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-roas-1.png" alt="ROAS de 3 = 0,23 €, image 1 sur 5"><img loading="lazy" src="visuels/car-roas-2.png" alt="ROAS de 3 = 0,23 €, image 2 sur 5"><img loading="lazy" src="visuels/car-roas-3.png" alt="ROAS de 3 = 0,23 €, image 3 sur 5"><img loading="lazy" src="visuels/car-roas-4.png" alt="ROAS de 3 = 0,23 €, image 4 sur 5"><img loading="lazy" src="visuels/car-roas-5.png" alt="ROAS de 3 = 0,23 €, image 5 sur 5"></div><span class="count">5 images</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Carrousel</span><span class="chip ok">Prêt</span></div>
+    <h3>ROAS de 3 = 0,23 €</h3>
+    
+    <p class="caption">Ton gestionnaire de pub affiche un ROAS de 3. Bravo ?
+Sur un produit à 25 € avec 1 colis sur 5 refusé, tu gagnes… 0,23 € par commande.
+
+Il n’y a pas de « bon ROAS » universel. Il y a TON ROAS minimum : ici 2,93. En dessous, chaque vente te coûte de l’argent.
+
+💬 Commente ROAS : je calcule le tien.
+📊 Le Pack Vendeur donne un verdict ✅/❌ pour chaque campagne.
+
+#facebookads #tiktokads #roas #ecommerce #dropshipping #CeQueTuGardes</p>
+    <button type="button" class="copy" data-copy="Ton gestionnaire de pub affiche un ROAS de 3. Bravo ?
+Sur un produit à 25 € avec 1 colis sur 5 refusé, tu gagnes… 0,23 € par commande.
+
+Il n’y a pas de « bon ROAS » universel. Il y a TON ROAS minimum : ici 2,93. En dessous, chaque vente te coûte de l’argent.
+
+💬 Commente ROAS : je calcule le tien.
+📊 Le Pack Vendeur donne un verdict ✅/❌ pour chaque campagne.
+
+#facebookads #tiktokads #roas #ecommerce #dropshipping #CeQueTuGardes">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="facebook" data-week="3">
+  <header><span class="net net-facebook">Facebook</span><span class="when">Vendredi 4 déc. · 20:00</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-roas-1.png" alt="ROAS de 3 = 0,23 €, image 1 sur 5"><img loading="lazy" src="visuels/car-roas-2.png" alt="ROAS de 3 = 0,23 €, image 2 sur 5"><img loading="lazy" src="visuels/car-roas-3.png" alt="ROAS de 3 = 0,23 €, image 3 sur 5"><img loading="lazy" src="visuels/car-roas-4.png" alt="ROAS de 3 = 0,23 €, image 4 sur 5"><img loading="lazy" src="visuels/car-roas-5.png" alt="ROAS de 3 = 0,23 €, image 5 sur 5"></div><span class="count">5 images</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Album (5 images)</span><span class="chip ok">Prêt</span></div>
+    <h3>ROAS de 3 = 0,23 €</h3>
+    
+    <p class="caption">« Ma campagne a un ROAS de 3, elle est rentable. »
+Pas forcément.
+
+Produit à 25 €, 1 colis sur 5 refusé :
+ROAS 2,5 → −1,85 € par commande
+ROAS 3 → +0,23 €
+ROAS 4 → +2,84 €
+
+Votre ROAS minimum dépend de votre marge et de votre taux de livraison. Calculez-le avant de lancer votre prochaine campagne (gratuit, lien en commentaire).</p>
+    <button type="button" class="copy" data-copy="« Ma campagne a un ROAS de 3, elle est rentable. »
+Pas forcément.
+
+Produit à 25 €, 1 colis sur 5 refusé :
+ROAS 2,5 → −1,85 € par commande
+ROAS 3 → +0,23 €
+ROAS 4 → +2,84 €
+
+Votre ROAS minimum dépend de votre marge et de votre taux de livraison. Calculez-le avant de lancer votre prochaine campagne (gratuit, lien en commentaire).">Copier le texte</button>
+    <details><summary>1er commentaire</summary><p class="caption small">🧮 https://margokit.com/fr/calculator?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=roas</p><button type="button" class="copy" data-copy="🧮 https://margokit.com/fr/calculator?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=roas">Copier le commentaire</button></details>
+  </div></article><article class="post" data-net="tiktok" data-week="3">
+  <header><span class="net net-tiktok">TikTok</span><span class="when">Vendredi 4 déc. · 20:30</span></header>
+  <div class="media tall script"><div class="shoot"><span class="chip warn">Vidéo à tourner</span><p class="hook">2 pubs sur 6 perdaient de l’argent. Le ROAS ne le montrait pas.</p><p><b>À l’écran</b> Pack Vendeur (copie de démonstration), onglet Publicité, colonne Verdict.</p><p><b>Voix off</b> « Dans cet exemple : campagne montre, ROAS 1,96. Sac cabas, 0,88. Mais même au-dessus de 2, une campagne peut perdre de l’argent avec les retours. Cette colonne calcule le vrai bénéfice par campagne. Rouge = stop. »</p><p class="src">script n°21 (videos.md)</p></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Vidéo</span><span class="chip warn">À tourner</span></div>
+    <h3>Quelle pub couper ?</h3>
+    
+    <p class="caption">Le verdict ✅/❌ pour chaque campagne. Pack Vendeur, lien en bio.
+
+#facebookads #tiktokads #ecommerce #googlesheets</p>
+    <button type="button" class="copy" data-copy="Le verdict ✅/❌ pour chaque campagne. Pack Vendeur, lien en bio.
+
+#facebookads #tiktokads #ecommerce #googlesheets">Copier le texte</button>
+    
+  </div></article></div>
+      <p class="empty" hidden>Aucune publication pour ce filtre cette semaine.</p>
+    </section><section class="week" data-week="4">
+      <div class="wk"><h2>Semaine 4 · Factures de fin d’année</h2><span class="d">7 → 13 déc.</span><p>Margokit Pro pour les freelances et petites entreprises (gratuit 3 documents/mois). Bilan et relance de l’offre.</p></div>
+      <div class="grid"><article class="post" data-net="instagram" data-week="4">
+  <header><span class="net net-instagram">Instagram</span><span class="when">Lundi 7 déc. · 19:00</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-pro-1.png" alt="Devis → facture en 1 clic, image 1 sur 5"><img loading="lazy" src="visuels/car-pro-2.png" alt="Devis → facture en 1 clic, image 2 sur 5"><img loading="lazy" src="visuels/car-pro-3.png" alt="Devis → facture en 1 clic, image 3 sur 5"><img loading="lazy" src="visuels/car-pro-4.png" alt="Devis → facture en 1 clic, image 4 sur 5"><img loading="lazy" src="visuels/car-pro-5.png" alt="Devis → facture en 1 clic, image 5 sur 5"></div><span class="count">5 images</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Carrousel</span><span class="chip ok">Prêt</span></div>
+    <h3>Devis → facture en 1 clic</h3>
+    
+    <p class="caption">Freelances, artisans, petites entreprises : ton client a dit oui ?
+Ta facture est prête en 1 clic. ✅
+
+Margokit Pro :
+• Devis → facture → avoir, numérotation automatique
+• Ton logo, tes mentions légales, PDF en français ou en anglais
+• Envoi par lien, e-mail ou WhatsApp
+• Tu vois qui a payé et qui est en retard
+• Formats Factur-X et UBL pour la facture électronique
+
+Gratuit jusqu’à 3 documents par mois. Lien en bio.
+
+#freelance #autoentrepreneur #facturation #devis #petiteentreprise #factureelectronique</p>
+    <button type="button" class="copy" data-copy="Freelances, artisans, petites entreprises : ton client a dit oui ?
+Ta facture est prête en 1 clic. ✅
+
+Margokit Pro :
+• Devis → facture → avoir, numérotation automatique
+• Ton logo, tes mentions légales, PDF en français ou en anglais
+• Envoi par lien, e-mail ou WhatsApp
+• Tu vois qui a payé et qui est en retard
+• Formats Factur-X et UBL pour la facture électronique
+
+Gratuit jusqu’à 3 documents par mois. Lien en bio.
+
+#freelance #autoentrepreneur #facturation #devis #petiteentreprise #factureelectronique">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="facebook" data-week="4">
+  <header><span class="net net-facebook">Facebook</span><span class="when">Lundi 7 déc. · 20:00</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-pro-1.png" alt="Devis → facture en 1 clic, image 1 sur 5"><img loading="lazy" src="visuels/car-pro-2.png" alt="Devis → facture en 1 clic, image 2 sur 5"><img loading="lazy" src="visuels/car-pro-3.png" alt="Devis → facture en 1 clic, image 3 sur 5"><img loading="lazy" src="visuels/car-pro-4.png" alt="Devis → facture en 1 clic, image 4 sur 5"><img loading="lazy" src="visuels/car-pro-5.png" alt="Devis → facture en 1 clic, image 5 sur 5"></div><span class="count">5 images</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Album (5 images)</span><span class="chip ok">Prêt</span></div>
+    <h3>Devis → facture en 1 clic</h3>
+    
+    <p class="caption">Freelances, artisans, petites entreprises : fini les factures sur Word. 🧾
+
+Avec Margokit Pro :
+✔ Devis transformé en facture en 1 clic
+✔ Numérotation automatique, mentions légales, votre logo
+✔ PDF en français ou en anglais
+✔ Envoi par lien, e-mail ou WhatsApp
+✔ Suivi payé / en retard
+✔ Formats Factur-X et UBL pour la facture électronique
+
+Gratuit jusqu’à 3 documents par mois.</p>
+    <button type="button" class="copy" data-copy="Freelances, artisans, petites entreprises : fini les factures sur Word. 🧾
+
+Avec Margokit Pro :
+✔ Devis transformé en facture en 1 clic
+✔ Numérotation automatique, mentions légales, votre logo
+✔ PDF en français ou en anglais
+✔ Envoi par lien, e-mail ou WhatsApp
+✔ Suivi payé / en retard
+✔ Formats Factur-X et UBL pour la facture électronique
+
+Gratuit jusqu’à 3 documents par mois.">Copier le texte</button>
+    <details><summary>1er commentaire</summary><p class="caption small">Créer un compte gratuit : https://margokit.com/fr/signup?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=pro</p><button type="button" class="copy" data-copy="Créer un compte gratuit : https://margokit.com/fr/signup?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=pro">Copier le commentaire</button></details>
+  </div></article><article class="post" data-net="tiktok" data-week="4">
+  <header><span class="net net-tiktok">TikTok</span><span class="when">Lundi 7 déc. · 20:30</span></header>
+  <div class="media tall script"><div class="shoot"><span class="chip warn">Vidéo à tourner</span><p class="hook">Arrête de faire tes factures sur Word.</p><p><b>À l’écran</b> Un fichier « facture_finale_v3.docx », puis margokit.com : création d’une facture.</p><p><b>Voix off</b> « Mauvais calculs, numéro fiscal oublié, &quot;facture_finale_v3.docx&quot;… Margokit Pro : devis en facture en un clic, PDF en français ou en anglais, envoyé par WhatsApp. Gratuit jusqu’à 3 documents par mois, lien en bio. »</p><p class="src">script n°29 mis à jour</p></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Vidéo</span><span class="chip warn">À tourner</span></div>
+    <h3>Arrête les factures sur Word</h3>
+    
+    <p class="caption">Freelances, celle-ci est pour vous. 🧾
+
+#freelance #autoentrepreneur #facture #entrepreneur</p>
+    <button type="button" class="copy" data-copy="Freelances, celle-ci est pour vous. 🧾
+
+#freelance #autoentrepreneur #facture #entrepreneur">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="linkedin" data-week="4">
+  <header><span class="net net-linkedin">LinkedIn</span><span class="when">Mardi 8 déc. · 08:30</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-pro-1.png" alt="Facture électronique : où en sont les indépendants ?, image 1 sur 5"><img loading="lazy" src="visuels/car-pro-2.png" alt="Facture électronique : où en sont les indépendants ?, image 2 sur 5"><img loading="lazy" src="visuels/car-pro-3.png" alt="Facture électronique : où en sont les indépendants ?, image 3 sur 5"><img loading="lazy" src="visuels/car-pro-4.png" alt="Facture électronique : où en sont les indépendants ?, image 4 sur 5"><img loading="lazy" src="visuels/car-pro-5.png" alt="Facture électronique : où en sont les indépendants ?, image 5 sur 5"></div><span class="count">5 images · PDF</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Document PDF (carrousel)</span><span class="chip ok">Prêt</span></div>
+    <h3>Facture électronique : où en sont les indépendants ?</h3>
+    
+    <p class="caption">Depuis le 1er septembre 2026, toutes les entreprises en France doivent pouvoir recevoir des factures électroniques. Au 1er septembre 2027, les PME, TPE et micro-entrepreneurs devront aussi les émettre.
+
+Beaucoup d’indépendants font encore leurs factures sur Word.
+
+Avec Margokit Pro, j’ai voulu un outil simple :
+• devis → facture → avoir, numérotation sans trou
+• PDF en français ou en anglais, mentions légales par pays
+• envoi par lien, e-mail ou WhatsApp, suivi des retards
+• exports Factur-X et UBL (norme EN 16931), données hébergées en Europe
+
+La transmission via une plateforme agréée arrive ensuite. Gratuit jusqu’à 3 documents par mois.
+
+Experts-comptables et accompagnateurs d’indépendants : qu’est-ce qui bloque le plus vos clients dans cette transition ?</p>
+    <button type="button" class="copy" data-copy="Depuis le 1er septembre 2026, toutes les entreprises en France doivent pouvoir recevoir des factures électroniques. Au 1er septembre 2027, les PME, TPE et micro-entrepreneurs devront aussi les émettre.
+
+Beaucoup d’indépendants font encore leurs factures sur Word.
+
+Avec Margokit Pro, j’ai voulu un outil simple :
+• devis → facture → avoir, numérotation sans trou
+• PDF en français ou en anglais, mentions légales par pays
+• envoi par lien, e-mail ou WhatsApp, suivi des retards
+• exports Factur-X et UBL (norme EN 16931), données hébergées en Europe
+
+La transmission via une plateforme agréée arrive ensuite. Gratuit jusqu’à 3 documents par mois.
+
+Experts-comptables et accompagnateurs d’indépendants : qu’est-ce qui bloque le plus vos clients dans cette transition ?">Copier le texte</button>
+    <details><summary>1er commentaire</summary><p class="caption small">Essayer Margokit Pro gratuitement : https://margokit.com/fr/signup?utm_source=linkedin&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=pro</p><button type="button" class="copy" data-copy="Essayer Margokit Pro gratuitement : https://margokit.com/fr/signup?utm_source=linkedin&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=pro">Copier le commentaire</button></details>
+  </div></article><article class="post" data-net="tiktok" data-week="4">
+  <header><span class="net net-tiktok">TikTok</span><span class="when">Mardi 8 déc. · 20:30</span></header>
+  <div class="media tall script"><div class="shoot"><span class="chip warn">Vidéo à tourner</span><p class="hook">Le client a dit oui. La facture prend… 1 clic.</p><p><b>À l’écran</b> Compte de test sur margokit.com : devis → « Convertir en facture » → PDF → « Envoyer par WhatsApp ».</p><p><b>Voix off</b> « Le client a dit oui. Un clic : la facture est créée, numérotée, avec mes mentions. J’envoie le lien sur WhatsApp. C’est tout. »</p><p class="src">script n°30 mis à jour</p></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Vidéo</span><span class="chip warn">À tourner</span></div>
+    <h3>Le devis qui devient facture</h3>
+    
+    <p class="caption">Devis → facture → WhatsApp. Gratuit jusqu’à 3 documents/mois.
+
+#freelance #facture #devis #autoentrepreneur</p>
+    <button type="button" class="copy" data-copy="Devis → facture → WhatsApp. Gratuit jusqu’à 3 documents/mois.
+
+#freelance #facture #devis #autoentrepreneur">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="instagram" data-week="4">
+  <header><span class="net net-instagram">Instagram</span><span class="when">Mercredi 9 déc. · 19:00</span></header>
+  <div class="media tall script"><div class="shoot"><span class="chip warn">Vidéo à tourner</span><p class="hook">Le client a dit oui. La facture prend… 1 clic.</p><p><b>À l’écran</b> Enregistrement d’écran sur margokit.com avec un compte de test : ouvre un devis, clique « Convertir en facture », ouvre le PDF, appuie sur « Envoyer par WhatsApp ».</p><p><b>Voix off</b> « Le client a dit oui. Avant : je recopiais tout dans Word. Maintenant : un clic, la facture est créée, numérotée, avec mes mentions. J’envoie le lien sur WhatsApp. Gratuit jusqu’à 3 documents par mois, lien en bio. »</p><p class="src">script n°30 mis à jour</p></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Reel</span><span class="chip warn">À tourner</span></div>
+    <h3>Le devis qui devient facture</h3>
+    
+    <p class="caption">Le client a dit oui → 1 clic → facture envoyée sur WhatsApp. 🧾
+Margokit Pro, gratuit jusqu’à 3 documents par mois. Lien en bio.
+
+#freelance #facture #devis #autoentrepreneur #entrepreneur</p>
+    <button type="button" class="copy" data-copy="Le client a dit oui → 1 clic → facture envoyée sur WhatsApp. 🧾
+Margokit Pro, gratuit jusqu’à 3 documents par mois. Lien en bio.
+
+#freelance #facture #devis #autoentrepreneur #entrepreneur">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="facebook" data-week="4">
+  <header><span class="net net-facebook">Facebook</span><span class="when">Mercredi 9 déc. · 20:00</span></header>
+  <div class="media tall script"><div class="shoot"><span class="chip warn">Vidéo à tourner</span><p class="hook"></p><p class="src">script n°30 mis à jour</p></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Vidéo</span><span class="chip warn">À tourner</span></div>
+    <h3>Le devis qui devient facture</h3>
+    
+    <p class="caption">Le client a dit oui → 1 clic → facture envoyée sur WhatsApp. Démonstration. 👇</p>
+    <button type="button" class="copy" data-copy="Le client a dit oui → 1 clic → facture envoyée sur WhatsApp. Démonstration. 👇">Copier le texte</button>
+    <details><summary>1er commentaire</summary><p class="caption small">Gratuit jusqu’à 3 documents/mois : https://margokit.com/fr/signup?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=pro-video</p><button type="button" class="copy" data-copy="Gratuit jusqu’à 3 documents/mois : https://margokit.com/fr/signup?utm_source=facebook&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=pro-video">Copier le commentaire</button></details>
+  </div></article><article class="post" data-net="tiktok" data-week="4">
+  <header><span class="net net-tiktok">TikTok</span><span class="when">Mercredi 9 déc. · 20:30</span></header>
+  <div class="media portrait"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/car-pro-1.png" alt="Carrousel photo : Margokit Pro, image 1 sur 5"><img loading="lazy" src="visuels/car-pro-2.png" alt="Carrousel photo : Margokit Pro, image 2 sur 5"><img loading="lazy" src="visuels/car-pro-3.png" alt="Carrousel photo : Margokit Pro, image 3 sur 5"><img loading="lazy" src="visuels/car-pro-4.png" alt="Carrousel photo : Margokit Pro, image 4 sur 5"><img loading="lazy" src="visuels/car-pro-5.png" alt="Carrousel photo : Margokit Pro, image 5 sur 5"></div><span class="count">5 images</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Carrousel photo</span><span class="chip ok">Prêt</span></div>
+    <h3>Carrousel photo : Margokit Pro</h3>
+    
+    <p class="caption">Ton client a dit oui ? Facture en 1 clic 👉
+
+#freelance #facturation #petiteentreprise #factureelectronique</p>
+    <button type="button" class="copy" data-copy="Ton client a dit oui ? Facture en 1 clic 👉
+
+#freelance #facturation #petiteentreprise #factureelectronique">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="linkedin" data-week="4">
+  <header><span class="net net-linkedin">LinkedIn</span><span class="when">Jeudi 10 déc. · 08:30</span></header>
+  <div class="media wide"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/deck-01.png" alt="Margokit en 10 slides, image 1 sur 3"><img loading="lazy" src="visuels/deck-03.png" alt="Margokit en 10 slides, image 2 sur 3"><img loading="lazy" src="visuels/deck-09.png" alt="Margokit en 10 slides, image 3 sur 3"></div><span class="count">3 images · PDF</span></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Document PDF (présentation)</span><span class="chip ok">Prêt</span></div>
+    <h3>Margokit en 10 slides</h3>
+    
+    <p class="caption">Un mois après le début de la campagne, voici Margokit en 10 slides : le problème, les 4 outils, pour qui, les prix.
+
+Ce que j’en retiens : [à compléter avec ton bilan réel, visites, inscriptions, premières ventes].
+
+Si vous connaissez un vendeur en ligne ou un freelance qui ne sait pas exactement ce qu’il gagne, partagez-lui ce document. Merci 🙏</p>
+    <button type="button" class="copy" data-copy="Un mois après le début de la campagne, voici Margokit en 10 slides : le problème, les 4 outils, pour qui, les prix.
+
+Ce que j’en retiens : [à compléter avec ton bilan réel, visites, inscriptions, premières ventes].
+
+Si vous connaissez un vendeur en ligne ou un freelance qui ne sait pas exactement ce qu’il gagne, partagez-lui ce document. Merci 🙏">Copier le texte</button>
+    <details><summary>1er commentaire</summary><p class="caption small">margokit.com : https://margokit.com/fr?utm_source=linkedin&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=deck</p><button type="button" class="copy" data-copy="margokit.com : https://margokit.com/fr?utm_source=linkedin&amp;utm_medium=social&amp;utm_campaign=ce-que-tu-gardes&amp;utm_content=deck">Copier le commentaire</button></details>
+  </div></article><article class="post" data-net="tiktok" data-week="4">
+  <header><span class="net net-tiktok">TikTok</span><span class="when">Jeudi 10 déc. · 20:30</span></header>
+  <div class="media tall script"><div class="shoot"><span class="chip warn">Vidéo à tourner</span><p class="hook">Tout vendeur a besoin de ce tableau de bord.</p><p><b>À l’écran</b> Scroll lent du Tableau de bord du Tracker, musique tendance, sans voix.</p><p><b>Voix off</b> Sans voix. Texte tuile par tuile, fin : « Template Google Sheets, lien en bio ».</p><p class="src">script n°20 (videos.md)</p></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Vidéo</span><span class="chip warn">À tourner</span></div>
+    <h3>Le tableau de bord en 15 secondes</h3>
+    
+    <p class="caption">Tout se calcule depuis tes commandes. 📊
+
+#googlesheets #ecommerce #organisation #vendreenligne</p>
+    <button type="button" class="copy" data-copy="Tout se calcule depuis tes commandes. 📊
+
+#googlesheets #ecommerce #organisation #vendreenligne">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="instagram" data-week="4">
+  <header><span class="net net-instagram">Instagram</span><span class="when">Vendredi 11 déc. · 19:00</span></header>
+  <div class="media tall script"><div class="shoot"><span class="chip warn">Vidéo à tourner</span><p class="hook">Tout vendeur a besoin de ce tableau de bord.</p><p><b>À l’écran</b> Scroll lent du Tableau de bord du Tracker (copie de démonstration), 2 s par tuile, musique tendance, sans voix.</p><p><b>Voix off</b> Sans voix. Texte à l’écran tuile par tuile : CA · Bénéfice net · Taux de livraison · Taux de retour · Panier moyen · Meilleur canal. Fin : « Template Google Sheets, lien en bio ».</p><p class="src">script n°20 (videos.md)</p></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Reel</span><span class="chip warn">À tourner</span></div>
+    <h3>Le tableau de bord en 15 secondes</h3>
+    
+    <p class="caption">CA, bénéfice net, taux de livraison, taux de retour, panier moyen, meilleur canal.
+Tout se calcule tout seul depuis tes commandes. Google Sheets, paiement unique.
+Lien en bio. 📊
+
+#googlesheets #ecommerce #vendreenligne #organisation #entrepreneur</p>
+    <button type="button" class="copy" data-copy="CA, bénéfice net, taux de livraison, taux de retour, panier moyen, meilleur canal.
+Tout se calcule tout seul depuis tes commandes. Google Sheets, paiement unique.
+Lien en bio. 📊
+
+#googlesheets #ecommerce #vendreenligne #organisation #entrepreneur">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="facebook" data-week="4">
+  <header><span class="net net-facebook">Facebook</span><span class="when">Vendredi 11 déc. · 20:00</span></header>
+  <div class="media wide"><div class="strip" tabindex="0" aria-label="Visuels, faire défiler"><img loading="lazy" src="visuels/deck-03.png" alt="Bilan : quel outil vous manque ?, image 1 sur 1"></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Texte + question</span><span class="chip ok">Prêt</span></div>
+    <h3>Bilan : quel outil vous manque ?</h3>
+    
+    <p class="caption">Un mois que je partage ici les calculs que trop de vendeurs ne font pas. Merci à tous ceux qui ont commenté, testé le calculateur et posé leurs questions. 🙏
+
+Je prépare la suite de Margokit. Dites-moi en commentaire :
+quel est le chiffre de votre activité que vous aimeriez connaître et que vous ne connaissez pas aujourd’hui ?
+
+Je réponds à chaque commentaire.</p>
+    <button type="button" class="copy" data-copy="Un mois que je partage ici les calculs que trop de vendeurs ne font pas. Merci à tous ceux qui ont commenté, testé le calculateur et posé leurs questions. 🙏
+
+Je prépare la suite de Margokit. Dites-moi en commentaire :
+quel est le chiffre de votre activité que vous aimeriez connaître et que vous ne connaissez pas aujourd’hui ?
+
+Je réponds à chaque commentaire.">Copier le texte</button>
+    
+  </div></article><article class="post" data-net="tiktok" data-week="4">
+  <header><span class="net net-tiktok">TikTok</span><span class="when">Vendredi 11 déc. · 20:30</span></header>
+  <div class="media tall script"><div class="shoot"><span class="chip warn">Vidéo à tourner</span><p class="hook">La routine du dimanche d’un vendeur qui connaît ses chiffres (5 minutes).</p><p><b>À l’écran</b> 4 écrans du Pack Vendeur (copie de démonstration), un par étape.</p><p><b>Voix off</b> « Un : mets à jour le statut de tes commandes. Deux : ajoute ta dépense pub par campagne. Trois : regarde ton bénéfice après pub. Quatre : coupe les campagnes en rouge. Terminé. »</p><p class="src">script n°27 adapté</p></div></div>
+  <div class="body">
+    <div class="meta"><span class="fmt">Vidéo</span><span class="chip warn">À tourner</span></div>
+    <h3>La routine du dimanche</h3>
+    
+    <p class="caption">5 minutes par semaine pour savoir ce que tu gardes vraiment.
+
+#ecommerce #routine #entrepreneur #googlesheets</p>
+    <button type="button" class="copy" data-copy="5 minutes par semaine pour savoir ce que tu gardes vraiment.
+
+#ecommerce #routine #entrepreneur #googlesheets">Copier le texte</button>
+    
+  </div></article></div>
+      <p class="empty" hidden>Aucune publication pour ce filtre cette semaine.</p>
+    </section>
+  </div>
+
+  <div class="panel" id="p-deck" role="tabpanel" aria-labelledby="t-deck" hidden>
+    <div class="deck"><figure><img loading="lazy" src="visuels/deck-01.png" alt="Présentation Margokit, slide 1"><figcaption>Slide 1</figcaption></figure><figure><img loading="lazy" src="visuels/deck-02.png" alt="Présentation Margokit, slide 2"><figcaption>Slide 2</figcaption></figure><figure><img loading="lazy" src="visuels/deck-03.png" alt="Présentation Margokit, slide 3"><figcaption>Slide 3</figcaption></figure><figure><img loading="lazy" src="visuels/deck-04.png" alt="Présentation Margokit, slide 4"><figcaption>Slide 4</figcaption></figure><figure><img loading="lazy" src="visuels/deck-05.png" alt="Présentation Margokit, slide 5"><figcaption>Slide 5</figcaption></figure><figure><img loading="lazy" src="visuels/deck-06.png" alt="Présentation Margokit, slide 6"><figcaption>Slide 6</figcaption></figure><figure><img loading="lazy" src="visuels/deck-07.png" alt="Présentation Margokit, slide 7"><figcaption>Slide 7</figcaption></figure><figure><img loading="lazy" src="visuels/deck-08.png" alt="Présentation Margokit, slide 8"><figcaption>Slide 8</figcaption></figure><figure><img loading="lazy" src="visuels/deck-09.png" alt="Présentation Margokit, slide 9"><figcaption>Slide 9</figcaption></figure><figure><img loading="lazy" src="visuels/deck-10.png" alt="Présentation Margokit, slide 10"><figcaption>Slide 10</figcaption></figure></div>
+  </div>
+
+  <div class="panel" id="p-story" role="tabpanel" aria-labelledby="t-story" hidden>
+    <p class="empty" style="padding-bottom:0">Les zones en pointillés indiquent où placer le sticker (sondage ou lien) dans Instagram ou Facebook.</p>
+    <div class="storyrow"><img loading="lazy" src="visuels/story-black-friday.png" alt="Story black-friday"><img loading="lazy" src="visuels/story-calculateur.png" alt="Story calculateur"><img loading="lazy" src="visuels/story-early.png" alt="Story early"><img loading="lazy" src="visuels/story-sondage.png" alt="Story sondage"></div>
+  </div>
+
+  <footer>Sources : marketing/campagne/ dans le dépôt. Textes complets et liens suivis (UTM) dans instagram.md, facebook.md, tiktok.md et linkedin.md. Chiffres issus des formules du calculateur Margokit.</footer>
+</div>
+
+<script>
+(function(){
+  var state={net:'all',status:'all'};
+  function apply(){
+    document.querySelectorAll('.post').forEach(function(el){
+      var okNet=state.net==='all'||el.dataset.net===state.net;
+      var okSt=state.status==='all'||el.querySelector('.chip.warn');
+      el.hidden=!(okNet&&okSt);
+    });
+    document.querySelectorAll('section.week').forEach(function(s){
+      var any=[].some.call(s.querySelectorAll('.post'),function(p){return !p.hidden});
+      s.querySelector('.empty').hidden=any;
+    });
+  }
+  document.querySelectorAll('.f').forEach(function(b){
+    b.addEventListener('click',function(){
+      var key=b.dataset.net?'net':'status';
+      state[key]=b.dataset[key];
+      document.querySelectorAll('.f[data-'+key+']').forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});
+      apply();
+    });
+  });
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.addEventListener('click',function(){
+      document.querySelectorAll('.tab').forEach(function(x){
+        var on=x===t; x.setAttribute('aria-selected',String(on));
+        document.getElementById(x.getAttribute('aria-controls')).hidden=!on;
+      });
+    });
+  });
+  document.querySelectorAll('.copy').forEach(function(b){
+    b.addEventListener('click',function(){
+      var txt=b.dataset.copy, label=b.textContent;
+      function done(){b.textContent='Copié';b.classList.add('done');setTimeout(function(){b.textContent=label;b.classList.remove('done')},1600)}
+      function fallback(){var p=b.previousElementSibling;if(!p)return;var r=document.createRange();r.selectNodeContents(p);var s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Texte sélectionné, fais Copier'}
+      try{navigator.clipboard.writeText(txt).then(done,fallback)}catch(e){fallback()}
+    });
+  });
+})();
+</script>

@@ -6,3 +6,6 @@ private/
 
 # Vidéos générées par /brag (lourdes, ne pas publier)
 brag-output*/
+
+# Copie locale des vidéos de campagne (lourdes)
+marketing/campagne/videos/

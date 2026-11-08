@@ -19,6 +19,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..');
 const { chromium } = await import(join(ROOT, 'app', 'node_modules', 'playwright', 'index.mjs'));
 const { covers, pins, proVisuals, whatsappVisuals } = await import('./visuals.mjs');
+const { campaignVisuals } = await import('./campagne.mjs');
 
 const OUT = join(HERE, 'out');
 const ASSETS = join(HERE, 'assets');
@@ -92,15 +93,17 @@ for (const [k, f] of Object.entries(APP_SHOTS)) {
   appShots[k] = dataUrl(`${f}.png`);
 }
 
-const list = [...covers(), ...proVisuals(appShots), ...pins(shots), ...whatsappVisuals()].filter((v) => !filter || v.name.includes(filter));
+const list = [...covers(), ...proVisuals(appShots), ...pins(shots), ...whatsappVisuals(), ...campaignVisuals(shots.fr, appShots)].filter((v) => !filter || v.name.includes(filter));
 const page = await browser.newPage({ deviceScaleFactor: 1 });
 for (const v of list) {
   await page.setViewportSize({ width: v.w, height: v.h });
   await page.setContent(v.html, { waitUntil: 'networkidle' });
   await page.evaluate(() => document.fonts.ready);
-  const file = join(OUT, `${v.name}.png`);
+  const dir = v.out ?? OUT;
+  mkdirSync(dir, { recursive: true });
+  const file = join(dir, `${v.name}.png`);
   await page.screenshot({ path: file, clip: { x: 0, y: 0, width: v.w, height: v.h } });
-  if (writeHtml) writeFileSync(join(OUT, `${v.name}.html`), v.html);
+  if (writeHtml) writeFileSync(join(dir, `${v.name}.html`), v.html);
   // Verify exact pixel size from the PNG header
   const buf = readFileSync(file);
   const w = buf.readUInt32BE(16);
