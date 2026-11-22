@@ -7,6 +7,7 @@ import { Link } from '@/i18n/navigation';
 import { connectDb } from '@/lib/db';
 import { links } from '@/lib/links';
 import { getPlan } from '@/lib/plan';
+import { requireConsent } from '@/lib/consent';
 import { requireUser } from '@/lib/session';
 import { fmtLocale } from '@/lib/intl';
 
@@ -16,6 +17,8 @@ export default async function ActivatePage({ params }: PageProps<'/[locale]/acti
   const { locale } = await params;
   setRequestLocale(locale);
   const user = await requireUser(locale);
+  await connectDb();
+  await requireConsent(user.id, locale, '/activate');
   const t = await getTranslations('plan');
   await connectDb();
   const plan = await getPlan(user.id);

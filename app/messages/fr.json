@@ -907,5 +907,15 @@
       "errorText": "Ce lien a déjà été utilisé ou il a plus de 7 jours. Tu peux renvoyer ton avis depuis la page des avis.",
       "back": "Retour aux avis"
     }
+  },
+  "consent": {
+    "title": "Avant de commencer",
+    "subtitle": "Deux accords sont nécessaires pour utiliser Margokit.",
+    "terms": "J’accepte les <terms>conditions générales d’utilisation</terms> et la <privacy>politique de confidentialité</privacy> de Margokit.",
+    "transfer": "J’accepte que mes données soient hébergées et traitées hors du Maroc — en France (Union européenne) et aux États-Unis — par les prestataires techniques de Margokit, comme décrit dans la <privacy>politique de confidentialité</privacy>.",
+    "submit": "Continuer",
+    "required": "Coche les deux cases pour continuer.",
+    "why": "La loi marocaine 09-08 demande ton accord exprès pour l’hébergement de tes données à l’étranger. Ton accord est enregistré avec sa date.",
+    "signOut": "Se déconnecter"
   }
 }

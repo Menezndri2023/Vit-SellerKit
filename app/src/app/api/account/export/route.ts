@@ -1,3 +1,4 @@
+import { consentOf } from '@/lib/consent';
 import { connectDb } from '@/lib/db';
 import { getSession } from '@/lib/session';
 import { BusinessProfile } from '@/models/BusinessProfile';
@@ -21,9 +22,11 @@ export async function GET() {
     Subscription.find({ userId }).select('plan provider status startsAt expiresAt createdAt').lean(),
     Review.find({ $or: [{ userId }, { email: session.user.email.toLowerCase() }] }).select('kit rating name location comment status createdAt').lean(),
   ]);
+  const consent = await consentOf(userId);
   const data = {
     exportedAt: new Date().toISOString(),
     account: { name: session.user.name, email: session.user.email, createdAt: session.user.createdAt },
+    consent,
     businessProfile: profile,
     clients,
     products,

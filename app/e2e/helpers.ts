@@ -20,6 +20,11 @@ export async function signUpAndLogin(page: Page, name = 'Salma Test') {
   await page.getByLabel('E-mail').fill(email);
   await page.getByLabel('Mot de passe').fill(password);
   await page.getByRole('button', { name: 'Se connecter' }).click();
+  // First visit: terms + transfer-abroad consent (law 09-08), then the dashboard
+  await expect(page).toHaveURL(/\/fr\/consent/);
+  await page.locator('input[name=terms]').check();
+  await page.locator('input[name=transfer]').check();
+  await page.getByRole('button', { name: 'Continuer' }).click();
   await expect(page).toHaveURL(/\/fr\/app$/);
   return { email, password };
 }

@@ -6,6 +6,7 @@ import PlanBanner from '@/components/plan/PlanBanner';
 import { ObjectId } from 'mongodb';
 import { connectDb, mongoClient } from '@/lib/db';
 import { getPlan } from '@/lib/plan';
+import { requireConsent } from '@/lib/consent';
 import { requireUser } from '@/lib/session';
 
 export const metadata: Metadata = { robots: { index: false, follow: false }, alternates: null };
@@ -14,6 +15,7 @@ export default async function AppLayout({ children, params }: LayoutProps<'/[loc
   const { locale } = await params;
   const user = await requireUser(locale);
   await connectDb();
+  await requireConsent(user.id, locale, '/app');
   // Emails (onboarding, reminders, password reset) follow the language the user actually uses:
   // Google sign-ups start with the default, and anyone can switch language later
   if ((user as { uiLocale?: string }).uiLocale !== locale && ObjectId.isValid(user.id)) {

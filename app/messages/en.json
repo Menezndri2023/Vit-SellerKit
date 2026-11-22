@@ -907,5 +907,15 @@
       "errorText": "This link was already used or is more than 7 days old. You can send your review again from the reviews page.",
       "back": "Back to reviews"
     }
+  },
+  "consent": {
+    "title": "Before you start",
+    "subtitle": "Two agreements are needed to use Margokit.",
+    "terms": "I accept Margokit’s <terms>terms of service</terms> and <privacy>privacy policy</privacy>.",
+    "transfer": "I agree that my data is hosted and processed outside Morocco — in France (European Union) and in the United States — by Margokit’s technical providers, as described in the <privacy>privacy policy</privacy>.",
+    "submit": "Continue",
+    "required": "Tick both boxes to continue.",
+    "why": "Moroccan law 09-08 requires your express agreement for hosting your data abroad. Your agreement is recorded with its date.",
+    "signOut": "Sign out"
   }
 }
