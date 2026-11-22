@@ -80,6 +80,7 @@ Les tests de bout en bout utilisent une base séparée (`margokit_e2e`) et un fa
 2. Sur **chaque** produit : active **Generate a unique license key per sale** (clés de licence). Dans le contenu livré, écris par exemple : « Ta clé : {license_key} — active-la sur https://margokit.com/fr/activate ».
 3. **Récupérer les Product ID** (écran d'édition du produit, ou via l'API) et les mettre dans `GUMROAD_PRODUCT_ID_MONTHLY` et `GUMROAD_PRODUCT_ID_LIFETIME`. L'API de vérification des licences exige le `product_id` pour les produits créés après le 9 janvier 2023.
 4. **Liens d'achat** : mets les URL des produits dans `GUMROAD_URL_MONTHLY` et `GUMROAD_URL_LIFETIME` (boutons de la page Tarifs et de `/activate`).
+   **Offre annuelle (facultative)** : produit Gumroad de type **Membership** avec une récurrence **annuelle** et des clés de licence → `GUMROAD_PRODUCT_ID_ANNUAL`, `GUMROAD_URL_ANNUAL` et `GUMROAD_PRICE_ANNUAL_USD` (prix affiché, identique à Gumroad). La carte et le bouton n'apparaissent que si les trois sont renseignés ; le build de production refuse une configuration partielle.
 5. **Webhook (Ping)** :
    - génère un secret : `openssl rand -hex 24` → `GUMROAD_PING_SECRET` ;
    - Gumroad → Settings → Advanced → **Ping endpoint** : `https://margokit.com/api/webhooks/gumroad/<GUMROAD_PING_SECRET>`.

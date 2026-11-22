@@ -22,7 +22,7 @@ export default async function Home({ params, searchParams }: PageProps<'/[locale
   const features = [1, 2, 3, 4] as const;
   const tMeta = await getTranslations('meta');
   const site = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
-  const jsonLd = homeJsonLd({ site, locale, description: tMeta('description'), publisherUrl: publisherUrl() });
+  const jsonLd = homeJsonLd({ site, locale, description: tMeta('description'), publisherUrl: publisherUrl(), annualUsd: links.proAnnual() && Number(process.env.GUMROAD_PRICE_ANNUAL_USD) > 0 ? Number(process.env.GUMROAD_PRICE_ANNUAL_USD) : null });
 
   return (
     <div className="flex flex-col gap-20 pb-28 lg:pb-16">

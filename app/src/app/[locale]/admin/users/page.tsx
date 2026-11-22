@@ -43,7 +43,7 @@ export default async function AdminUsers({ params, searchParams }: PageProps<'/[
                   {best && (
                     <span className="text-muted">
                       {' '}
-                      · {best.provider}/{best.plan} · {best.expiresAt ? `${t('until')} ${date(new Date(best.expiresAt))}` : best.plan === 'monthly' ? t('renews') : t('lifetime')}
+                      · {best.provider}/{best.plan} · {best.expiresAt ? `${t('until')} ${date(new Date(best.expiresAt))}` : best.plan === 'monthly' || best.plan === 'annual' ? t('renews') : t('lifetime')}
                     </span>
                   )}
                 </p>

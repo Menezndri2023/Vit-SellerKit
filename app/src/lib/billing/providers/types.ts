@@ -3,7 +3,7 @@
  * Stripe or CMI later). Access rights only depend on the Subscription collection, so switching
  * or adding a provider never touches the rest of the app.
  */
-export type Plan = 'monthly' | 'lifetime';
+export type Plan = 'monthly' | 'annual' | 'lifetime';
 
 export interface BillingProvider {
   readonly id: string;

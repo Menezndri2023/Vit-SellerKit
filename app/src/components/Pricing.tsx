@@ -1,4 +1,4 @@
-import { getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { links } from '@/lib/links';
 
@@ -13,11 +13,20 @@ function Check() {
 export default async function Pricing() {
   const t = await getTranslations('pricing');
   const monthly = links.proMonthly();
+  const annual = links.proAnnual();
   const lifetime = links.proLifetime();
+  const locale = await getLocale();
+  // Annual offer: shown only when configured on Gumroad (product + URL) with its USD price
+  const annualUsd = Number(process.env.GUMROAD_PRICE_ANNUAL_USD);
+  // Same style as the other cards (« 5 $ » in French and Arabic, « $5 » in English)
+  const annualPrice = annual && annualUsd > 0 ? (locale === 'en' ? `$${annualUsd}` : `${annualUsd} $`) : null;
 
   const plans = [
     { name: t('freeName'), price: t('freePrice'), period: t('freePeriod'), features: [t('freeF1'), t('freeF2'), t('freeF3'), t('freeF4')], cta: t('freeCta'), href: '/signup', external: false, highlight: false },
     { name: t('monthlyName'), price: t('monthlyPrice'), period: t('monthlyPeriod'), features: [t('proF1'), t('proF2'), t('proF4'), t('proF3')], cta: t('monthlyCta'), href: monthly ?? '/signup', external: Boolean(monthly), highlight: true },
+    ...(annual && annualPrice
+      ? [{ name: t('annualName'), price: annualPrice, period: t('annualPeriod'), features: [t('annualF1'), t('proF2'), t('proF4'), t('proF3')], cta: t('annualCta'), href: annual, external: true, highlight: false }]
+      : []),
     { name: t('lifetimeName'), price: t('lifetimePrice'), period: t('lifetimePeriod'), features: [t('lifetimeF1'), t('lifetimeF2'), t('proF2'), t('proF3')], cta: t('lifetimeCta'), href: lifetime ?? '/signup', external: Boolean(lifetime), highlight: false },
   ];
 
@@ -27,7 +36,7 @@ export default async function Pricing() {
         <h2 className="font-display text-3xl font-bold">{t('title')}</h2>
         <p className="mt-2 text-muted">{t('subtitle')}</p>
       </div>
-      <div className="mt-8 grid gap-5 md:grid-cols-3">
+      <div className={`mt-8 grid gap-5 ${plans.length > 3 ? 'md:grid-cols-2 xl:grid-cols-4' : 'md:grid-cols-3'}`}>
         {plans.map((p) => (
           <div key={p.name} className={`flex flex-col rounded-2xl border bg-surface p-6 ${p.highlight ? 'border-primary-ink ring-2 ring-primary/40' : 'border-line'}`}>
             <div className="flex items-center justify-between">

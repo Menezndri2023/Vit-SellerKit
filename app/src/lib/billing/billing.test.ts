@@ -43,3 +43,15 @@ describe('activation codes', () => {
     expect(looksLikeCode('8A5C1D2E-...')).toBe(false);
   });
 });
+
+describe('annual plan', () => {
+  it('is recognised as a renewing subscription, like monthly', async () => {
+    const { evaluateLicense } = await import('./gumroad-status');
+    const products = { monthly: 'm', annual: 'a', lifetime: 'l' };
+    expect(evaluateLicense({ success: true, purchase: { product_id: 'a', subscription_id: 's' } }, products)).toMatchObject({ valid: true, plan: 'annual', status: 'active' });
+    expect(evaluateLicense({ success: true, purchase: { product_id: 'a', subscription_ended_at: '2020-01-01T00:00:00Z' } }, products)).toEqual({ valid: false, reason: 'ended' });
+    // Not configured: an annual key is "another product"
+    expect(evaluateLicense({ success: true, purchase: { product_id: 'a' } }, { monthly: 'm', lifetime: 'l' })).toEqual({ valid: false, reason: 'wrong_product' });
+  });
+});
+

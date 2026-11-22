@@ -21,7 +21,7 @@ export async function GET(req: Request) {
   const now = new Date();
   const report = { rechecked: 0, expired: 0, reminders: 0, reminders_sent: 0, recurring_drafts: 0, onboarding: 0 };
 
-  const stale = await Subscription.find({ provider: 'gumroad', plan: 'monthly', status: { $in: ['active', 'cancelled'] }, $or: [{ lastCheckedAt: { $lt: new Date(now.getTime() - DAY) } }, { lastCheckedAt: null }] }).sort({ lastCheckedAt: 1 }).limit(50).lean(); // oldest checks first, so every subscription gets its turn
+  const stale = await Subscription.find({ provider: 'gumroad', plan: { $in: ['monthly', 'annual'] }, status: { $in: ['active', 'cancelled'] }, $or: [{ lastCheckedAt: { $lt: new Date(now.getTime() - DAY) } }, { lastCheckedAt: null }] }).sort({ lastCheckedAt: 1 }).limit(50).lean(); // oldest checks first, so every subscription gets its turn
   for (const s of stale) {
     await recheckSubscription(String(s._id)).then(() => report.rechecked++, () => undefined);
   }

@@ -153,7 +153,11 @@
     "lifetimeF2": "Toutes les mises à jour incluses",
     "lifetimeCta": "Payer une fois",
     "note": "Paiement par carte via Gumroad. Carte refusée ? Paie localement via WhatsApp.",
-    "proF4": "Relances automatiques et factures récurrentes"
+    "proF4": "Relances automatiques et factures récurrentes",
+    "annualName": "Pro annuel",
+    "annualPeriod": "par an",
+    "annualF1": "Tout Pro pendant 12 mois",
+    "annualCta": "Payer à l’année"
   },
   "faq": {
     "title": "Questions",
@@ -710,7 +714,10 @@
       "unavailable": "Impossible de joindre Gumroad pour le moment. Réessaie dans quelques minutes.",
       "rateLimited": "Trop de tentatives. Attends 15 minutes."
     },
-    "backToApp": "Retour à l’app"
+    "backToApp": "Retour à l’app",
+    "annual": "Pro annuel — renouvelé automatiquement",
+    "annualCancelled": "Pro annuel — annulé, accès jusqu’au {date}",
+    "buyAnnual": "Pro annuel"
   },
   "admin": {
     "title": "Admin",

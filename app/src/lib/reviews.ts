@@ -24,7 +24,7 @@ export async function verificationFor(kit: Kit, email: string, userId?: string):
   await connectDb();
   const sales = await BillingEvent.find({ provider: 'gumroad', type: 'sale', email: email.toLowerCase(), isTest: { $ne: true } }, { productId: 1, productName: 1 }).lean();
   const ids = gumroadProducts();
-  if (sales.some((s) => saleMatchesKit(kit, s, { monthly: ids.monthly, lifetime: ids.lifetime }))) return 'purchase';
+  if (sales.some((s) => saleMatchesKit(kit, s, { monthly: ids.monthly, annual: ids.annual, lifetime: ids.lifetime }))) return 'purchase';
   if (kit === 'pro' && userId) {
     // Pro sold by hand (WhatsApp, transfer) is a purchase too
     if (await Subscription.exists({ userId, status: { $in: ['active', 'cancelled', 'expired'] } })) return 'purchase';

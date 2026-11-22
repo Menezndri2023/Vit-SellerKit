@@ -118,3 +118,19 @@ test('daily cron requires its secret', async ({ request }) => {
   expect(ok.status()).toBe(200);
   expect(await ok.json()).toMatchObject({ rechecked: expect.any(Number), expired: expect.any(Number) });
 });
+
+test('annual offer: shown once configured, an annual license activates a renewing Pro plan', async ({ page }) => {
+  await page.goto('/fr#pricing');
+  const card = page.getByRole('heading', { name: 'Pro annuel' }).locator('xpath=ancestor::div[contains(@class, "rounded-2xl")][1]');
+  await expect(card.getByText('49 $')).toBeVisible();
+  await expect(card.getByRole('link', { name: 'Payer à l’année' })).toHaveAttribute('href', /pro-annual\?.*utm_content=pro-annual/);
+
+  await signUpAndLogin(page, 'Annual Buyer');
+  const key = `ANNUAL-${Date.now()}-KEY0001`;
+  await registerLicense({ key, product_id: 'prod_annual', email: 'annual@example.com', subscription_id: `sub_${key}` });
+  await page.goto('/fr/activate');
+  await page.getByLabel('Clé de licence ou code d’activation').fill(key);
+  await page.getByRole('button', { name: 'Activer' }).click();
+  await expect(page.getByText('Pro annuel — renouvelé automatiquement')).toBeVisible();
+});
+

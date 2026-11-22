@@ -9,7 +9,7 @@ import type { LicenseStatus } from './gumroad-status';
 const DAY = 86_400_000;
 
 export type ActivationResult =
-  | { ok: true; plan: 'monthly' | 'lifetime' | 'manual'; expiresAt: Date | null }
+  | { ok: true; plan: 'monthly' | 'annual' | 'lifetime' | 'manual'; expiresAt: Date | null }
   | { ok: false; error: 'invalid' | 'refunded' | 'ended' | 'payment_failed' | 'already_used' | 'unavailable' };
 
 function statusFields(s: Extract<LicenseStatus, { valid: true }>) {

@@ -6,7 +6,7 @@ import { PRODUCT_NAME, PUBLISHER_NAME } from './brand';
  * No rating/review markup (self-served reviews are not eligible and must not be invented),
  * no FAQPage (Google limits FAQ rich results to authoritative government/health sites).
  */
-export function homeJsonLd({ site, locale, description, publisherUrl }: { site: string; locale: string; description: string; publisherUrl: string | null }) {
+export function homeJsonLd({ site, locale, description, publisherUrl, annualUsd = null }: { site: string; locale: string; description: string; publisherUrl: string | null; annualUsd?: number | null }) {
   const orgId = `${site}/#publisher`;
   return {
     '@context': 'https://schema.org',
@@ -25,6 +25,7 @@ export function homeJsonLd({ site, locale, description, publisherUrl }: { site: 
         offers: [
           { '@type': 'Offer', name: 'Free', price: '0', priceCurrency: 'USD' },
           { '@type': 'Offer', name: 'Pro Monthly', price: '5', priceCurrency: 'USD' },
+          ...(annualUsd ? [{ '@type': 'Offer', name: 'Pro Annual', price: String(annualUsd), priceCurrency: 'USD' }] : []),
           { '@type': 'Offer', name: 'Pro Lifetime', price: '39', priceCurrency: 'USD' },
         ],
       },

@@ -18,6 +18,8 @@ export const gumroadProvider: BillingProvider = {
   name: 'Gumroad',
 
   checkoutUrl(plan) {
+    // The annual offer is shown only once both its product ID and its URL are configured
+    if (plan === 'annual') return (process.env.GUMROAD_PRODUCT_ID_ANNUAL && process.env.GUMROAD_URL_ANNUAL) || null;
     return (plan === 'monthly' ? process.env.GUMROAD_URL_MONTHLY : process.env.GUMROAD_URL_LIFETIME) || null;
   },
 
@@ -36,7 +38,7 @@ export const gumroadProvider: BillingProvider = {
     // redelivery is still deduplicated, a new event is processed.
     const eventId = type === 'sale' ? `gumroad:sale:${ref}` : `gumroad:${type}:${ref}:${sha256(JSON.stringify(body)).slice(0, 16)}`;
     const products = gumroadProducts();
-    const isOurs = Boolean(body.product_id && (body.product_id === products.monthly || body.product_id === products.lifetime));
+    const isOurs = Boolean(body.product_id && [products.monthly, products.annual, products.lifetime].filter(Boolean).includes(body.product_id));
 
     await connectDb();
     try {

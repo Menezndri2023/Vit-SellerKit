@@ -245,6 +245,10 @@ describe('production configuration check', () => {
     RESEND_API_KEY: 'r', CRON_SECRET: 'c', LEGAL_ENTITY: 'e', LEGAL_ADDRESS: 'a', CONTACT_EMAIL: 'm', GUMROAD_PRODUCT_ID_MONTHLY: 'p1', GUMROAD_PRODUCT_ID_LIFETIME: 'p2', GUMROAD_PING_SECRET: 's',
   };
   it('accepts a complete configuration', () => expect(productionConfigProblems(complete)).toEqual([]));
+  it('annual offer: all three variables or none', () => {
+    expect(productionConfigProblems({ ...complete, GUMROAD_URL_ANNUAL: 'https://x.gumroad.com/l/annual' }).join()).toMatch(/Annual offer/);
+    expect(productionConfigProblems({ ...complete, GUMROAD_URL_ANNUAL: 'u', GUMROAD_PRODUCT_ID_ANNUAL: 'p', GUMROAD_PRICE_ANNUAL_USD: '49' })).toEqual([]);
+  });
   it('flags placeholders, localhost, sandbox and public secrets', () => {
     const problems = productionConfigProblems({ ...complete, LEGAL_ENTITY: ' ', NEXT_PUBLIC_SITE_URL: 'http://localhost:3000', EINVOICE_PROVIDER: 'sandbox', NEXT_PUBLIC_STRIPE_SECRET: 'x' }).join('\n');
     expect(problems).toMatch(/LEGAL_ENTITY/);

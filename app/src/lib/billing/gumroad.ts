@@ -3,7 +3,7 @@ import { evaluateLicense, type GumroadVerifyResponse, type LicenseStatus } from 
 
 const API = () => (process.env.GUMROAD_API_URL ?? 'https://api.gumroad.com').replace(/\/$/, '');
 
-export const gumroadProducts = () => ({ monthly: process.env.GUMROAD_PRODUCT_ID_MONTHLY, lifetime: process.env.GUMROAD_PRODUCT_ID_LIFETIME });
+export const gumroadProducts = () => ({ monthly: process.env.GUMROAD_PRODUCT_ID_MONTHLY, annual: process.env.GUMROAD_PRODUCT_ID_ANNUAL || undefined, lifetime: process.env.GUMROAD_PRODUCT_ID_LIFETIME });
 
 /** Calls Gumroad's license verification for one product. Throws on network/server errors (never "invalid"). */
 async function verifyFor(productId: string, licenseKey: string, incrementUses: boolean): Promise<GumroadVerifyResponse> {
@@ -23,7 +23,7 @@ async function verifyFor(productId: string, licenseKey: string, incrementUses: b
 /** Tries the key against both Margokit Pro products. */
 export async function verifyGumroadLicense(licenseKey: string, { incrementUses = false } = {}): Promise<LicenseStatus> {
   const products = gumroadProducts();
-  const ids = [products.monthly, products.lifetime].filter(Boolean) as string[];
+  const ids = [products.monthly, products.annual, products.lifetime].filter(Boolean) as string[];
   // Misconfiguration is an error, never "this key is invalid" (that would expire paying users)
   if (!ids.length) throw new Error('GUMROAD_PRODUCT_ID_MONTHLY / GUMROAD_PRODUCT_ID_LIFETIME are not set');
   let last: LicenseStatus = { valid: false, reason: 'not_found' };

@@ -37,11 +37,11 @@ export function publicName(name: string): string {
 type Sale = { productId?: string | null; productName?: string | null };
 
 /** Does a Gumroad sale correspond to this kit? Pro products are recognised by ID, templates by product name. */
-export function saleMatchesKit(kit: Kit, sale: Sale, proIds: { monthly?: string; lifetime?: string }): boolean {
+export function saleMatchesKit(kit: Kit, sale: Sale, proIds: { monthly?: string; annual?: string; lifetime?: string }): boolean {
   const name = (sale.productName ?? '').toLowerCase();
   switch (kit) {
     case 'pro':
-      return Boolean(sale.productId && (sale.productId === proIds.monthly || sale.productId === proIds.lifetime)) || name.includes('margokit pro');
+      return Boolean(sale.productId && (sale.productId === proIds.monthly || sale.productId === proIds.annual || sale.productId === proIds.lifetime)) || name.includes('margokit pro');
     case 'pack':
       return name.includes('seller pack') || name.includes('pack vendeur');
     case 'tracker':

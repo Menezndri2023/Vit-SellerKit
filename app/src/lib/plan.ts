@@ -31,7 +31,7 @@ export async function getPlan(userId: string): Promise<PlanInfo> {
   const subs = await Subscription.find({ userId, status: { $in: ['active', 'cancelled'] } }).lean();
   // Monthly Gumroad subscriptions are re-verified at most once a day (cancellations, failed payments)
   for (const s of subs) {
-    if (s.provider === 'gumroad' && s.plan === 'monthly' && (!s.lastCheckedAt || Date.now() - new Date(s.lastCheckedAt).getTime() > DAY)) {
+    if (s.provider === 'gumroad' && (s.plan === 'monthly' || s.plan === 'annual') && (!s.lastCheckedAt || Date.now() - new Date(s.lastCheckedAt).getTime() > DAY)) {
       await recheckSubscription(String(s._id)).catch(() => undefined);
     }
   }

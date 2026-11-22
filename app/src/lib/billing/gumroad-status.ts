@@ -26,12 +26,14 @@ export type GumroadVerifyResponse = { success: boolean; uses?: number; message?:
 
 export type LicenseStatus =
   | { valid: false; reason: 'not_found' | 'refunded' | 'ended' | 'payment_failed' | 'wrong_product' }
-  | { valid: true; plan: 'monthly' | 'lifetime'; status: 'active' | 'cancelled'; saleId?: string; subscriptionId?: string; email?: string; endsAt: Date | null };
+  | { valid: true; plan: 'monthly' | 'annual' | 'lifetime'; status: 'active' | 'cancelled'; saleId?: string; subscriptionId?: string; email?: string; endsAt: Date | null };
 
-export function evaluateLicense(res: GumroadVerifyResponse, products: { monthly?: string; lifetime?: string }, now = new Date()): LicenseStatus {
+export function evaluateLicense(res: GumroadVerifyResponse, products: { monthly?: string; annual?: string; lifetime?: string }, now = new Date()): LicenseStatus {
   const p = res.purchase;
   if (!res.success || !p) return { valid: false, reason: 'not_found' };
-  const plan = p.product_id && p.product_id === products.monthly ? 'monthly' : p.product_id && p.product_id === products.lifetime ? 'lifetime' : null;
+  const id = p.product_id;
+  // Monthly and annual are both Gumroad memberships (renewing subscriptions); lifetime is a one-off sale
+  const plan = id && id === products.monthly ? 'monthly' : id && id === products.annual ? 'annual' : id && id === products.lifetime ? 'lifetime' : null;
   if (!plan) return { valid: false, reason: 'wrong_product' };
   if (p.refunded || p.chargebacked || (p.disputed && !p.dispute_won)) return { valid: false, reason: 'refunded' };
 

@@ -30,6 +30,9 @@ export function productionConfigProblems(env: Env): string[] {
     need('GUMROAD_PRODUCT_ID_MONTHLY', 'license verification of Margokit Pro Monthly');
     need('GUMROAD_PRODUCT_ID_LIFETIME', 'license verification of Margokit Pro Lifetime');
     need('GUMROAD_PING_SECRET', 'secret part of the Gumroad Ping URL');
+    // Optional annual offer: all or nothing (a URL without product ID would sell keys that can't be verified)
+    const annual = ['GUMROAD_PRODUCT_ID_ANNUAL', 'GUMROAD_URL_ANNUAL', 'GUMROAD_PRICE_ANNUAL_USD'];
+    if (annual.some((k) => env[k]?.trim()) && !annual.every((k) => env[k]?.trim())) problems.push(`Annual offer: set all of ${annual.join(', ')} (or none)`);
   }
   if (env.EINVOICE_PROVIDER === 'sandbox') problems.push('EINVOICE_PROVIDER=sandbox is a local simulation: use "none" in production');
   for (const name of Object.keys(env)) {

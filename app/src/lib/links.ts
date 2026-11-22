@@ -16,6 +16,7 @@ export function withUtm(url: string | undefined, content: string): string | null
 
 export const links = {
   proMonthly: () => withUtm(activeBillingProvider().checkoutUrl('monthly') ?? undefined, 'pro-monthly'),
+  proAnnual: () => withUtm(activeBillingProvider().checkoutUrl('annual') ?? undefined, 'pro-annual'),
   proLifetime: () => withUtm(activeBillingProvider().checkoutUrl('lifetime') ?? undefined, 'pro-lifetime'),
   pack: () => withUtm(process.env.GUMROAD_PACK_URL, 'pack'),
   tracker: () => withUtm(process.env.GUMROAD_TRACKER_URL, 'tracker'),

@@ -25,6 +25,7 @@ export default async function ActivatePage({ params }: PageProps<'/[locale]/acti
   const fmt = (d: Date) => new Intl.DateTimeFormat(fmtLocale(locale), { dateStyle: 'long' }).format(d);
   const label = planLabel(plan, fmt);
   const monthly = links.proMonthly();
+  const annual = links.proAnnual();
   const lifetime = links.proLifetime();
   const whatsapp = links.whatsapp();
 
@@ -49,13 +50,18 @@ export default async function ActivatePage({ params }: PageProps<'/[locale]/acti
           <ActivateForm />
         </section>
 
-        {(monthly || lifetime || whatsapp) && (
+        {(monthly || annual || lifetime || whatsapp) && (
           <section className="rounded-2xl border border-dashed border-line p-6">
             <h2 className="font-display text-lg font-bold">{t('buyTitle')}</h2>
             <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               {monthly && (
                 <a href={monthly} target="_blank" rel="noopener" className="grid h-12 place-items-center rounded-xl bg-primary px-5 font-semibold text-on-primary hover:brightness-95">
                   {t('buyMonthly')}
+                </a>
+              )}
+              {annual && (
+                <a href={annual} target="_blank" rel="noopener" className="grid h-12 place-items-center rounded-xl border border-line bg-surface px-5 font-semibold hover:bg-bg">
+                  {t('buyAnnual')}
                 </a>
               )}
               {lifetime && (

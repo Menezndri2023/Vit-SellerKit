@@ -3,7 +3,7 @@ import { Schema, model, models, type InferSchemaType, type Model } from 'mongoos
 const schema = new Schema(
   {
     userId: { type: String, required: true, index: true },
-    plan: { type: String, enum: ['monthly', 'lifetime', 'manual'], required: true },
+    plan: { type: String, enum: ['monthly', 'annual', 'lifetime', 'manual'], required: true },
     provider: { type: String, enum: ['gumroad', 'manual'], required: true },
     /** active: paid · cancelled: will not renew, access until expiresAt · expired/refunded/revoked: no access */
     status: { type: String, enum: ['active', 'cancelled', 'expired', 'refunded', 'revoked'], default: 'active', index: true },

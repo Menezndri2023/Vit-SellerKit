@@ -153,7 +153,11 @@
     "lifetimeF2": "All future updates included",
     "lifetimeCta": "Buy once",
     "note": "Card payment through Gumroad. Card declined? Pay locally via WhatsApp.",
-    "proF4": "Automatic reminders and recurring invoices"
+    "proF4": "Automatic reminders and recurring invoices",
+    "annualName": "Pro annual",
+    "annualPeriod": "per year",
+    "annualF1": "Everything in Pro for 12 months",
+    "annualCta": "Pay yearly"
   },
   "faq": {
     "title": "Questions",
@@ -710,7 +714,10 @@
       "unavailable": "We can’t reach Gumroad right now. Try again in a few minutes.",
       "rateLimited": "Too many attempts. Wait 15 minutes."
     },
-    "backToApp": "Back to the app"
+    "backToApp": "Back to the app",
+    "annual": "Pro annual — renews automatically",
+    "annualCancelled": "Pro annual — cancelled, access until {date}",
+    "buyAnnual": "Pro annual"
   },
   "admin": {
     "title": "Admin",
