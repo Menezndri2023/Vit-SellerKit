@@ -30,7 +30,10 @@ Architecture et décisions : [../docs/pro/ARCHITECTURE.md](../docs/pro/ARCHITECT
 | Documents | Devis, factures, avoirs ; totaux EN 16931 ; catégories de TVA (normal, zéro, exonéré, autoliquidation, intracommunautaire, export, hors champ) ; contrôles de conformité avant émission ; numérotation continue attribuée à l'émission ; document verrouillé une fois émis ; conversion devis → facture ; paiements partiels |
 | Partage | PDF EN/FR (QR code virement SEPA), lien public sécurisé et révocable, e-mail avec PDF joint, WhatsApp |
 | Facture électronique | **Factur-X** (PDF/A-3 + XML CII, profil EN 16931, validé contre les XSD officiels à chaque export) et **UBL 2.1 Peppol BIS 3.0** pour les factures et avoirs émis |
-| Plans | Gratuit : 3 documents émis/mois avec filigrane · Pro mensuel ou à vie via Gumroad · codes manuels |
+| Plans | Gratuit : 3 documents émis/mois avec filigrane cliquable · Pro mensuel, annuel (affiché une fois configuré) ou à vie via Gumroad · codes manuels |
+| Pro | Documents illimités sans filigrane, **relances automatiques** des factures en retard (J+1, J+7, J+15, au nom du vendeur), **factures récurrentes** (brouillon préparé à chaque échéance, jamais émis automatiquement) |
+| Sécurité du compte | Double authentification (application + codes de secours), obligatoire pour l'admin ; connexion Google refusée aux admins ; consentement loi 09-08 enregistré |
+| Guides | `/guides` (FR/EN) : facture au Maroc (art. 145 CGI), marge et bénéfice, devis freelance |
 | Admin | Statistiques, utilisateurs (attribuer / prolonger / retirer Pro), codes par lot, journal des ventes |
 | RGPD | Export JSON de toutes les données, suppression du compte |
 
