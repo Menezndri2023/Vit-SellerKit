@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Subscribes Margokit's webhook to Gumroad's refund / dispute / cancellation / subscription events,
 # so a refund or a cancellation is reflected immediately (not only at the daily re-check).
-# Run it yourself: the Gumroad access token is typed in hidden, the Ping secret is read from Vercel
-# and never printed. Idempotent: existing subscriptions to the same URL are kept, not duplicated.
+# Run it yourself: the Gumroad access token is typed in hidden, the Ping secret is never printed. Idempotent: existing subscriptions to the same URL are kept, not duplicated.
 # Usage (from app/): bash scripts/gumroad-subscriptions.sh
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -13,12 +12,17 @@ RESOURCES="refund dispute dispute_won cancellation subscription_updated subscrip
 read -rsp "Gumroad access token (hidden): " TOKEN; echo
 [ -n "$TOKEN" ] || { echo "No token"; exit 1; }
 
-TMP=$(mktemp); trap 'rm -f "$TMP"' EXIT
-vercel env pull --environment=production --yes "$TMP" >/dev/null 2>&1
-SECRET=$(grep '^GUMROAD_PING_SECRET=' "$TMP" | cut -d= -f2- | tr -d '"')
-rm -f "$TMP"
-[ -n "$SECRET" ] || { echo "GUMROAD_PING_SECRET not found on Vercel (production)"; exit 1; }
+# The Ping secret: $GUMROAD_PING_SECRET, else ../private/margokit-pro.env (setup file, never committed).
+# (Vercel can't give it back: production variables are "sensitive" and can't be read after creation.)
+SECRET=${GUMROAD_PING_SECRET:-}
+ENV_FILE=../private/margokit-pro.env
+if [ -z "$SECRET" ] && [ -f "$ENV_FILE" ]; then SECRET=$(grep '^GUMROAD_PING_SECRET=' "$ENV_FILE" | cut -d= -f2- | tr -d "\"'"); fi
+[ -n "$SECRET" ] || { echo "Ping secret not found: run with GUMROAD_PING_SECRET=… (Gumroad → Settings → Advanced → Ping URL, last part)"; exit 1; }
 URL="$SITE/api/webhooks/gumroad/$SECRET"
+# Check the URL against the live site without side effects: a non-form body answers 400 with the
+# right secret (request rejected before anything is stored), 404 with a wrong one.
+CODE=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: text/plain' --data 'check' "$URL")
+[ "$CODE" = "400" ] || { echo "The Ping secret doesn't match $SITE (HTTP $CODE): nothing changed"; exit 1; }
 
 for R in $RESOURCES; do
   EXISTING=$(curl -fsS "$API/resource_subscriptions" -G --data-urlencode "access_token=$TOKEN" --data-urlencode "resource_name=$R" \
