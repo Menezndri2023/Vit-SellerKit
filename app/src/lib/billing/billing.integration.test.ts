@@ -218,6 +218,18 @@ describe('Gumroad Ping webhook', () => {
     expect((await BillingEvent.findOne().lean())!.processedAt).toBeInstanceOf(Date);
   });
 
+  it('processes a second cancellation of the same subscription (after a restart), but not a redelivery', async () => {
+    purchases[KEY] = activeMonthly();
+    await activateLicense('user-a', KEY);
+    const cancel1 = { resource_name: 'cancellation', subscription_id: 'sub-1', product_id: MONTHLY, cancelled_at: '2026-11-01T10:00:00Z' };
+    await ping(cancel1);
+    await ping(cancel1); // redelivery
+    await ping({ resource_name: 'subscription_restarted', subscription_id: 'sub-1', product_id: MONTHLY, restarted_at: '2026-11-02T10:00:00Z' });
+    await ping({ ...cancel1, cancelled_at: '2026-11-05T10:00:00Z' });
+    expect(await BillingEvent.countDocuments({ type: 'cancellation' })).toBe(2);
+    expect(await BillingEvent.countDocuments({ type: 'subscription_restarted' })).toBe(1);
+  });
+
   it('a refund ping removes access after re-verification with Gumroad', async () => {
     purchases[KEY] = activeMonthly();
     await activateLicense('user-a', KEY);

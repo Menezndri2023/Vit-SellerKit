@@ -31,7 +31,10 @@ export const gumroadProvider: BillingProvider = {
     const body = Object.fromEntries([...form.entries()].map(([k, v]) => [k, String(v).slice(0, 2000)]));
     const type = body.resource_name || (body.refunded === 'true' ? 'refund' : 'sale');
     const ref = body.sale_id || body.subscription_id || sha256(JSON.stringify(body));
-    const eventId = `gumroad:${type}:${ref}`;
+    // A sale happens once per sale_id; subscription events (cancellation, restart, end, refund…) can
+    // repeat for the same sale/subscription, so their key also covers the payload: an identical
+    // redelivery is still deduplicated, a new event is processed.
+    const eventId = type === 'sale' ? `gumroad:sale:${ref}` : `gumroad:${type}:${ref}:${sha256(JSON.stringify(body)).slice(0, 16)}`;
     const products = gumroadProducts();
     const isOurs = Boolean(body.product_id && (body.product_id === products.monthly || body.product_id === products.lifetime));
 
