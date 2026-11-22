@@ -12,13 +12,24 @@ TOKEN=$(printf '%s' "$TOKEN" | tr -d '[:space:]')
 JSON=$(curl -sS -G https://api.gumroad.com/v2/products --data-urlencode "access_token=$TOKEN") || { echo "Network error"; exit 1; }
 
 RESULT=$(GUMROAD_JSON="$JSON" EXPECTED_LIFETIME="$EXPECTED_LIFETIME" python3 - <<'PY'
-import json, os
+import json, os, re
 d = json.loads(os.environ.get("GUMROAD_JSON") or "{}")
 if not d.get("success"):
     print("ERROR " + str(d.get("message", "token refused")))
     raise SystemExit
 def usd(p):
-    return (p.get("price") or 0) / 100
+    # Memberships keep their price in the tier (price is 0 at the product level)
+    if p.get("price"):
+        return p["price"] / 100
+    for v in p.get("variants") or []:
+        for o in v.get("options") or []:
+            rp = (o.get("recurrence_prices") or {})
+            for k in ("yearly", "monthly"):
+                cents = (rp.get(k) or {}).get("price_cents")
+                if cents:
+                    return cents / 100
+    m = re.search(r"(\d+(?:[.,]\d+)?)", p.get("formatted_price") or "")
+    return float(m.group(1).replace(",", ".")) if m else 0
 products = d.get("products", [])
 print("INFO Your Gumroad products:")
 for p in products:
