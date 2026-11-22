@@ -3,7 +3,8 @@ import AppNav from '@/components/app/AppNav';
 import LocaleSwitcher from '@/components/LocaleSwitcher';
 import Logo from '@/components/Logo';
 import PlanBanner from '@/components/plan/PlanBanner';
-import { connectDb } from '@/lib/db';
+import { ObjectId } from 'mongodb';
+import { connectDb, mongoClient } from '@/lib/db';
 import { getPlan } from '@/lib/plan';
 import { requireUser } from '@/lib/session';
 
@@ -13,6 +14,11 @@ export default async function AppLayout({ children, params }: LayoutProps<'/[loc
   const { locale } = await params;
   const user = await requireUser(locale);
   await connectDb();
+  // Emails (onboarding, reminders, password reset) follow the language the user actually uses:
+  // Google sign-ups start with the default, and anyone can switch language later
+  if ((user as { uiLocale?: string }).uiLocale !== locale && ObjectId.isValid(user.id)) {
+    await mongoClient().db().collection('user').updateOne({ _id: new ObjectId(user.id) }, { $set: { uiLocale: locale } }).catch(() => undefined);
+  }
   const plan = await getPlan(user.id);
 
   return (

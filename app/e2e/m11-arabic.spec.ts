@@ -1,4 +1,6 @@
 import { expect, test } from '@playwright/test';
+import { MongoClient } from 'mongodb';
+import { E2E_DB } from '../playwright.config';
 import { signUpAndLogin } from './helpers';
 
 test('Arabic interface: RTL, Latin digits, language switch', async ({ page }) => {
@@ -19,8 +21,12 @@ test('Arabic interface: RTL, Latin digits, language switch', async ({ page }) =>
   await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
 
   // Signed-in app in Arabic
-  await signUpAndLogin(page);
+  const { email } = await signUpAndLogin(page);
   await page.goto('/ar/app/clients');
+  // Emails follow the language used in the app (Google sign-ups included)
+  const db = await MongoClient.connect(E2E_DB);
+  expect((await db.db().collection('user').findOne({ email }))?.uiLocale).toBe('ar');
+  await db.close();
   await expect(page.getByText('لا يوجد عملاء بعد')).toBeVisible();
   await page.goto('/ar/app/documents');
   await expect(page.getByRole('heading', { level: 1, name: 'المستندات' })).toBeVisible();
