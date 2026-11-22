@@ -15,6 +15,9 @@ export default async function SiteHeader() {
         <Link href="/calculator" className="hidden rounded-lg px-3 py-2 text-muted hover:bg-surface sm:block">
           {t('calculator')}
         </Link>
+        <Link href="/guides" className="hidden rounded-lg px-3 py-2 text-muted hover:bg-surface md:block">
+          {t('guides')}
+        </Link>
         <Link href="/#pricing" className="hidden rounded-lg px-3 py-2 text-muted hover:bg-surface sm:block">
           {t('pricing')}
         </Link>

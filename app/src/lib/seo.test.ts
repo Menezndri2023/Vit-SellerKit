@@ -20,6 +20,11 @@ describe('sitemap and robots', () => {
     expect(home.lastModified).toBeUndefined();
     expect(home.alternates?.languages).toMatchObject({ en: 'https://margokit.com/en', ar: 'https://margokit.com/ar', 'x-default': 'https://margokit.com/en' });
     expect(entries.find((e) => e.url.endsWith('/fr/legal/privacy'))!.lastModified).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    // Guides: French + English, each with its own slug and real modification date
+    const guide = entries.find((e) => e.url === 'https://margokit.com/fr/guides/facture-maroc-mentions-obligatoires')!;
+    expect(guide.lastModified).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(guide.alternates?.languages).toMatchObject({ en: 'https://margokit.com/en/guides/morocco-invoice-requirements' });
+    expect(urls.some((u) => u.includes('/ar/guides'))).toBe(false);
   });
 
   it('blocks API and private areas, points to the sitemap', async () => {

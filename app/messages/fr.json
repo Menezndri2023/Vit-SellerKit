@@ -96,7 +96,8 @@
     "switchLabel": "English",
     "switchLocale": "en",
     "home": "Accueil",
-    "plan": "Abonnement"
+    "plan": "Abonnement",
+    "guides": "Guides"
   },
   "landing": {
     "title": "Découvre combien tu gagnes VRAIMENT sur chaque vente",
@@ -125,7 +126,10 @@
     "whatsapp": "Une question ? Écris-nous sur WhatsApp",
     "reviewsAll": "Voir tous les avis",
     "reviewsFirst": "Donner mon avis",
-    "reviewsEmpty": "Les premiers avis arrivent. Tu utilises un outil Margokit ? Dis-nous ce que tu en penses."
+    "reviewsEmpty": "Les premiers avis arrivent. Tu utilises un outil Margokit ? Dis-nous ce que tu en penses.",
+    "moroccoTitle": "Tu factures au Maroc ?",
+    "moroccoText": "ICE vérifié, identifiant fiscal, RC, taxe professionnelle, TVA distincte et montants en dirhams : Margokit suit les mentions de l’article 145 du CGI et te prévient s’il en manque une.",
+    "moroccoLink": "Lire le guide des mentions obligatoires"
   },
   "pricing": {
     "title": "Des prix simples",
@@ -259,7 +263,8 @@
     "rights": "© {year} Margokit",
     "terms": "CGU",
     "privacy": "Confidentialité",
-    "reviews": "Avis clients"
+    "reviews": "Avis clients",
+    "guides": "Guides"
   },
   "calcCta": {
     "packTitle": "Suis ça sur chaque commande, automatiquement",
@@ -577,7 +582,9 @@
       "buyerVatIntraEu": "Une livraison intracommunautaire nécessite le numéro de TVA du client.",
       "intraEuCountry": "Une livraison intracommunautaire doit aller à un client d’un autre pays de l’UE.",
       "exportInsideEu": "« Export » concerne les clients hors UE.",
-      "exemptionReason": "Ajoute le motif d’exonération (l’article de loi) sur les lignes exonérées."
+      "exemptionReason": "Ajoute le motif d’exonération (l’article de loi) sur les lignes exonérées.",
+      "sellerIf": "Ajoute ton identifiant fiscal (IF) dans Paramètres : l’article 145 du CGI l’exige sur les factures (sauf auto-entrepreneur et contribution professionnelle unique).",
+      "sellerTp": "Ajoute ton numéro de taxe professionnelle (patente) dans Paramètres : l’article 145 du CGI l’exige sur les factures (sauf auto-entrepreneur et contribution professionnelle unique)."
     },
     "payments": {
       "title": "Paiements",
@@ -1020,5 +1027,15 @@
       "date": "Choisis une date à venir (dans les 13 prochains mois).",
       "exists": "Cette facture est déjà répétée."
     }
+  },
+  "guides": {
+    "title": "Guides",
+    "subtitle": "Facturation, devis et marge : des explications concrètes pour les indépendants et les vendeurs en ligne.",
+    "metaTitle": "Guides facturation, devis et marge — Margokit",
+    "metaDescription": "Mentions obligatoires d’une facture au Maroc, calcul de la marge et du bénéfice par vente, devis de freelance : des guides pratiques et sourcés.",
+    "breadcrumb": "Fil d’Ariane",
+    "updated": "Mis à jour le {date}",
+    "sources": "Sources",
+    "ctaTitle": "Margokit calcule tout pour toi : totaux, TVA, mentions et marge."
   }
 }

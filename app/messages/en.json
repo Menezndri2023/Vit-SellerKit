@@ -96,7 +96,8 @@
     "switchLabel": "Français",
     "switchLocale": "fr",
     "home": "Home",
-    "plan": "Plan"
+    "plan": "Plan",
+    "guides": "Guides"
   },
   "landing": {
     "title": "Find out how much you REALLY make on every sale",
@@ -125,7 +126,10 @@
     "whatsapp": "Questions? Chat with us on WhatsApp",
     "reviewsAll": "See all reviews",
     "reviewsFirst": "Write a review",
-    "reviewsEmpty": "The first reviews are on their way. Using a Margokit tool? Tell us what you think."
+    "reviewsEmpty": "The first reviews are on their way. Using a Margokit tool? Tell us what you think.",
+    "moroccoTitle": "Invoicing in Morocco?",
+    "moroccoText": "Checked ICE, tax ID, trade register, business tax number, separate VAT and amounts in dirhams: Margokit follows the details required by article 145 of the tax code and warns you when one is missing.",
+    "moroccoLink": "Read the guide to mandatory details"
   },
   "pricing": {
     "title": "Simple pricing",
@@ -259,7 +263,8 @@
     "rights": "© {year} Margokit",
     "terms": "Terms",
     "privacy": "Privacy",
-    "reviews": "Reviews"
+    "reviews": "Reviews",
+    "guides": "Guides"
   },
   "calcCta": {
     "packTitle": "Track this on every order, automatically",
@@ -577,7 +582,9 @@
       "buyerVatIntraEu": "An intra-EU supply needs the client’s VAT number.",
       "intraEuCountry": "An intra-EU supply must go to a client in another EU country.",
       "exportInsideEu": "“Export” is for clients outside the EU.",
-      "exemptionReason": "Add the exemption reason (the legal article) on exempt lines."
+      "exemptionReason": "Add the exemption reason (the legal article) on exempt lines.",
+      "sellerIf": "Add your tax ID (IF) in Settings: article 145 of Morocco’s tax code requires it on invoices (except auto-entrepreneurs and the single professional contribution regime).",
+      "sellerTp": "Add your business tax (TP / patente) number in Settings: article 145 of Morocco’s tax code requires it on invoices (except auto-entrepreneurs and the single professional contribution regime)."
     },
     "payments": {
       "title": "Payments",
@@ -1020,5 +1027,15 @@
       "date": "Pick a future date (within the next 13 months).",
       "exists": "This invoice is already repeated."
     }
+  },
+  "guides": {
+    "title": "Guides",
+    "subtitle": "Invoicing, quotes and margins: practical explanations for freelancers and online sellers.",
+    "metaTitle": "Invoicing, quote and margin guides — Margokit",
+    "metaDescription": "Mandatory invoice details in Morocco, profit margin per sale, freelance quotes: practical, sourced guides.",
+    "breadcrumb": "Breadcrumb",
+    "updated": "Updated on {date}",
+    "sources": "Sources",
+    "ctaTitle": "Margokit computes everything for you: totals, VAT, mentions and margin."
   }
 }

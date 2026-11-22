@@ -74,6 +74,10 @@ export function checkCompliance({ type, seller, buyer, lines, dueDate, totalIncl
     if (sc === 'FR' && !hasId(seller.ids, 'SIREN')) err('sellerSiren');
     if (sc === 'BE' && !hasId(seller.ids, 'BCE')) err('sellerBce');
     if (sc === 'MA' && !hasId(seller.ids, 'ICE')) err('sellerIce');
+    // Morocco, CGI art. 145-III 2°: tax ID (IF) and business tax (TP) number. Warning only:
+    // art. 145-XI excludes the auto-entrepreneur and CPU regimes.
+    if (sc === 'MA' && !hasId(seller.ids, 'IF')) warn('sellerIf');
+    if (sc === 'MA' && !hasId(seller.ids, 'PATENTE')) warn('sellerTp');
     if (sc && isEu(sc) && chargesVat && !hasId(seller.ids, 'VAT')) err('sellerVat');
 
     // French e-invoicing reform: client SIREN on domestic B2B invoices

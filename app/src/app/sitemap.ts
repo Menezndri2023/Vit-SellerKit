@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { routing } from '@/i18n/routing';
+import { GUIDES } from '@/content/guides';
 import { UPDATED as LEGAL_UPDATED } from '@/content/legal';
 
 // Canonical production domain only (never the request host or localhost in production builds)
@@ -20,6 +21,16 @@ const pages: { path: string; locales: readonly string[]; lastModified?: string }
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  // Guides: French and English only, each language with its own slug
+  const guides = GUIDES.flatMap((g) => {
+    const languages = { fr: `${site}/fr/guides/${g.text.fr.slug}`, en: `${site}/en/guides/${g.text.en.slug}`, 'x-default': `${site}/en/guides/${g.text.en.slug}` };
+    return (['fr', 'en'] as const).map((l) => ({ url: languages[l], lastModified: g.updated, alternates: { languages } }));
+  });
+  const index = (['fr', 'en'] as const).map((l) => ({ url: `${site}/${l}/guides`, alternates: { languages: { fr: `${site}/fr/guides`, en: `${site}/en/guides`, 'x-default': `${site}/en/guides` } } }));
+  return [...pageEntries(), ...index, ...guides];
+}
+
+function pageEntries(): MetadataRoute.Sitemap {
   return pages.flatMap(({ path: page, locales, lastModified }) => {
     const languages = { ...Object.fromEntries(locales.map((l) => [l, `${site}/${l}${page}`])), 'x-default': `${site}/${routing.defaultLocale}${page}` };
     return locales.map((locale) => ({

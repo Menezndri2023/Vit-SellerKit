@@ -12,7 +12,7 @@ async function scan(page: Page, url: string) {
 
 test('public pages have no automatically detectable WCAG A/AA violations', async ({ page }) => {
   const problems: string[] = [];
-  for (const url of ['/fr', '/en', '/ar', '/fr/calculator', '/ar/calculator', '/fr/reviews', '/fr/legal/terms', '/fr/login', '/fr/signup', '/fr/forgot-password']) {
+  for (const url of ['/fr', '/en', '/ar', '/fr/calculator', '/ar/calculator', '/fr/reviews', '/fr/legal/terms', '/fr/login', '/fr/signup', '/fr/forgot-password', '/fr/guides', '/fr/guides/facture-maroc-mentions-obligatoires', '/en/guides/calculate-profit-margin-per-sale']) {
     problems.push(...(await scan(page, url)));
   }
   expect(problems, problems.join('\n')).toEqual([]);

@@ -81,6 +81,16 @@ describe('checkCompliance', () => {
     expect(codes(checkCompliance({ ...base, seller: ma, buyer: { ...frBusiness, address: { ...frBusiness.address, country: 'MA' }, ids: [] } }))).toEqual(expect.arrayContaining(['sellerIce', 'buyerIce']));
   });
 
+  it('Morocco (CGI art. 145-III 2°): IF and business tax number are warnings, not blockers', () => {
+    const maBuyer = { ...frBusiness, address: { ...frBusiness.address, country: 'MA' }, ids: [{ scheme: 'ICE', value: '001234567000089' }] };
+    const withIce = { ...frSeller, vatRegime: 'standard' as const, address: { ...frSeller.address, country: 'MA' }, ids: [{ scheme: 'ICE', value: '001525000000012' }] };
+    const issues = checkCompliance({ ...base, seller: withIce, buyer: maBuyer });
+    expect(issues.filter((i) => i.severity === 'warning').map((i) => i.code)).toEqual(expect.arrayContaining(['sellerIf', 'sellerTp']));
+    expect(issues.filter((i) => i.severity === 'error')).toEqual([]);
+    const complete = { ...withIce, ids: [...withIce.ids, { scheme: 'IF', value: '73292932' }, { scheme: 'PATENTE', value: '12345678' }] };
+    expect(codes(checkCompliance({ ...base, seller: complete, buyer: maBuyer }))).not.toEqual(expect.arrayContaining(['sellerIf']));
+  });
+
   it('does not ask for a VAT number under the franchise scheme, but forbids charging VAT', () => {
     const franchise = { ...frSeller, vatRegime: 'franchise' as const, ids: [{ scheme: 'SIREN', value: '552032534' }] };
     expect(codes(checkCompliance({ ...base, seller: franchise, lines: [{ vatCategory: 'O', taxRate: 0 }] }))).toEqual([]);

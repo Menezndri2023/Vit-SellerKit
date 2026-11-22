@@ -59,6 +59,18 @@ export default async function Home({ params, searchParams }: PageProps<'/[locale
         </div>
       </section>
 
+      <section className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+        <div className="flex flex-col gap-4 rounded-2xl border border-line bg-primary-soft p-6 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="font-display text-xl font-bold">{t('moroccoTitle')}</h2>
+            <p className="mt-1 max-w-2xl text-muted">{t('moroccoText')}</p>
+          </div>
+          <Link href="/guides/facture-maroc-mentions-obligatoires" locale={locale === 'en' ? 'en' : 'fr'} className="shrink-0 font-semibold text-primary-ink underline">
+            {t('moroccoLink')}
+          </Link>
+        </div>
+      </section>
+
       <Pricing />
 
       <SheetsCta />

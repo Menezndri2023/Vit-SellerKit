@@ -26,6 +26,9 @@ export default async function SiteFooter() {
         </span>
       </div>
       <div className="flex flex-wrap gap-x-4 gap-y-2">
+        <Link href="/guides" className="hover:text-ink">
+          {t('guides')}
+        </Link>
         <Link href="/reviews" className="hover:text-ink">
           {t('reviews')}
         </Link>
