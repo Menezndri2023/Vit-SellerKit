@@ -24,7 +24,7 @@ test('legal pages, data export and account deletion', async ({ page }) => {
   await expect(page.getByText('L’e-mail ne correspond pas.')).toBeVisible();
   await page.getByLabel(/Tape ton e-mail/).fill(email);
   await page.getByRole('button', { name: 'Tout supprimer' }).click();
-  await expect(page).toHaveURL(/\/fr$/);
+  await expect(page).toHaveURL(/\/fr(\?|$)/); // the home calculator may add its state to the URL
 
   // The account is gone
   expect((await page.request.get('/api/account/export')).status()).toBe(401);

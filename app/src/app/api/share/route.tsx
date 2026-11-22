@@ -2,6 +2,7 @@ import { ImageResponse } from 'next/og';
 import { hasLocale } from 'next-intl';
 import { routing } from '@/i18n/routing';
 import { computeProfit } from '@/lib/profit';
+import { clientIp, rateLimit } from '@/lib/rate-limit';
 import { formatMoney, formatPct, parseState, toInputs } from '@/lib/calculator-state';
 import en from '../../../../messages/en.json';
 import fr from '../../../../messages/fr.json';
@@ -10,6 +11,8 @@ const messages = { en, fr };
 
 /** 1080×1920 image (stories, TikTok, Reels) of the user's result. */
 export async function GET(request: Request) {
+  // Image rendering costs CPU: limit per IP; identical results are then served from Vercel's cache
+  if (!(await rateLimit('share-image', await clientIp(), 20, 60))) return new Response('Too many requests', { status: 429 });
   const params = Object.fromEntries(new URL(request.url).searchParams);
   const requested = hasLocale(routing.locales, params.locale) ? params.locale : routing.defaultLocale;
   // The image renderer can't shape Arabic text: Arabic users get the English image
@@ -58,6 +61,6 @@ export async function GET(request: Request) {
         </div>
       </div>
     ),
-    { width: 1080, height: 1920 },
+    { width: 1080, height: 1920, headers: { 'Cache-Control': 'public, max-age=86400, s-maxage=31536000, immutable' } },
   );
 }

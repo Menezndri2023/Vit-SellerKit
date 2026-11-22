@@ -8,6 +8,11 @@ export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 export const alt = 'Margokit — Profit Calculator';
 
+// One image per language, rendered once at build time instead of on every social-media crawl
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
 export default async function Image({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: requested } = await params;
   const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale;

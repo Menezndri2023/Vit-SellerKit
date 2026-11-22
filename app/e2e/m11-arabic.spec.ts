@@ -17,7 +17,7 @@ test('Arabic interface: RTL, Latin digits, language switch', async ({ page }) =>
 
   // Switch language on the same page
   await page.getByRole('link', { name: 'Français' }).click();
-  await expect(page).toHaveURL(/\/fr$/);
+  await expect(page).toHaveURL(/\/fr(\?|$)/); // the home calculator may add its state to the URL
   await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
 
   // Signed-in app in Arabic
