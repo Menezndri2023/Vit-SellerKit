@@ -7,7 +7,7 @@ import { loadDocView } from '@/lib/documents/load';
 import { findByShareToken } from '@/lib/documents/share';
 import { clientIp, rateLimit } from '@/lib/rate-limit';
 
-export const metadata: Metadata = { robots: { index: false, follow: false }, referrer: 'no-referrer' };
+export const metadata: Metadata = { robots: { index: false, follow: false }, referrer: 'no-referrer', alternates: null };
 
 /** What the user's client sees: the document, a PDF download and the payment options. No account needed. */
 export default async function PublicDocumentPage({ params }: PageProps<'/[locale]/d/[token]'>) {

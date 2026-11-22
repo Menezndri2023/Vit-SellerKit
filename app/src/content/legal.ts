@@ -16,7 +16,8 @@ export function publisher(): Publisher {
   };
 }
 
-const UPDATED = '2026-09-27';
+/** Date the texts last changed (also the sitemap lastmod of the legal pages) */
+export const UPDATED = '2026-11-22';
 
 export function terms(lang: 'en' | 'fr', p: Publisher): LegalDoc {
   if (lang === 'fr') {

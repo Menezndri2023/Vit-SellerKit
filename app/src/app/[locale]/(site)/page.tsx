@@ -10,6 +10,8 @@ import ReviewCard from '@/components/reviews/ReviewCard';
 import { parseState } from '@/lib/calculator-state';
 import { links } from '@/lib/links';
 import { approvedReviews } from '@/lib/reviews';
+import { publisherUrl } from '@/lib/brand';
+import { homeJsonLd, jsonLdString } from '@/lib/structured-data';
 
 export default async function Home({ params, searchParams }: PageProps<'/[locale]'>) {
   const { locale } = await params;
@@ -18,9 +20,13 @@ export default async function Home({ params, searchParams }: PageProps<'/[locale
   const initial = parseState(await searchParams, locale);
   const reviews = await approvedReviews({ limit: 3 });
   const features = [1, 2, 3, 4] as const;
+  const tMeta = await getTranslations('meta');
+  const site = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
+  const jsonLd = homeJsonLd({ site, locale, description: tMeta('description'), publisherUrl: publisherUrl() });
 
   return (
     <div className="flex flex-col gap-20 pb-28 lg:pb-16">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }} />
       <section className="mx-auto w-full max-w-6xl px-4 pt-6 sm:px-6 sm:pt-12">
         <h1 className="max-w-4xl font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-6xl">{t('title')}</h1>
         <p className="mt-5 max-w-2xl text-lg text-muted">{t('subtitle')}</p>

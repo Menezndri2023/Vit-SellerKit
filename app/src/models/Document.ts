@@ -104,7 +104,9 @@ const schema = new Schema(
     issuedAt: { type: Date },
     sentAt: { type: Date },
   },
-  { timestamps: true },
+  // optimisticConcurrency: save() fails (VersionError) if the document changed since it was read,
+  // so two payments recorded at the same time can't both pass the "≤ amount due" check
+  { timestamps: true, optimisticConcurrency: true },
 );
 
 schema.index({ userId: 1, type: 1, issueDate: -1 });

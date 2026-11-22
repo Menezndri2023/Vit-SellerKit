@@ -1,5 +1,5 @@
 import 'server-only';
-import { isValidObjectId } from 'mongoose';
+import { isValidObjectId, type ClientSession } from 'mongoose';
 import type { BusinessProfileDoc } from '@/models/BusinessProfile';
 import type { ClientDoc } from '@/models/Client';
 import { Document, type DocumentDoc } from '@/models/Document';
@@ -79,11 +79,48 @@ export async function findOwned(userId: string, id: string) {
   return Document.findOne({ _id: id, userId });
 }
 
-export const isLocked = (d: Pick<DocumentDoc, 'status'>) => d.status !== 'draft';
+/**
+ * Issue-time rule for credit notes (call inside the issue transaction): the cumulated total of the
+ * credit notes of an invoice can't exceed it (throws CREDIT_EXCEEDS); once it reaches it, the
+ * invoice is cancelled. The original is always written, so two concurrent credit notes on the
+ * same invoice conflict (the transaction retries) instead of both passing the check.
+ */
+export async function applyCreditNote(
+  userId: string,
+  creditNote: { _id: unknown; precedingInvoice?: { id?: string | null } | null; totals?: { totalInclTax?: number | null } | null },
+  session: ClientSession,
+): Promise<void> {
+  const originalId = creditNote.precedingInvoice?.id;
+  if (!originalId || !isValidObjectId(originalId)) return;
+  const original = await Document.findOne({ _id: originalId, userId }).session(session);
+  if (!original) return;
+  const previous = await Document.find({ userId, type: 'credit_note', status: { $ne: 'draft' }, 'precedingInvoice.id': String(original._id), _id: { $ne: creditNote._id } })
+    .select('totals.totalInclTax')
+    .session(session)
+    .lean();
+  const credited = previous.reduce((s, c) => s + (c.totals?.totalInclTax ?? 0), 0) + (creditNote.totals?.totalInclTax ?? 0);
+  const invoiced = original.totals?.totalInclTax ?? 0;
+  if (credited > invoiced) throw new Error('CREDIT_EXCEEDS');
+  if (credited === invoiced) {
+    original.status = 'cancelled';
+    original.amountDue = 0;
+  }
+  original.set('updatedAt', new Date());
+  await original.save({ session });
+}
+
+export const isLocked =(d: Pick<DocumentDoc, 'status'>) => d.status !== 'draft';
 
 /** Today at 00:00 UTC in the user's time zone, as a Date (documents store calendar days at UTC midnight). */
 export function todayIn(timeZone: string | undefined): Date {
-  const iso = new Intl.DateTimeFormat('en-CA', { timeZone: timeZone || 'UTC', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+  const fmt = (tz: string) => new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+  let iso: string;
+  try {
+    iso = fmt(timeZone || 'UTC');
+  } catch {
+    // The time zone comes from the browser at sign-up: an invalid value must not break the app
+    iso = fmt('UTC');
+  }
   return new Date(`${iso}T00:00:00Z`);
 }
 

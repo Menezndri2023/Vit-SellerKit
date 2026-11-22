@@ -7,7 +7,7 @@ import { connectDb } from '@/lib/db';
 import { getPlan } from '@/lib/plan';
 import { requireUser } from '@/lib/session';
 
-export const metadata: Metadata = { robots: { index: false, follow: false } };
+export const metadata: Metadata = { robots: { index: false, follow: false }, alternates: null };
 
 export default async function AppLayout({ children, params }: LayoutProps<'/[locale]/app'>) {
   const { locale } = await params;

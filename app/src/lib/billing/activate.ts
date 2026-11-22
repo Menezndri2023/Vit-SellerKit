@@ -36,25 +36,38 @@ export async function activateLicense(userId: string, rawKey: string, { incremen
   if (!status.valid) return { ok: false, error: status.reason === 'not_found' || status.reason === 'wrong_product' ? 'invalid' : status.reason };
 
   const keyHash = sha256(key);
-  const existing = await Subscription.findOne({ licenseKeyHash: keyHash }).lean();
-  if (existing && existing.userId !== userId) return { ok: false, error: 'already_used' };
-
   const fields = statusFields(status);
-  await Subscription.updateOne(
-    { licenseKeyHash: keyHash },
-    { $set: { ...fields, userId, provider: 'gumroad', licenseKeyEnc: encrypt(key) }, $setOnInsert: { startsAt: new Date() } },
-    { upsert: true },
-  );
+  // Atomic claim: the filter includes the user, so a key already linked to another account never
+  // matches and the upsert hits the unique index on licenseKeyHash instead of re-assigning the key.
+  // (A separate "find then update" let two accounts activating the same key at once both succeed.)
+  try {
+    await Subscription.updateOne(
+      { licenseKeyHash: keyHash, userId },
+      { $set: { ...fields, provider: 'gumroad', licenseKeyEnc: encrypt(key) }, $setOnInsert: { startsAt: new Date() } },
+      { upsert: true },
+    );
+  } catch (e) {
+    if ((e as { code?: number }).code === 11000) return { ok: false, error: 'already_used' };
+    throw e;
+  }
   return { ok: true, plan: status.plan, expiresAt: status.endsAt };
 }
 
-/** Re-verifies a Gumroad subscription (cancellation, failed payment, refund). Network errors keep the current state. */
+/**
+ * Re-verifies a Gumroad subscription (cancellation, failed payment, refund).
+ * Only an explicit answer from Gumroad removes access: network/server errors throw (state kept),
+ * and "unknown key / other product" — which for a key that was valid at activation points to a
+ * configuration problem (product ID changed or missing), not to a refund — keeps the current state.
+ */
 export async function recheckSubscription(subscriptionId: string): Promise<void> {
   const sub = await Subscription.findById(subscriptionId).select('+licenseKeyEnc');
   if (!sub || sub.provider !== 'gumroad' || !sub.licenseKeyEnc) return;
   const status = await verifyGumroadLicense(decrypt(sub.licenseKeyEnc));
   if (status.valid) {
     Object.assign(sub, statusFields(status));
+  } else if (status.reason === 'not_found' || status.reason === 'wrong_product') {
+    console.warn(`[billing] Gumroad no longer recognises the key of subscription ${subscriptionId} (${status.reason}); access unchanged — check GUMROAD_PRODUCT_ID_*`);
+    sub.lastCheckedAt = new Date();
   } else {
     sub.status = status.reason === 'refunded' ? 'refunded' : 'expired';
     sub.lastCheckedAt = new Date();

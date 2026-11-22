@@ -1,6 +1,6 @@
 'use server';
 
-import mongoose from 'mongoose';
+import mongoose, { isValidObjectId } from 'mongoose';
 import { refresh } from 'next/cache';
 import { z } from 'zod';
 import { redirect } from '@/i18n/navigation';
@@ -10,7 +10,7 @@ import { connectDb } from '@/lib/db';
 import { checkCompliance, type Issue } from '@/lib/documents/compliance';
 import { draftSchema } from '@/lib/documents/draft-schema';
 import { counterPeriod, formatNumber } from '@/lib/documents/numbering';
-import { buyerSnapshot, derive, findOwned, sellerSnapshot, todayIn } from '@/lib/documents/service';
+import { applyCreditNote, buyerSnapshot, derive, findOwned, sellerSnapshot, todayIn } from '@/lib/documents/service';
 import { fieldErrors, type FormState } from '@/lib/forms';
 import { layout, sendEmail } from '@/lib/email';
 import { loadDocView } from '@/lib/documents/load';
@@ -19,13 +19,13 @@ import { formatMinor, parseAmount } from '@/lib/money';
 import { pdfFileName, renderDocumentPdf } from '@/lib/pdf/render';
 import { refreshLifecycle, reportCashed, transmitDocument } from '@/lib/einvoice/transmit';
 import { rateLimit } from '@/lib/rate-limit';
-import { checkIssueAllowed } from '@/lib/plan';
+import { checkIssueAllowed, enforceFreeQuota } from '@/lib/plan';
 import { actionUser } from '@/lib/session';
 import { audit } from '@/models/AuditLog';
 import { BusinessProfile } from '@/models/BusinessProfile';
 import { Client } from '@/models/Client';
 import { nextSeq } from '@/models/Counter';
-import { Document, type DocStatus } from '@/models/Document';
+import { Document, type DocStatus, type DocType } from '@/models/Document';
 
 const day = (iso: string | undefined) => (iso ? new Date(`${iso}T00:00:00Z`) : undefined);
 
@@ -117,6 +117,7 @@ export async function issueDocument(id: string, locale: string): Promise<IssueRe
   const session = await mongoose.connection.startSession();
   try {
     await session.withTransaction(async () => {
+      if (plan.watermark) await enforceFreeQuota(user.id, session);
       const seq = await nextSeq(`${user.id}:${series}:${counterPeriod(pattern, issueDate)}`, session);
       const res = await Document.updateOne(
         { _id: doc._id, userId: user.id, status: 'draft' },
@@ -136,18 +137,11 @@ export async function issueDocument(id: string, locale: string): Promise<IssueRe
       );
       if (res.matchedCount === 0) throw new Error('LOCKED');
 
-      // A credit note for the full amount cancels the original invoice
-      if (doc.type === 'credit_note' && doc.precedingInvoice?.id) {
-        const original = await Document.findOne({ _id: doc.precedingInvoice.id, userId: user.id }).session(session);
-        if (original && original.totals?.totalInclTax === doc.totals?.totalInclTax) {
-          original.status = 'cancelled';
-          original.amountDue = 0;
-          await original.save({ session });
-        }
-      }
+      if (doc.type === 'credit_note' && doc.precedingInvoice?.id) await applyCreditNote(user.id, doc, session);
     });
   } catch (e) {
-    return { error: e instanceof Error && e.message === 'LOCKED' ? 'locked' : 'generic' };
+    const code = e instanceof Error ? e.message : '';
+    return { error: code === 'LOCKED' ? 'locked' : code === 'PLAN_LIMIT' ? 'planLimit' : code === 'CREDIT_EXCEEDS' ? 'creditExceeds' : 'generic' };
   } finally {
     await session.endSession();
   }
@@ -158,10 +152,11 @@ export async function issueDocument(id: string, locale: string): Promise<IssueRe
   return {};
 }
 
-async function transition(id: string, from: DocStatus[], to: DocStatus, extra: Record<string, unknown> = {}) {
+async function transition(id: string, from: DocStatus[], to: DocStatus, extra: Record<string, unknown> = {}, types?: DocType[]) {
   const user = await actionUser();
+  if (!isValidObjectId(id)) return;
   await connectDb();
-  const res = await Document.updateOne({ _id: id, userId: user.id, status: { $in: from } }, { $set: { status: to, ...extra } });
+  const res = await Document.updateOne({ _id: id, userId: user.id, status: { $in: from }, ...(types ? { type: { $in: types } } : {}) }, { $set: { status: to, ...extra } });
   if (res.matchedCount) await audit({ userId: user.id, actorId: user.id, action: `document.${to}`, targetType: 'document', targetId: id });
   refresh();
 }
@@ -172,7 +167,8 @@ export async function markSent(id: string) {
 
 export async function setQuoteOutcome(id: string, outcome: 'accepted' | 'declined') {
   if (!['accepted', 'declined'].includes(outcome)) return;
-  await transition(id, ['issued', 'sent', 'accepted', 'declined'], outcome);
+  // Only quotes can be accepted/declined: an invoice called directly with this action stays untouched
+  await transition(id, ['issued', 'sent', 'accepted', 'declined'], outcome, {}, ['quote']);
 }
 
 /** New draft copied from an existing document (duplicate, quote → invoice, invoice → credit note). */
@@ -316,7 +312,7 @@ export async function sendDocumentEmail(id: string, _prev: FormState, form: Form
     to: parsed.data.to,
     subject,
     text: `${parsed.data.message}\n\n${url}`,
-    html: layout(subject, parsed.data.message, { label: m.doc.emailButton, url }, m.doc.emailFooter),
+    html: layout(subject, parsed.data.message, { label: m.doc.emailButton, url }, m.doc.emailFooter, view.lang),
     replyTo: view.seller?.email,
     attachments: [{ filename: pdfFileName(view), content: pdf }],
   });

@@ -5,7 +5,7 @@ import AdminTabs from '@/components/admin/AdminTabs';
 import { Link } from '@/i18n/navigation';
 import { requireAdmin } from '@/lib/session';
 
-export const metadata: Metadata = { robots: { index: false, follow: false } };
+export const metadata: Metadata = { robots: { index: false, follow: false }, alternates: null };
 
 export default async function AdminLayout({ children, params }: LayoutProps<'/[locale]/admin'>) {
   const { locale } = await params;

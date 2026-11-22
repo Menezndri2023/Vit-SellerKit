@@ -10,7 +10,7 @@ import { getPlan } from '@/lib/plan';
 import { requireUser } from '@/lib/session';
 import { fmtLocale } from '@/lib/intl';
 
-export const metadata: Metadata = { robots: { index: false } };
+export const metadata: Metadata = { robots: { index: false, follow: false }, alternates: null };
 
 export default async function ActivatePage({ params }: PageProps<'/[locale]/activate'>) {
   const { locale } = await params;

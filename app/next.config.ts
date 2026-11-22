@@ -1,7 +1,15 @@
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
+import { productionConfigProblems } from './src/lib/config-check';
+
 const isDev = process.env.NODE_ENV !== 'production';
+
+// Blocking check for the production deployment only (previews and local builds are not affected)
+if (process.env.VERCEL_ENV === 'production') {
+  const problems = productionConfigProblems(process.env);
+  if (problems.length) throw new Error(`Production configuration is incomplete:\n- ${problems.join('\n- ')}`);
+}
 
 // No user accounts or secrets in the browser: a strict-but-simple CSP without nonces
 // (Next.js inline scripts need 'unsafe-inline' unless every page is rendered with a nonce).
@@ -12,6 +20,7 @@ const csp = [
   "img-src 'self' data: blob:",
   "font-src 'self'",
   "connect-src 'self'",
+  "object-src 'none'",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
@@ -22,7 +31,7 @@ const securityHeaders = [
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'X-Frame-Options', value: 'DENY' },
-  { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+  { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()' },
   { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
 ];
 

@@ -52,18 +52,25 @@ export const gumroadProvider: BillingProvider = {
         raw: { ...body, license_key: body.license_key ? `…${body.license_key.slice(-4)}` : undefined },
       });
     } catch (e) {
-      if ((e as { code?: number }).code === 11000) return new Response('Duplicate', { status: 200 });
-      throw e;
+      if ((e as { code?: number }).code !== 11000) throw e;
+      // Redelivery: done already → acknowledge; a previous attempt failed midway → process again
+      // (every step below is idempotent and re-verifies with Gumroad's API).
+      const previous = await BillingEvent.findOne({ eventId }).select('processedAt').lean();
+      if (previous?.processedAt || !isOurs) return new Response('Duplicate', { status: 200 });
     }
 
     // Sales of other products (Google Sheets templates) are only logged, for the revenue stats
-    if (!isOurs) return new Response('OK');
+    if (!isOurs) {
+      await BillingEvent.updateOne({ eventId }, { $set: { processedAt: new Date() } });
+      return new Response('OK');
+    }
 
     let verified = false;
     let linkedUserId: string | undefined;
     if (body.license_key) {
       const status = await verifyGumroadLicense(body.license_key).catch(() => null);
-      verified = Boolean(status);
+      // "verified" = Gumroad's API confirmed a valid purchase (not merely that it answered)
+      verified = Boolean(status?.valid);
       const existing = await Subscription.findOne({ licenseKeyHash: sha256(body.license_key.trim()) }).lean();
       if (existing) {
         linkedUserId = existing.userId;
@@ -80,11 +87,11 @@ export const gumroadProvider: BillingProvider = {
       const sub = await Subscription.findOne({ $or: [{ 'external.saleId': body.sale_id }, { 'external.subscriptionId': body.subscription_id }].filter((c) => Object.values(c)[0]) }).lean();
       if (sub) {
         linkedUserId = sub.userId;
-        await recheckSubscription(String(sub._id)).catch(() => undefined);
-        verified = true;
+        // Verified only if Gumroad's API actually answered (a network error keeps verified=false)
+        verified = await recheckSubscription(String(sub._id)).then(() => true, () => false);
       }
     }
-    await BillingEvent.updateOne({ eventId }, { $set: { verified, linkedUserId } });
+    await BillingEvent.updateOne({ eventId }, { $set: { verified, linkedUserId, processedAt: new Date() } });
     return new Response('OK');
   },
 };

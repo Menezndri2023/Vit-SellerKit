@@ -1,4 +1,6 @@
 import 'server-only';
+import type { ClientSession } from 'mongoose';
+import { nextSeq } from '@/models/Counter';
 import { Document } from '@/models/Document';
 import { Subscription, type SubscriptionDoc } from '@/models/Subscription';
 import { recheckSubscription } from './billing/activate';
@@ -50,7 +52,20 @@ export async function getPlan(userId: string): Promise<PlanInfo> {
   };
 }
 
-export type PlanCheck = { allowed: boolean; watermark: boolean; used: number; limit: number | null };
+/**
+ * Free plan, inside the issue transaction: re-counts this month's issued documents and throws
+ * PLAN_LIMIT when the quota is used. The per-user monthly counter is written first so that two
+ * concurrent issues of the same user conflict (MongoDB write conflict → the transaction retries
+ * and then sees the other document): the limit can't be bypassed by issuing several drafts at once.
+ */
+export async function enforceFreeQuota(userId: string, session: ClientSession, now = new Date()): Promise<void> {
+  const start = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+  await nextSeq(`quota:${userId}:${start.toISOString().slice(0, 7)}`, session);
+  const used = await Document.countDocuments({ userId, issuedAt: { $gte: start } }).session(session);
+  if (used >= FREE_MONTHLY_LIMIT) throw new Error('PLAN_LIMIT');
+}
+
+export type PlanCheck ={ allowed: boolean; watermark: boolean; used: number; limit: number | null };
 
 /** Free plan: 3 issued documents per month, with the "Made with Margokit" watermark. */
 export async function checkIssueAllowed(userId: string): Promise<PlanCheck> {

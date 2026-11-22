@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { confirmReview } from '../actions';
 
-export const metadata: Metadata = { robots: { index: false, follow: false } };
+export const metadata: Metadata = { robots: { index: false, follow: false }, alternates: null };
 
 export default async function ConfirmReviewPage({ params, searchParams }: PageProps<'/[locale]/reviews/confirm'>) {
   const { locale } = await params;

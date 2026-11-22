@@ -1,4 +1,5 @@
 import 'server-only';
+import { publisherLine } from './brand';
 import { env } from './env';
 
 type Email = { to: string; subject: string; html: string; text: string; replyTo?: string; attachments?: { filename: string; content: Buffer }[] };
@@ -26,6 +27,7 @@ export async function sendEmail({ to, subject, html, text, replyTo, attachments 
   if (!res.ok) throw new Error(`Resend error ${res.status}: ${await res.text()}`);
 }
 
+
 const escapeHtml = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 
 /** Minimal branded layout: one message, one button. */
@@ -40,7 +42,9 @@ export function layout(title: string, body: string, button: { label: string; url
 <p style="font-size:15px;line-height:1.6;color:#475569;margin:0 0 24px">${escapeHtml(body)}</p>
 <a href="${escapeHtml(button.url)}" style="display:inline-block;background:#a3e635;color:#0f172a;font-weight:700;text-decoration:none;padding:12px 22px;border-radius:12px">${escapeHtml(button.label)}</a>
 <p style="font-size:12px;color:#94a3b8;margin:28px 0 0">${escapeHtml(footer)}</p>
-</td></tr></table></td></tr></table></body></html>`;
+</td></tr></table>
+<p style="font-size:11px;color:#94a3b8;margin:16px 0 0">${escapeHtml(publisherLine(lang))}</p>
+</td></tr></table></body></html>`;
 }
 
 const copy = {

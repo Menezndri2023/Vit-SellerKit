@@ -23,8 +23,11 @@ async function verifyFor(productId: string, licenseKey: string, incrementUses: b
 /** Tries the key against both Margokit Pro products. */
 export async function verifyGumroadLicense(licenseKey: string, { incrementUses = false } = {}): Promise<LicenseStatus> {
   const products = gumroadProducts();
+  const ids = [products.monthly, products.lifetime].filter(Boolean) as string[];
+  // Misconfiguration is an error, never "this key is invalid" (that would expire paying users)
+  if (!ids.length) throw new Error('GUMROAD_PRODUCT_ID_MONTHLY / GUMROAD_PRODUCT_ID_LIFETIME are not set');
   let last: LicenseStatus = { valid: false, reason: 'not_found' };
-  for (const productId of [products.monthly, products.lifetime].filter(Boolean) as string[]) {
+  for (const productId of ids) {
     const status = evaluateLicense(await verifyFor(productId, licenseKey.trim(), incrementUses), products);
     if (status.valid || status.reason !== 'not_found') return status;
     last = status;

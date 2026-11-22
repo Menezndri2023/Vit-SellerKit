@@ -6,6 +6,17 @@ import { privacy, publisher, terms } from '@/content/legal';
 
 const PAGES = { terms, privacy } as const;
 
+const DESCRIPTIONS = {
+  terms: {
+    en: 'Terms of service of Margokit: free and Pro plans, Gumroad payments, refunds, your responsibility for your quotes and invoices, liability and termination.',
+    fr: 'Conditions générales d’utilisation de Margokit : plans gratuit et Pro, paiement via Gumroad, remboursement, responsabilité sur tes devis et factures, résiliation.',
+  },
+  privacy: {
+    en: 'How Margokit processes your data: what is collected, why, processors and hosting, retention, cookies, security and how to exercise your rights.',
+    fr: 'Comment Margokit traite tes données : données collectées, finalités, sous-traitants et hébergement, durées de conservation, cookies, sécurité et exercice de tes droits.',
+  },
+} as const;
+
 export function generateStaticParams() {
   return ['en', 'fr'].flatMap((locale) => Object.keys(PAGES).map((page) => ({ locale, page })));
 }
@@ -17,8 +28,10 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/legal/[p
   // Written in English and French only: the Arabic URL shows the English text, so it points there
   const textLocale = locale === 'fr' ? 'fr' : 'en';
   const languages = { en: `/en/legal/${page}`, fr: `/fr/legal/${page}` };
+  const lang = locale === 'fr' ? 'fr' : 'en';
   return {
-    title: `${build(locale === 'fr' ? 'fr' : 'en', publisher()).title} — Margokit`,
+    title: `${build(lang, publisher()).title} — Margokit`,
+    description: DESCRIPTIONS[page as keyof typeof PAGES][lang],
     // Each legal page is its own canonical URL (the layout default points at the home page)
     alternates: { canonical: `/${textLocale}/legal/${page}`, languages: { ...languages, 'x-default': `/${routing.defaultLocale}/legal/${page}` } },
   };

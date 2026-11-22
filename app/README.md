@@ -63,7 +63,7 @@ Sans clé Resend, les e-mails (confirmation d'inscription, mot de passe oublié,
 ## 3. Tests
 
 ```bash
-npm test                 # tests unitaires (calculs, TVA, numérotation, conformité, identifiants, licences…)
+npm test                 # tests unitaires + intégration (MongoDB en mémoire : activation concurrente, webhooks, cron, quota gratuit, avoirs, numérotation)
 npm run build            # obligatoire avant les tests de bout en bout
 npm run e2e              # Playwright, ordinateur + mobile (nécessite `npm run db`)
 ```
@@ -93,7 +93,7 @@ Les tests de bout en bout utilisent une base séparée (`margokit_e2e`) et un fa
 
 1. https://cloud.mongodb.com → **Create** → cluster **M0 (Free)**, **région en Europe** (Paris, Francfort ou Irlande), c'est préférable pour le RGPD.
 2. **Database Access** → utilisateur avec un mot de passe long, rôle « Read and write to any database ».
-3. **Network Access** → `0.0.0.0/0`. Vercel n'a pas d'adresses IP fixes sur le plan gratuit ; la sécurité repose sur le mot de passe.
+3. **Network Access** → `0.0.0.0/0` : Vercel n'a pas d'adresses IP sortantes fixes hors option payante. **C'est un risque réel**, pas neutralisé par le mot de passe seul : la base est joignable depuis tout Internet (force brute, fuite d'URI dans un log ou un poste, faille du driver). Mesures minimales : utilisateur dédié à l'app avec le rôle `readWrite` sur la seule base `margokit` (pas « any database »), mot de passe aléatoire de 32+ caractères, rotation en cas de doute, alertes Atlas sur les connexions, sauvegardes activées. Pour supprimer l'exposition : **Vercel Static IPs / Secure Compute** (IP sortantes fixes à autoriser dans Atlas) ou un cluster dédié avec **Private Endpoint** (offres payantes : vérifier les tarifs actuels).
 4. **Connect → Drivers** → copie l'URI, ajoute le nom de la base : `mongodb+srv://USER:PASS@cluster.xxxxx.mongodb.net/margokit?retryWrites=true&w=majority` → `MONGODB_URI`.
 
 ### Vercel
@@ -117,6 +117,8 @@ Le calculateur autonome (`../calculator`) devient inutile une fois l'app en lign
 **Connexion Google** : https://console.cloud.google.com → APIs & Services → Credentials → **OAuth client ID** (type Web) → URI de redirection autorisée : `https://margokit.com/api/auth/callback/google` (et `http://localhost:3000/api/auth/callback/google` pour le local) → `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`. Sans ces variables, le bouton Google n'apparaît pas.
 
 **Newsletter** : voir [email-capture/Code.gs](email-capture/Code.gs) (Google Sheet gratuit) → `SUBSCRIBE_WEBHOOK_URL`, `SUBSCRIBE_WEBHOOK_SECRET`.
+
+**Contrôle de configuration** : le build de production Vercel (`VERCEL_ENV=production`) échoue si une variable indispensable manque (domaine, base, secrets, Resend, cron, Gumroad, mentions légales) — voir `src/lib/config-check.ts`. Les previews ne sont pas concernées.
 
 **Pages légales** : `LEGAL_ENTITY`, `LEGAL_ADDRESS` et `CONTACT_EMAIL` complètent les CGU et la politique de confidentialité. Les textes (`src/content/legal.ts`) sont une base de travail : fais-les relire par un professionnel.
 

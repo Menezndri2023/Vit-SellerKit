@@ -15,6 +15,8 @@ const schema = new Schema(
     isTest: Boolean,
     verified: { type: Boolean, default: false },
     linkedUserId: { type: String, index: true },
+    /** Set once the event has been fully handled; a redelivery of an unprocessed event is retried */
+    processedAt: { type: Date },
     raw: { type: Schema.Types.Mixed },
     receivedAt: { type: Date, default: () => new Date(), index: true },
   },

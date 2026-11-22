@@ -6,6 +6,9 @@ import { headers } from 'next/headers';
  * Falls back to the configured site URL outside a request.
  */
 export async function siteUrl(): Promise<string> {
+  // Production: always the canonical domain (links in emails and share links never depend on the Host header)
+  const canonical = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '');
+  if (process.env.VERCEL_ENV === 'production' && canonical) return canonical;
   try {
     const h = await headers();
     const host = h.get('x-forwarded-host') ?? h.get('host');
