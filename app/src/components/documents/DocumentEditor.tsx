@@ -313,8 +313,8 @@ export default function DocumentEditor({ initial, clients, products, defaults }:
             <dt className="font-semibold">{t('total')}</dt>
             <dd className="font-display text-xl font-extrabold">{money(preview.totalInclTax)}</dd>
           </div>
-          <p className="text-end text-xs text-muted">{t('serverRecalc')}</p>
         </dl>
+        <p className="ms-auto mt-2 max-w-sm text-end text-xs text-muted">{t('serverRecalc')}</p>
       </section>
 
       <section className="rounded-2xl border border-line bg-surface p-5 sm:p-6">

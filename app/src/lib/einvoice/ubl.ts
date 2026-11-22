@@ -23,6 +23,12 @@ const el = (name: string, value: string | number | undefined | null, attrs: Reco
  * Peppol electronic address (EndpointID, mandatory in Peppol) from the party's identifiers:
  * BE enterprise number (0208), FR SIRET (0009) or SIREN (0002), NL KvK (0106), DE/LU VAT (9930/9938).
  */
+/** Plain EN 16931 core invoice (no Peppol extension). */
+export const EN16931_CUSTOMIZATION = 'urn:cen.eu:en16931:2017';
+
+/** Both parties have a Peppol electronic address: the UBL can be sent through Peppol. */
+export const isPeppolReady = (input: Pick<FacturXInvoiceInput, 'seller' | 'buyer'>) => Boolean(endpointId(input.seller as Party) && endpointId(input.buyer as Party));
+
 export function endpointId(p: Party): { id: string; scheme: string } | null {
   const legal = p.legalOrganization;
   const country = p.address?.country;
@@ -30,6 +36,7 @@ export function endpointId(p: Party): { id: string; scheme: string } | null {
   if (legal?.id && legal.schemeID && ['0208', '0009', '0002', '0106'].includes(legal.schemeID)) return { id: legal.id.replace(/^BE/, ''), scheme: legal.schemeID };
   if (vat && country === 'DE') return { id: vat, scheme: '9930' };
   if (vat && country === 'LU') return { id: vat, scheme: '9938' };
+  if (vat && country === 'NL') return { id: vat, scheme: '9944' }; // checked by PEPPOL-COMMON-R056
   return null;
 }
 
@@ -105,16 +112,21 @@ export function buildUbl(input: FacturXInvoiceInput, digits: number): string {
     .join('');
 
   const breakdown = input.vatBreakdown ?? [];
+  const peppol = isPeppolReady(input);
   const xml = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     `<${root} xmlns="urn:oasis:names:specification:ubl:schema:xsd:${root}-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">`,
-    el('cbc:CustomizationID', CUSTOMIZATION),
-    el('cbc:ProfileID', PROFILE),
+    // Peppol BIS 3.0 needs an electronic address for both parties (PEPPOL-EN16931-R010/R020).
+    // Without one (e.g. a client outside Peppol), the file is plain EN 16931 UBL, not labelled Peppol.
+    el('cbc:CustomizationID', peppol ? CUSTOMIZATION : EN16931_CUSTOMIZATION),
+    peppol ? el('cbc:ProfileID', PROFILE) : '',
     el('cbc:ID', input.document.id),
     el('cbc:IssueDate', input.document.issueDate),
     isCredit ? '' : el('cbc:DueDate', input.document.dueDate),
     el(isCredit ? 'cbc:CreditNoteTypeCode' : 'cbc:InvoiceTypeCode', String(input.document.typeCode ?? '380')),
-    ...(input.document.notes ?? []).map((n) => el('cbc:Note', n.subjectCode ? `#${n.subjectCode}#${n.content}` : n.content)),
+    // PEPPOL-EN16931-R002: one document-level note only (several are allowed only between German
+    // parties) — the mentions are joined, each keeping its French subject-code prefix (#PMD#, #PMT#…)
+    input.document.notes?.length ? el('cbc:Note', input.document.notes.map((n) => (n.subjectCode ? `#${n.subjectCode}#${n.content}` : n.content)).join('\n')) : '',
     el('cbc:DocumentCurrencyCode', cur),
     // Peppol requires a buyer reference or an order reference
     el('cbc:BuyerReference', input.document.buyerReference ?? input.document.id),

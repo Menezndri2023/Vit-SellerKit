@@ -18,6 +18,14 @@ const VATEX: Record<string, string> = { AE: 'VATEX-EU-AE', K: 'VATEX-EU-IC', G: 
 
 const day = (iso?: string) => (iso ? iso.slice(0, 10) : undefined);
 
+const withoutVat = (ids: { scheme: string; value: string }[]) => ids.filter((i) => i.scheme !== 'VAT');
+
+/** EN 16931 VAT categories after the small-business mapping (franchise: "outside scope" → exempt). */
+export function exportCategories(doc: Pick<DocView, 'lines' | 'seller'>): Set<string> {
+  const franchise = doc.seller?.vatRegime === 'franchise';
+  return new Set(doc.lines.map((l) => (franchise && l.vatCategory === 'O' ? 'E' : l.vatCategory)));
+}
+
 export function typeCode(type: DocView['type']): '380' | '381' | '386' {
   return type === 'credit_note' ? '381' : type === 'deposit_invoice' ? '386' : '380';
 }
@@ -69,6 +77,11 @@ export function buildFacturXInput(doc: DocView): FacturXInvoiceInput {
   };
 
   const isPayable = doc.type === 'invoice' || doc.type === 'deposit_invoice';
+  const categories = new Set(doc.lines.map((l) => category(l.vatCategory)));
+  // BR-O-02: an invoice "not subject to VAT" carries no VAT identifier (seller or buyer)
+  const outOfScope = categories.has('O');
+  // BR-IC-12: intra-community supply needs a deliver-to country — the buyer's address unless another one is given
+  const deliveryAddress = doc.buyer.deliveryAddress ?? (categories.has('K') ? doc.buyer.address : undefined);
   const iban = doc.seller.bankAccount?.iban;
   const s = doc.seller;
   const b = doc.buyer;
@@ -83,8 +96,8 @@ export function buildFacturXInput(doc: DocView): FacturXInvoiceInput {
       ...(doc.buyerReference ? { buyerReference: doc.buyerReference } : {}),
       notes: notes(doc),
     },
-    seller: party({ name: s.legalName, tradeName: s.tradeName, address: s.address, ids: doc.sellerIds, rawIds: s.ids, email: s.email, phone: s.phone }),
-    buyer: party({ name: b.name, address: b.address, ids: doc.buyerIds, rawIds: b.ids, email: b.email }),
+    seller: party({ name: s.legalName, tradeName: s.tradeName, address: s.address, ids: doc.sellerIds, rawIds: outOfScope ? withoutVat(s.ids) : s.ids, email: s.email, phone: s.phone }),
+    buyer: party({ name: b.name, address: b.address, ids: doc.buyerIds, rawIds: outOfScope ? withoutVat(b.ids) : b.ids, email: b.email }),
     lines: doc.lines.map((l, i) => {
       const cat = category(l.vatCategory);
       const discounted = l.discountPct > 0;
@@ -98,7 +111,8 @@ export function buildFacturXInput(doc: DocView): FacturXInvoiceInput {
         ...(discounted ? { grossUnitPrice: major(l.unitPrice), priceDiscount: Number(((major(l.unitPrice) * l.discountPct) / 100).toFixed(4)) } : {}),
         lineTotal: major(l.net),
         vatCategoryCode: cat as never,
-        vatRatePercent: cat === 'S' ? l.taxRate : 0,
+        // BR-O-05: no item VAT rate for "not subject to VAT"
+        ...(cat === 'O' ? {} : { vatRatePercent: cat === 'S' ? l.taxRate : 0 }),
       };
     }),
     vatBreakdown: mergeBreakdown(doc.totals.taxBreakdown.map((g) => ({ ...g, category: category(g.category) }))).map((g) => ({
@@ -132,7 +146,7 @@ export function buildFacturXInput(doc: DocView): FacturXInvoiceInput {
     // Date of supply is mandatory (BR-FX-EN-04 / French mention): defaults to the invoice date
     delivery: {
       date: day(doc.serviceDate ?? doc.issueDate),
-      ...(b.deliveryAddress ? { location: { line1: b.deliveryAddress.line1, city: b.deliveryAddress.city, postalCode: b.deliveryAddress.postalCode ?? '', country: b.deliveryAddress.country } } : {}),
+      ...(deliveryAddress ? { location: { line1: deliveryAddress.line1, city: deliveryAddress.city, postalCode: deliveryAddress.postalCode ?? '', country: deliveryAddress.country } } : {}),
     },
     ...(doc.precedingInvoice ? { references: [{ id: doc.precedingInvoice.number, type: 'preceding' as const, issueDate: day(doc.precedingInvoice.issueDate) }] } : {}),
   };

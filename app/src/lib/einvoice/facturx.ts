@@ -5,6 +5,7 @@ import { embedFacturX, Flavor, Profile, validateInput } from '@stackforge-eu/fac
 import type { DocView } from '../documents/view-model';
 import { renderDocumentPdf } from '../pdf/render';
 import { buildFacturXInput } from './facturx-input';
+import { einvoiceRuleErrors } from './rules';
 
 let icc: Buffer | undefined;
 const iccProfile = async () => (icc ??= await readFile(path.join(process.cwd(), 'assets', 'icc', 'sRGB-v2-micro.icc')));
@@ -20,6 +21,9 @@ export class EInvoiceValidationError extends Error {
  * Input and XSD validation must pass, otherwise nothing is produced.
  */
 export async function renderFacturX(doc: DocView): Promise<{ pdf: Uint8Array; xml: string }> {
+  // EN 16931 rules that depend on the user's data (VAT numbers, category mix): actionable messages
+  const ruleErrors = einvoiceRuleErrors(doc);
+  if (ruleErrors.length) throw new EInvoiceValidationError(ruleErrors);
   const input = buildFacturXInput(doc);
   // Validate first: the library throws on invalid input, we want readable errors for the user
   const check = validateInput(input, Profile.EN16931);

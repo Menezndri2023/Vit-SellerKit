@@ -10,9 +10,10 @@
   --primary: #a3e635;
   --primary-ink: #4d7c0f;
   --primary-soft: #f7fee7;
-  --profit: #16a34a;
-  --loss: #dc2626;
-  --warn: #b45309;
+  /* One shade darker than Tailwind 600: ≥ 4.5:1 for text on their own 10–15 % tints (WCAG AA) */
+  --profit: #166534;
+  --loss: #b91c1c;
+  --warn: #92400e;
 }
 
 /* Dark */

@@ -1,4 +1,5 @@
 import { buildFacturXInput } from '@/lib/einvoice/facturx-input';
+import { einvoiceRuleErrors } from '@/lib/einvoice/rules';
 import { exportableDoc } from '@/lib/einvoice/load';
 import { buildUbl } from '@/lib/einvoice/ubl';
 import { currencyDigits } from '@/lib/money';
@@ -8,6 +9,8 @@ import { pdfFileName } from '@/lib/pdf/render';
 export async function GET(_req: Request, ctx: RouteContext<'/api/documents/[id]/ubl'>) {
   const res = await exportableDoc((await ctx.params).id);
   if ('error' in res) return res.error;
+  const errors = einvoiceRuleErrors(res.view);
+  if (errors.length) return Response.json({ errors }, { status: 422 });
   const xml = buildUbl(buildFacturXInput(res.view), currencyDigits(res.view.currency));
   return new Response(xml, {
     headers: {

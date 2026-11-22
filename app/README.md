@@ -162,7 +162,9 @@ Tu peux aussi attribuer du Pro directement à un compte : **Admin → Utilisateu
 - Le Factur-X est validé à chaque export (règles du profil EN 16931 + schémas XSD officiels) ; si une donnée manque, l'utilisateur voit la liste des erreurs au lieu d'un fichier invalide.
 - Correspondances EN 16931 : SIREN → schéma `0002`, BCE → `0208`, KvK → `0106` ; franchise en base → catégorie `E` + `VATEX-FR-FRANCHISE` ; autoliquidation, intracommunautaire, export, hors champ → codes `VATEX-EU-*` ; notes `PMD` (pénalités), `PMT` (indemnité 40 €), `AAB` (escompte) ; date de livraison/prestation = date de facture si non renseignée.
 - UBL : `EndpointID` Peppol déduit des identifiants (BCE, SIRET/SIREN, KvK, TVA DE/LU) ; validé contre les XSD OASIS UBL 2.1 pendant le développement.
-- **Pas encore fait** : validation officielle Schematron (règles EN 16931 et Peppol) et contrôle PDF/A-3 par veraPDF — à lancer avant de promettre la conformité (ces outils nécessitent Java).
+- **Règles officielles (Schematron)** : `npm run schematron:setup` (Java requis) télécharge les artefacts CEN EN 16931 1.3.17 et Peppol BIS 3.0.22 ; `npm test` valide alors les exports CII et UBL de cas représentatifs (B2B deux taux + remise, franchise 293 B, autoliquidation, livraison intracommunautaire, export, hors champ, avoir, acompte, paiement partiel). Les données que ces règles refusent (n° de TVA vendeur ou client manquant, hors champ mélangé à d'autres taux) sont bloquées avant l'export avec un message clair (`src/lib/einvoice/rules.ts`).
+- Le fichier UBL n'est déclaré **Peppol BIS 3.0** que si le vendeur et le client ont une adresse électronique Peppol ; sinon c'est un UBL EN 16931 standard.
+- **Pas encore fait** : contrôle PDF/A-3 du Factur-X par veraPDF.
 
 ### Envoi via une plateforme agréée (PA) ou Peppol
 
