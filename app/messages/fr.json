@@ -151,7 +151,7 @@
     "proF3": "Tout le plan gratuit : liens de paiement, QR code SEPA, partage, suivi des retards",
     "monthlyCta": "Passer à Pro",
     "lifetimeName": "Pro à vie",
-    "lifetimePrice": "39 $",
+    "lifetimePrice": "99 $",
     "lifetimePeriod": "paiement unique",
     "lifetimeF1": "Tout Pro, pour toujours",
     "lifetimeF2": "Toutes les mises à jour incluses",
@@ -710,7 +710,7 @@
     "success": "Pro est activé. Merci ! 🎉",
     "buyTitle": "Pas encore de clé ?",
     "buyMonthly": "Pro mensuel — 5 $/mois",
-    "buyLifetime": "Pro à vie — 39 $ une fois",
+    "buyLifetime": "Pro à vie — 99 $ une fois",
     "whatsapp": "Carte refusée ? Paie localement sur WhatsApp",
     "errors": {
       "invalid": "Cette clé ou ce code n’est pas valide. Vérifie et réessaie.",

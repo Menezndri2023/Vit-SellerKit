@@ -151,7 +151,7 @@
     "proF3": "Everything in Free: payment links, SEPA QR code, sharing, overdue tracking",
     "monthlyCta": "Go Pro",
     "lifetimeName": "Pro lifetime",
-    "lifetimePrice": "$39",
+    "lifetimePrice": "$99",
     "lifetimePeriod": "one-time",
     "lifetimeF1": "Everything in Pro, forever",
     "lifetimeF2": "All future updates included",
@@ -710,7 +710,7 @@
     "success": "Pro is active. Thank you! 🎉",
     "buyTitle": "Don’t have a key yet?",
     "buyMonthly": "Pro monthly — $5/month",
-    "buyLifetime": "Pro lifetime — $39 once",
+    "buyLifetime": "Pro lifetime — $99 once",
     "whatsapp": "Card declined? Pay locally on WhatsApp",
     "errors": {
       "invalid": "This key or code isn’t valid. Check it and try again.",

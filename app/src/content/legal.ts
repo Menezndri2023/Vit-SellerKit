@@ -6,13 +6,15 @@
 export type LegalSection = { title: string; body: string[] };
 export type LegalDoc = { title: string; updated: string; sections: LegalSection[] };
 
-type Publisher = { entity: string; address: string; email: string };
+type Publisher = { entity: string; address: string; email: string; publisherEmail?: string };
 
 export function publisher(): Publisher {
   return {
     entity: process.env.LEGAL_ENTITY || '[Legal name / Nom légal]',
     address: process.env.LEGAL_ADDRESS || '[Address / Adresse]',
     email: process.env.CONTACT_EMAIL || '[contact email]',
+    // Publishing company's own address (VIT GLOBAL); CONTACT_EMAIL stays the Margokit support address
+    publisherEmail: process.env.PUBLISHER_EMAIL?.trim() || undefined,
   };
 }
 
@@ -25,7 +27,7 @@ export function terms(lang: 'en' | 'fr', p: Publisher): LegalDoc {
       title: 'Conditions générales d’utilisation',
       updated: UPDATED,
       sections: [
-        { title: '1. Éditeur', body: [`Margokit est édité par ${p.entity}, ${p.address}. Contact : ${p.email}.`] },
+        { title: '1. Éditeur', body: [`Margokit est édité par ${p.entity}, ${p.address}.${p.publisherEmail ? ` Contact de l’éditeur : ${p.publisherEmail}.` : ''} Support Margokit : ${p.email}.`] },
         { title: '2. Service', body: ['Margokit propose un calculateur de bénéfice gratuit et un logiciel en ligne de création de devis, factures et avoirs (« Margokit Pro »).', 'Le calculateur fournit des estimations à partir des chiffres que tu saisis ; il ne constitue pas un conseil financier.'] },
         { title: '3. Compte', body: ['Tu es responsable de l’exactitude des informations saisies et de la confidentialité de ton mot de passe. Un compte est personnel.', 'Nous pouvons suspendre un compte en cas d’usage frauduleux, abusif ou illégal.'] },
         { title: '4. Plans et paiement', body: ['Le plan gratuit permet d’émettre 3 documents par mois, avec la mention « Made with Margokit ».', 'Les abonnements Pro sont vendus par Gumroad, qui agit comme revendeur (merchant of record) : le paiement, la facturation et les taxes de vente sont gérés par Gumroad selon ses propres conditions. Certains accès peuvent aussi être activés par un code remis après un paiement direct.', 'L’abonnement mensuel se renouvelle jusqu’à son annulation depuis ton reçu Gumroad ; l’accès reste actif jusqu’à la fin de la période payée.', 'Remboursement : 14 jours après l’achat, sur simple demande.'] },
@@ -42,7 +44,7 @@ export function terms(lang: 'en' | 'fr', p: Publisher): LegalDoc {
     title: 'Terms of service',
     updated: UPDATED,
     sections: [
-      { title: '1. Publisher', body: [`Margokit is published by ${p.entity}, ${p.address}. Contact: ${p.email}.`] },
+      { title: '1. Publisher', body: [`Margokit is published by ${p.entity}, ${p.address}.${p.publisherEmail ? ` Publisher contact: ${p.publisherEmail}.` : ''} Margokit support: ${p.email}.`] },
       { title: '2. Service', body: ['Margokit provides a free profit calculator and online software to create quotes, invoices and credit notes (“Margokit Pro”).', 'The calculator gives estimates based on the numbers you enter; it is not financial advice.'] },
       { title: '3. Account', body: ['You are responsible for the accuracy of the information you enter and for keeping your password secret. An account is personal.', 'We may suspend an account in case of fraudulent, abusive or illegal use.'] },
       { title: '4. Plans and payment', body: ['The free plan lets you issue 3 documents per month, with the “Made with Margokit” mention.', 'Pro subscriptions are sold by Gumroad, acting as merchant of record: payment, receipts and sales taxes are handled by Gumroad under its own terms. Some access may also be activated with a code delivered after a direct payment.', 'The monthly plan renews until you cancel it from your Gumroad receipt; access stays active until the end of the paid period.', 'Refunds: within 14 days of purchase, on request.'] },
@@ -62,7 +64,7 @@ export function privacy(lang: 'en' | 'fr', p: Publisher): LegalDoc {
       title: 'Politique de confidentialité',
       updated: UPDATED,
       sections: [
-        { title: '1. Responsable du traitement', body: [`${p.entity}, ${p.address}. Contact : ${p.email}.`] },
+        { title: '1. Responsable du traitement', body: [`${p.entity}, ${p.address}.${p.publisherEmail ? ` Contact de l’éditeur : ${p.publisherEmail}.` : ''} Pour tes données (accès, rectification, suppression…) : ${p.email}.`] },
         { title: '2. Données traitées', body: ['Compte : nom, e-mail, mot de passe (haché, jamais lisible), langue et fuseau horaire.', 'Contenu : informations de ton entreprise, clients, produits, devis, factures et paiements que tu saisis. Pour tes clients, tu agis comme responsable de traitement et Margokit comme sous-traitant.', 'Abonnement : informations d’achat transmises par Gumroad (e-mail, produit, montant, pays).', 'Technique : journaux de sécurité, adresse IP (limitation des abus), statistiques de visite anonymes (Vercel Analytics, sans cookie).', 'Le calculateur fonctionne dans ton navigateur : les chiffres saisis ne sont pas enregistrés.', 'Avis : note, commentaire, nom, ville facultative et e-mail. Seuls la note, le commentaire, le prénom avec l’initiale du nom et la ville sont publiés, après relecture et avec ton accord. L’e-mail sert à confirmer l’avis et à vérifier un achat ; il n’est jamais publié. Tu peux demander la suppression d’un avis à tout moment.'] },
         { title: '3. Finalités et bases légales', body: ['Fournir le service (exécution du contrat) ; sécuriser le service et prévenir la fraude (intérêt légitime) ; gérer les abonnements (contrat) ; t’envoyer les e-mails liés au compte (contrat), trois conseils de prise en main dans les jours qui suivent l’inscription (intérêt légitime, désinscription en un clic dans chaque e-mail) et, si tu t’inscris, la newsletter (consentement, désinscription à tout moment).'] },
         { title: '4. Prestataires et transferts hors du Maroc', body: [
@@ -81,7 +83,7 @@ export function privacy(lang: 'en' | 'fr', p: Publisher): LegalDoc {
     title: 'Privacy policy',
     updated: UPDATED,
     sections: [
-      { title: '1. Controller', body: [`${p.entity}, ${p.address}. Contact: ${p.email}.`] },
+      { title: '1. Controller', body: [`${p.entity}, ${p.address}.${p.publisherEmail ? ` Publisher contact: ${p.publisherEmail}.` : ''} For your data (access, correction, deletion…): ${p.email}.`] },
       { title: '2. Data we process', body: ['Account: name, email, password (hashed, never readable), language and time zone.', 'Content: your business details, clients, products, quotes, invoices and payments you enter. For your clients’ data, you are the controller and Margokit acts as a processor.', 'Subscription: purchase information sent by Gumroad (email, product, amount, country).', 'Technical: security logs, IP address (abuse prevention), anonymous visit statistics (Vercel Analytics, cookieless).', 'The calculator runs in your browser: the numbers you type are not stored.', 'Reviews: rating, comment, name, optional city and email. Only the rating, comment, first name with last-name initial and city are published, after moderation and with your consent. The email is used to confirm the review and check a purchase; it is never published. You can ask for a review to be removed at any time.'] },
       { title: '3. Purposes and legal bases', body: ['Providing the service (contract); securing it and preventing fraud (legitimate interest); managing subscriptions (contract); sending account emails (contract), three getting-started tips in the days after sign-up (legitimate interest, one-click unsubscribe in each email) and, if you sign up, the newsletter (consent, unsubscribe anytime).'] },
       { title: '4. Providers and transfers outside Morocco', body: [

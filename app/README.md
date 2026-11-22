@@ -79,7 +79,8 @@ Les tests de bout en bout utilisent une base séparée (`margokit_e2e`) et un fa
 
 1. **Créer 2 produits** :
    - `Margokit Pro — Monthly` : type **Membership**, 5 $ par mois.
-   - `Margokit Pro — Lifetime` : produit numérique, 39 $.
+   - `Margokit Pro — Lifetime` : produit numérique, 99 $.
+   - `Margokit Pro — Annual` (facultatif) : type **Membership**, 49 $ par an.
 2. Sur **chaque** produit : active **Generate a unique license key per sale** (clés de licence). Dans le contenu livré, écris par exemple : « Ta clé : {license_key} — active-la sur https://margokit.com/fr/activate ».
 3. **Récupérer les Product ID** (écran d'édition du produit, ou via l'API) et les mettre dans `GUMROAD_PRODUCT_ID_MONTHLY` et `GUMROAD_PRODUCT_ID_LIFETIME`. L'API de vérification des licences exige le `product_id` pour les produits créés après le 9 janvier 2023.
 4. **Liens d'achat** : mets les URL des produits dans `GUMROAD_URL_MONTHLY` et `GUMROAD_URL_LIFETIME` (boutons de la page Tarifs et de `/activate`).

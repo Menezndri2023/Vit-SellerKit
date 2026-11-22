@@ -11,7 +11,7 @@ export function homeJsonLd({ site, locale, description, publisherUrl, annualUsd 
   return {
     '@context': 'https://schema.org',
     '@graph': [
-      { '@type': 'Organization', '@id': orgId, name: PUBLISHER_NAME, ...(publisherUrl ? { url: publisherUrl } : {}) },
+      { '@type': 'Organization', '@id': orgId, name: PUBLISHER_NAME, ...(publisherUrl ? { url: publisherUrl } : {}), ...(process.env.PUBLISHER_EMAIL ? { email: process.env.PUBLISHER_EMAIL } : {}) },
       { '@type': 'WebSite', '@id': `${site}/#website`, url: site, name: PRODUCT_NAME, inLanguage: ['en', 'fr', 'ar'], publisher: { '@id': orgId } },
       {
         '@type': 'SoftwareApplication',
@@ -26,7 +26,7 @@ export function homeJsonLd({ site, locale, description, publisherUrl, annualUsd 
           { '@type': 'Offer', name: 'Free', price: '0', priceCurrency: 'USD' },
           { '@type': 'Offer', name: 'Pro Monthly', price: '5', priceCurrency: 'USD' },
           ...(annualUsd ? [{ '@type': 'Offer', name: 'Pro Annual', price: String(annualUsd), priceCurrency: 'USD' }] : []),
-          { '@type': 'Offer', name: 'Pro Lifetime', price: '39', priceCurrency: 'USD' },
+          { '@type': 'Offer', name: 'Pro Lifetime', price: '99', priceCurrency: 'USD' },
         ],
       },
     ],
