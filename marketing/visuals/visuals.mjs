@@ -427,8 +427,9 @@ function proCover5() {
       <h1 style="font-size:54px;margin-top:16px">Start free. <em>Go Pro</em> when you need more.</h1></div>
     <div class="abs" style="left:72px;right:72px;top:216px;display:flex;gap:22px;align-items:stretch">
       ${card({ name: P.freeName, price: P.freePrice, period: P.freePeriod, features: [P.freeF1, P.freeF2, P.freeF3] })}
-      ${card({ name: P.monthlyName, price: P.monthlyPrice, period: P.monthlyPeriod, features: [P.proF1, P.proF2, P.proF3, P.proF4], hl: true, tag: 'Cancel anytime' })}
-      ${card({ name: P.lifetimeName, price: P.lifetimePrice, period: P.lifetimePeriod, features: [P.lifetimeF1, P.lifetimeF2, P.proF2, P.proF3], tag: 'Pay once' })}</div>
+      ${card({ name: P.monthlyName, price: P.monthlyPrice, period: P.monthlyPeriod, features: [P.proF1, P.proF2, P.proF4, 'Cancel anytime'], hl: true, tag: 'Popular' })}
+      ${card({ name: P.annualName, price: '$49', period: P.annualPeriod, features: [P.annualF1, '2 months free', P.proF4], tag: 'Save 18%' })}
+      ${card({ name: P.lifetimeName, price: P.lifetimePrice, period: P.lifetimePeriod, features: [P.lifetimeF1, P.lifetimeF2, P.proF4], tag: 'Pay once' })}</div>
     <div class="abs" style="left:72px;right:72px;bottom:72px;display:flex;align-items:center;justify-content:center;gap:14px;border-radius:14px;padding:16px 18px;background:rgba(163,230,53,.1);border:1px solid rgba(163,230,53,.4);font-size:18px;color:#E2E8F0">
       <span style="font-size:22px">⚡</span><b style="color:#fff">Ready for e-invoicing:</b> Factur-X · UBL/Peppol (EN 16931)</div>
   </div>`);

@@ -1,27 +1,27 @@
-# Gumroad — Margokit Pro (Monthly et Lifetime)
+# Gumroad — Margokit Pro (Monthly, Annual et Lifetime)
 
 > À copier-coller dans Gumroad. Les blocs `texte` sont destinés aux clients.
-> Deux produits distincts (l'app a besoin d'un Product ID par formule), même description de base.
+> Trois produits distincts (l'app a besoin d'un Product ID par formule), même description de base.
 > `{{URL_APP}}` = l'adresse de l'app en production (`https://margokit-pro.vercel.app` au départ, `https://margokit.com` une fois le domaine branché).
 > Réglages techniques côté app (Product ID, Ping, test) : [app/README.md](../../app/README.md), section 4.
 
 ## Réglages des produits
 
-| Champ Gumroad | Pro Monthly | Pro Lifetime |
-|---|---|---|
-| Type | **Membership** (abonnement) | Produit numérique |
-| Nom | `Margokit Pro — Monthly` | `Margokit Pro — Lifetime` |
-| URL | `margokit.gumroad.com/l/pro-monthly` | `margokit.gumroad.com/l/pro-lifetime` |
-| Prix | **5 $ / mois** | **39 $** une fois |
-| Clés de licence | ✅ **Generate a unique license key per sale** | ✅ idem |
-| Bouton | `Subscribe` | `I want this!` |
-| Résumé (sous le bouton) | `Unlimited quotes and invoices, no watermark. Cancel anytime.` | `Unlimited quotes and invoices, forever. Pay once.` |
-| Tags | `invoice`, `invoicing`, `quote`, `freelance`, `small business`, `factur-x`, `facture`, `devis` | idem |
-| Remboursement | 14 jours | 14 jours |
-| PPP | ✅ (comme les templates — attention, le champ PPP liste les produits **exclus**) | ✅ |
-| Codes promo | Aucun au lancement | `EARLY` peut s'appliquer (vérifie qu'il n'est pas en « tous les produits **sauf** ») |
+| Champ Gumroad | Pro Monthly | Pro Annual | Pro Lifetime |
+|---|---|---|---|
+| Type | **Membership** (abonnement) | **Membership**, récurrence **Yearly** uniquement | Produit numérique |
+| Nom | `Margokit Pro — Monthly` | `Margokit Pro — Annual` | `Margokit Pro — Lifetime` |
+| URL | `margokit.gumroad.com/l/pro-monthly` | `margokit.gumroad.com/l/pro-annual` | `margokit.gumroad.com/l/pro-lifetime` |
+| Prix | **5 $ / mois** | **49 $ / an** (2 mois offerts) | **99 $** une fois |
+| Clés de licence | ✅ **Generate a unique license key per sale** | ✅ idem | ✅ idem |
+| Bouton | `Subscribe` | `Subscribe` | `I want this!` |
+| Résumé (sous le bouton) | `Unlimited invoices, automatic reminders. Cancel anytime.` | `Everything in Pro for 12 months — 2 months free.` | `Everything in Pro, forever. Pay once.` |
+| Tags | `invoice`, `invoicing`, `quote`, `freelance`, `small business`, `factur-x`, `facture`, `devis` | idem | idem |
+| Remboursement | 14 jours | 14 jours | 14 jours |
+| PPP | ✅ (comme les templates — attention, le champ PPP liste les produits **exclus**) | ✅ | ✅ |
+| Codes promo | Aucun au lancement | Aucun | `EARLY` peut s'appliquer (vérifie qu'il n'est pas en « tous les produits **sauf** ») |
 
-Une fois créés : copie chaque **Product ID** et chaque **URL** dans les variables Vercel `GUMROAD_PRODUCT_ID_MONTHLY`, `GUMROAD_PRODUCT_ID_LIFETIME`, `GUMROAD_URL_MONTHLY`, `GUMROAD_URL_LIFETIME`.
+Une fois créés : Monthly et Lifetime sont déjà branchés ; pour Annual, lance `bash scripts/gumroad-annual-setup.sh` depuis `app/` (il enregistre l'ID, l'URL et le prix sur Vercel).
 
 ---
 
@@ -41,10 +41,10 @@ WHAT PRO UNLOCKS
 ━━━━━━━━━━━━━━━━
 
 ✔ Unlimited quotes, invoices and credit notes
-✔ No "Made with Margokit" watermark — your logo on every PDF
-✔ Payment links, bank details and SEPA QR code on your invoices
-✔ Paid / overdue tracking
-✔ Share by link, email and WhatsApp
+✔ No "Made with Margokit" watermark
+✔ Automatic reminders: Margokit emails clients who pay late (1, 7 and 15 days after the due date), in your name
+✔ Recurring invoices: a ready-to-issue draft every month, quarter or year
+✔ Plus everything in the free plan: your logo, payment links, bank details and SEPA QR code, sharing by link, email and WhatsApp, paid / overdue tracking
 
 ━━━━━━━━━━━━━━━━
 BUILT FOR REAL INVOICING
@@ -72,7 +72,7 @@ Can I try before paying?
 Yes. The free plan lets you issue 3 documents per month, with a small watermark.
 
 Monthly or lifetime?
-Monthly is $5/month, cancel anytime. Lifetime is $39 once, with all future updates.
+Monthly is $5/month, cancel anytime. Annual is $49/year (2 months free). Lifetime is $99 once, with all future updates.
 
 Does it replace my accountant?
 No. Margokit helps you produce clean, compliant-ready documents; your accountant remains your reference for tax questions.
@@ -99,10 +99,10 @@ Tu peux commencer gratuitement (3 documents par mois). Ce produit débloque Pro.
 CE QUE PRO DÉBLOQUE
 
 ✔ Devis, factures et avoirs illimités
-✔ Plus de filigrane « Fait avec Margokit » — ton logo sur chaque PDF
-✔ Liens de paiement, coordonnées bancaires et QR code SEPA sur tes factures
-✔ Suivi des factures payées et en retard
-✔ Partage par lien, e-mail et WhatsApp
+✔ Plus de filigrane « Fait avec Margokit »
+✔ Relances automatiques : Margokit écrit à tes clients en retard (1, 7 et 15 jours après l'échéance), à ton nom
+✔ Factures récurrentes : un brouillon prêt à émettre chaque mois, trimestre ou année
+✔ Et tout ce qu'offre le plan gratuit : ton logo, liens de paiement, RIB et QR code SEPA, partage par lien, e-mail et WhatsApp, suivi des paiements et des retards
 
 FAIT POUR FACTURER POUR DE VRAI
 
@@ -121,7 +121,7 @@ ACTIVER PRO
 QUESTIONS FRÉQUENTES
 
 Je peux essayer avant de payer ? Oui : l'offre gratuite permet 3 documents par mois, avec un petit filigrane.
-Mensuel ou à vie ? Mensuel : 5 $/mois, résiliable à tout moment. À vie : 39 $ une fois, mises à jour incluses.
+Mensuel, annuel ou à vie ? Mensuel : 5 $/mois, résiliable à tout moment. Annuel : 49 $/an (2 mois offerts). À vie : 99 $ une fois, mises à jour incluses.
 Ça remplace mon comptable ? Non. Margokit t'aide à produire des documents propres et prêts pour la réforme ; ton comptable reste ta référence pour les questions fiscales.
 Mes données sont en sécurité ? Elles sont hébergées dans l'UE. Tu peux exporter ou supprimer ton compte à tout moment depuis tes paramètres.
 Et si ça ne me convient pas ? Écris-nous sous 14 jours : remboursement complet.

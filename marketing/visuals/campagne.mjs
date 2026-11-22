@@ -243,13 +243,13 @@ function carPro(A) {
       sub: 'Numérotation automatique sans trou, identifiants fiscaux, plusieurs taux de TVA et devises. PDF en français ou en anglais.',
       body: imgFit(A.pdfFr, 'max-height:640px') },
     { theme: 'dark', kick: 'Envoie. Encaisse.', title: 'Lien, e-mail <em>ou WhatsApp</em>', size: 100,
-      sub: 'Tu vois ce qui est payé et ce qui est en retard. Fini le tableau Excel des relances.',
+      sub: 'Tu vois ce qui est payé et ce qui est en retard. Avec Pro, les relances partent toutes seules.',
       body: imgFit(A.share, 'width:100%;max-height:none') },
     { theme: 'light', kick: 'Facture électronique', title: 'Formats <em class="nw">Factur-X</em> et <em>UBL</em> déjà là', size: 92,
       sub: 'Exports conformes à la norme européenne EN 16931. En France, toutes les entreprises devront émettre des factures électroniques au plus tard le 1er septembre 2027.',
       body: `<div style="position:absolute;left:0;right:0;bottom:20px;display:flex;flex-direction:column;gap:20px">${[['1er sept. 2026', 'Toutes les entreprises en France doivent pouvoir <b>recevoir</b> des factures électroniques.'], ['1er sept. 2027', 'Les PME, TPE et micro-entrepreneurs doivent aussi les <b>émettre</b>.']].map(([a, b]) => `<div class="card" style="padding:30px 36px;display:grid;grid-template-columns:300px 1fr;gap:24px;align-items:center"><div class="big" style="font-size:50px;letter-spacing:-.02em">${a}</div><div style="font-size:30px;line-height:1.35">${b}</div></div>`).join('')}<div class="sub" style="font-size:26px">Margokit Pro produit déjà les formats. La transmission par une plateforme agréée arrive.</div></div>` },
     { theme: 'lime', kick: 'Gratuit pour commencer', title: '3 documents par mois, <em>gratuits</em>', size: 100,
-      body: `<div class="card" style="padding:30px 50px">${rows([['Gratuit', '0 $ · 3 docs/mois'], ['Pro mensuel', '5 $ / mois'], ['Pro à vie', '39 $ une fois']], 42, 30)}</div>
+      body: `<div class="card" style="padding:30px 50px">${rows([['Gratuit', '0 $ · 3 docs/mois'], ['Pro mensuel', '5 $ / mois'], ['Pro annuel', '49 $ / an'], ['Pro à vie', '99 $ une fois']], 42, 30)}</div>
       <div style="position:absolute;left:0;bottom:40px">${cta('margokit.com → Commencer gratuitement', 38)}</div>` },
   ]);
 }
@@ -318,7 +318,7 @@ function deck(S, A) {
         ['Calculateur', 'Gratuit', 'Le vrai bénéfice d’un produit, avant de le lancer.'],
         ['Tracker', '12 $ une fois', 'Le suivi des commandes, du stock et des clients dans Google Sheets.'],
         ['Pack Vendeur', '34 $ une fois', 'Le Tracker + pub &amp; ROAS, contenu, trésorerie, budget, prix.'],
-        ['Margokit Pro', 'Gratuit, puis 5 $/mois ou 39 $', 'Les devis, factures et avoirs en ligne.']].map(([a, b, c]) =>
+        ['Margokit Pro', 'Gratuit, puis dès 5 $/mois', 'Devis, factures et avoirs en ligne, relances automatiques.']].map(([a, b, c]) =>
         `<div class="card" style="padding:26px 34px;display:grid;grid-template-columns:290px 1fr;gap:20px;align-items:center"><div><div class="jk" style="font-weight:800;font-size:36px">${a}</div><div style="color:${BRAND.lime};font-weight:700;font-size:22px;margin-top:4px">${b}</div></div><div style="font-size:26px;color:#CBD5E1;line-height:1.35">${c}</div></div>`).join('')}</div>` },
     { theme: 'light', kick: 'Outil 1 · Calculateur gratuit', title: 'Le vrai bénéfice <em>en 10 secondes</em>', size: 80,
       left: ticks([['→', 'Prix, coûts, frais, pub et taux de colis refusés.'], ['→', 'Bénéfice réel, marge, prix minimum, prix pour 30 % et 50 % de marge.'], ['→', 'Pub max. par commande et ROAS minimum rentable.'], ['→', 'En ligne sur margokit.com/calculator, sans compte, en €, $ ou DH.']], 30, 24),

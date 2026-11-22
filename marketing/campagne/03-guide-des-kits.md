@@ -9,7 +9,7 @@
 | « Je ne sais pas combien je gagne » / « Je lance un produit » | **Calculateur** | Gratuit |
 | « J'ai des commandes, je note tout sur un cahier ou WhatsApp » / « J'ai trop de retours » | **Tracker** | 12 $ |
 | « Je fais de la pub Facebook / TikTok » / « Je ne sais pas quelle pub marche » | **Pack Vendeur** | 34 $ |
-| « Je fais mes factures sur Word » / « Je suis freelance » | **Margokit Pro** | Gratuit, puis 5 $/mois ou 39 $ |
+| « Je fais mes factures sur Word » / « Je suis freelance » | **Margokit Pro** | Gratuit, puis 5 $/mois, 49 $/an ou 99 $ à vie |
 
 Règle : on conseille toujours **l'outil gratuit d'abord**, puis le payant si la personne a vraiment le problème.
 
@@ -106,7 +106,8 @@ Le tableau de bord gagne 8 indicateurs : dépense pub, ROAS, bénéfice après p
 |---|---|---|
 | Gratuit | 0 $ | 3 documents par mois, petit filigrane « Fait avec Margokit » |
 | Pro mensuel | 5 $ / mois | Illimité, sans filigrane, sans engagement |
-| Pro à vie | 39 $ une fois | Illimité, pour toujours, mises à jour incluses |
+| Pro annuel | 49 $ par an | Tout Pro pendant 12 mois (2 mois offerts) |
+| Pro à vie | 99 $ une fois | Illimité, pour toujours, mises à jour incluses |
 
 **Activer Pro** : acheter sur Gumroad → copier la clé de licence du reçu → la coller sur margokit.com/fr/activate.
 

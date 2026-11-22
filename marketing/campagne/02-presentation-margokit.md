@@ -29,7 +29,7 @@ On commence gratuitement. On paie quand l'outil fait gagner du temps ou de l'arg
 | **Calculateur de bénéfice** | Gratuit, sans inscription | Le vrai bénéfice d'un produit avant de le lancer : marge, prix minimum, prix pour 30 % et 50 % de marge, pub max. par commande, ROAS minimum rentable. En €, $ ou DH. |
 | **Tracker Commandes & Stock** | 12 $, une fois | Un Google Sheet : commandes, stock automatique, clients (⚠️ à risque, ⭐ fidèles), tableau de bord avec le vrai bénéfice. 3 versions : anglais $, français €, Maroc DH. |
 | **Pack Vendeur** | 34 $, une fois | Tout le Tracker + publicité & ROAS (verdict par campagne), planning de contenu, trésorerie, budget, calculateur de prix. 11 onglets reliés. |
-| **Margokit Pro** | Gratuit (3 documents/mois), puis 5 $/mois ou 39 $ à vie | Application web de devis, factures et avoirs : devis → facture en 1 clic, PDF français ou anglais, envoi par lien, e-mail ou WhatsApp, suivi payé / en retard, exports Factur-X et UBL (norme EN 16931), données hébergées en Europe, interface en arabe. |
+| **Margokit Pro** | Gratuit (3 documents/mois), puis 5 $/mois, 49 $/an ou 99 $ à vie | Application web de devis, factures et avoirs : devis → facture en 1 clic, PDF français ou anglais, envoi par lien, e-mail ou WhatsApp, suivi payé / en retard, exports Factur-X et UBL (norme EN 16931), données hébergées en Europe, interface en arabe. |
 
 ## Pour qui
 
