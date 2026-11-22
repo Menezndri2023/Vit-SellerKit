@@ -1,0 +1,3 @@
+﻿Name,Type,Contact,Email,Phone,Address,Postal code,City,Country,VAT,Tax ID,Currency,Language,Notes
+Northwind Ltd,business,Anna Smith,billing@northwind.example,+44 20 0000 0000,1 King Street,EC2V 8AU,London,GB,GB123456789,,GBP,en,
+Jean Martin,individual,,jean.martin@example.fr,,3 rue de la Paix,75002,Paris,FR,,,EUR,fr,Client since 2024

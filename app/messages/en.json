@@ -97,7 +97,8 @@
     "switchLocale": "fr",
     "home": "Home",
     "plan": "Plan",
-    "guides": "Guides"
+    "guides": "Guides",
+    "revenue": "Revenue"
   },
   "landing": {
     "title": "Find out how much you REALLY make on every sale",
@@ -133,7 +134,7 @@
   },
   "pricing": {
     "title": "Simple pricing",
-    "subtitle": "Start free. Upgrade when you need more.",
+    "subtitle": "Start free. Try Pro for 7 days without a card, then upgrade when you need more.",
     "popular": "Most popular",
     "freeName": "Free",
     "freePrice": "$0",
@@ -166,7 +167,7 @@
   "faq": {
     "title": "Questions",
     "q1": "Is Margokit really free?",
-    "a1": "Yes. The calculator is free forever, and you can create 3 quotes or invoices per month for free. Pro removes the limit and the watermark.",
+    "a1": "Yes. The calculator is free forever, and you can create 3 quotes or invoices per month for free. You can also try Pro for 7 days without a card, in one click from your account. Pro removes the limit and the watermark.",
     "q2": "Which countries does it work for?",
     "a2": "Margokit works anywhere: any currency, several tax rates, tax ID labels and legal mentions adapted to your country (France, Belgium, Morocco and more), documents in English or French.",
     "q3": "Is Margokit ready for French e-invoicing?",
@@ -660,7 +661,8 @@
     "exclTax": "excl. tax",
     "seeAll": "See all",
     "reviewPrompt": "Is Margokit Pro saving you time? Your review helps other freelancers choose.",
-    "reviewLink": "Write a review →"
+    "reviewLink": "Write a review →",
+    "revenueLink": "See my revenue"
   },
   "docShare": {
     "title": "Share",
@@ -724,7 +726,13 @@
     "backToApp": "Back to the app",
     "annual": "Pro annual — renews automatically",
     "annualCancelled": "Pro annual — cancelled, access until {date}",
-    "buyAnnual": "Pro annual"
+    "buyAnnual": "Pro annual",
+    "trial": "Pro trial — until {date}",
+    "trialStart": "Try Pro free for 7 days",
+    "trialBanner": "Pro trial: everything is unlocked until {date}.",
+    "trialChoose": "Choose a plan",
+    "trialTitle": "Try Pro free for 7 days",
+    "trialText": "Unlimited documents without watermark, automatic reminders and recurring invoices. No card needed: when the trial ends, you simply go back to the free plan."
   },
   "admin": {
     "title": "Admin",
@@ -1037,5 +1045,80 @@
     "updated": "Updated on {date}",
     "sources": "Sources",
     "ctaTitle": "Margokit computes everything for you: totals, VAT, mentions and margin."
+  },
+  "revenue": {
+    "title": "Revenue",
+    "subtitle": "What you invoice and what you collect, month by month.",
+    "filters": "Year and currency",
+    "invoiced": "Invoiced in {year}",
+    "exclTax": "Excl. tax, credit notes deducted",
+    "vsLastYear": "{change} vs the same period last year",
+    "collected": "Collected in {year}",
+    "collectedHint": "Payments recorded on your invoices",
+    "outstanding": "Still to collect",
+    "outstandingHint": "Issued invoices not yet paid",
+    "overdueHint": "Including {amount} overdue",
+    "average": "Average invoice",
+    "invoiceCount": "{count, plural, =0 {No invoices} one {# invoice} other {# invoices}}",
+    "daysToPay": "Paid in {days, plural, one {# day} other {# days}} on average",
+    "byMonth": "Month by month",
+    "legendInvoiced": "Invoiced excl. tax",
+    "legendCollected": "Collected",
+    "table": "See the figures",
+    "month": "Month",
+    "topClients": "Top clients in {year}",
+    "noClients": "No invoices this year.",
+    "note": "Amounts in different currencies are never added together. Collected = payments you recorded, incl. tax.",
+    "emptyTitle": "No revenue to show yet",
+    "emptyText": "Once you issue your first invoice, you will see your revenue month by month, what is collected and your top clients here.",
+    "emptyCta": "Create an invoice"
+  },
+  "clientsImport": {
+    "button": "Import (CSV)",
+    "emptyHint": "Already have a client list in Excel or another tool?",
+    "back": "Clients",
+    "title": "Import clients",
+    "subtitle": "Add your whole list at once from a CSV file (Excel, Google Sheets, another tool).",
+    "howTitle": "How it works",
+    "how1": "In Excel or Google Sheets: File → Save as / Download → CSV.",
+    "how2": "Choose the file below and click “Check”: nothing is saved at this step.",
+    "how3": "Fix the reported lines if needed, then import.",
+    "columns": "Recognised columns: Name (required), Type (business or individual), Contact, Email, Phone, Address, Postal code, City, Country, VAT, Tax ID, Currency, Language, Notes. Address and city are required, as in the client form. Without a Country column, your business country is used.",
+    "template": "Download the CSV template",
+    "fileLabel": "CSV file",
+    "fileHint": "Up to 1 MB and 2,000 clients. Comma or semicolon separated.",
+    "check": "Check the file",
+    "recheck": "Check again",
+    "checking": "Checking…",
+    "summary": "{total, plural, one {# line read} other {# lines read}}: {ready, plural, =0 {no client to import} one {# client ready to import} other {# clients ready to import}}.",
+    "duplicates": "{count, plural, one {# client already exists and will be skipped} other {# clients already exist and will be skipped}}.",
+    "ignored": "Ignored columns: {columns}.",
+    "invalid": "{count, plural, one {# line to fix} other {# lines to fix}} (not imported):",
+    "line": "Line {line}",
+    "import": "{count, plural, one {Import # client} other {Import # clients}}",
+    "done": "{count, plural, =0 {No client imported.} one {# client imported.} other {# clients imported.}}",
+    "seeClients": "See my clients",
+    "fields": {
+      "name": "name",
+      "email": "invalid email",
+      "phone": "phone",
+      "contact": "contact",
+      "notes": "notes",
+      "address": "address",
+      "city": "city",
+      "country": "unknown country",
+      "postalCode": "postal code",
+      "region": "region",
+      "currency": "unknown currency",
+      "language": "language"
+    },
+    "errors": {
+      "noFile": "Choose a CSV file.",
+      "tooBig": "File too large (1 MB maximum).",
+      "empty": "The file has no client lines.",
+      "noName": "No “Name” column found. Check the first line of the file (headers).",
+      "tooMany": "2,000 clients maximum per file: split it into several files.",
+      "rateLimited": "Too many attempts. Try again in an hour."
+    }
   }
 }

@@ -3,6 +3,7 @@
 import { refresh } from 'next/cache';
 import { activateLicense, redeemCode } from '@/lib/billing/activate';
 import { looksLikeCode } from '@/lib/billing/codes';
+import { endTrial, startTrial as beginTrial } from '@/lib/billing/trial';
 import { connectDb } from '@/lib/db';
 import { clientIp, rateLimit } from '@/lib/rate-limit';
 import { actionUser } from '@/lib/session';
@@ -22,6 +23,17 @@ export async function activate(_prev: ActivateState, form: FormData): Promise<Ac
   const result = looksLikeCode(input) ? await redeemCode(user.id, input) : await activateLicense(user.id, input);
   await audit({ userId: user.id, actorId: user.id, action: result.ok ? 'plan.activate' : 'plan.activate.failed', targetType: 'user', targetId: user.id, details: { method: looksLikeCode(input) ? 'code' : 'license', ...(result.ok ? { plan: result.plan } : { error: result.error }) } });
   if (!result.ok) return { error: result.error };
+  await endTrial(user.id);
   refresh();
   return { ok: true };
+}
+
+/** Starts the one-time 7-day Pro trial (button in the plan banner and on the plan page). */
+export async function startTrial(): Promise<void> {
+  const user = await actionUser();
+  if (!(await rateLimit('trial-user', user.id, 5, 900))) return;
+  await connectDb();
+  const result = await beginTrial(user.id);
+  if (result.ok) await audit({ userId: user.id, actorId: user.id, action: 'plan.trial', targetType: 'user', targetId: user.id, details: { expiresAt: result.expiresAt.toISOString() } });
+  refresh();
 }

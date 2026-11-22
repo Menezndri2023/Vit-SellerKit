@@ -117,6 +117,12 @@ export default async function Dashboard({ params }: PageProps<'/[locale]/app'>) 
         ))}
       </section>
 
+      {hasIssued && (
+        <Link href="/app/revenue" className="-mt-2 self-end text-sm font-semibold text-primary-ink hover:underline">
+          {td('revenueLink')} <span className="inline-block rtl:-scale-x-100">→</span>
+        </Link>
+      )}
+
       {recent.length > 0 && (
         <section className="rounded-2xl border border-line bg-surface">
           <div className="flex items-center justify-between px-5 py-4">

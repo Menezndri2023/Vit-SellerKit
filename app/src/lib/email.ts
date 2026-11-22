@@ -86,6 +86,11 @@ const planCopy = {
     j1: { subject: 'Your Margokit Pro access ends tomorrow', body: 'Your Pro access ends on {date}. Renew now so your next invoices stay unlimited and without watermark.' },
     expired: { subject: 'Your Margokit Pro access has ended', body: 'Your Pro access ended on {date}. Your documents are safe; you are back on the free plan (3 documents per month).' },
     button: 'Renew Pro',
+    trial: {
+      j1: { subject: 'Your Margokit Pro trial ends tomorrow', body: 'Your 7-day Pro trial ends on {date}. Choose a plan (from $5/month) to keep unlimited invoices without watermark, automatic reminders and recurring invoices.' },
+      expired: { subject: 'Your Margokit Pro trial has ended', body: 'Your Pro trial ended on {date}. Your documents are safe; you are on the free plan (3 documents per month). Pro starts at $5/month.' },
+      button: 'Choose a plan',
+    },
     footer: 'You receive this email because you have a Margokit account.',
   },
   ar: {
@@ -93,6 +98,11 @@ const planCopy = {
     j1: { subject: 'ينتهي وصولك إلى Margokit Pro غدًا', body: 'ينتهي وصولك إلى Pro في {date}. جدّده الآن لتبقى فواتيرك القادمة غير محدودة وبدون علامة.' },
     expired: { subject: 'انتهى وصولك إلى Margokit Pro', body: 'انتهى وصولك إلى Pro في {date}. مستنداتك محفوظة، وقد عدت إلى الخطة المجانية (3 مستندات شهريًا).' },
     button: 'تجديد Pro',
+    trial: {
+      j1: { subject: 'تنتهي تجربتك لـ Margokit Pro غدًا', body: 'تنتهي تجربتك المجانية لـ Pro (7 أيام) في {date}. اختر خطة (ابتداءً من 5 $ شهريًا) لتحتفظ بفواتير غير محدودة وبدون علامة، والتذكيرات التلقائية والفواتير المتكررة.' },
+      expired: { subject: 'انتهت تجربتك لـ Margokit Pro', body: 'انتهت تجربتك لـ Pro في {date}. مستنداتك محفوظة، وأنت الآن على الخطة المجانية (3 مستندات شهريًا). يبدأ Pro من 5 $ شهريًا.' },
+      button: 'اختر خطة',
+    },
     footer: 'تصلك هذه الرسالة لأن لديك حسابًا في Margokit.',
   },
   fr: {
@@ -100,15 +110,23 @@ const planCopy = {
     j1: { subject: 'Ton accès Margokit Pro se termine demain', body: 'Ton accès Pro se termine le {date}. Renouvelle-le pour que tes prochaines factures restent illimitées et sans filigrane.' },
     expired: { subject: 'Ton accès Margokit Pro est terminé', body: 'Ton accès Pro s’est terminé le {date}. Tes documents sont conservés ; tu repasses au plan gratuit (3 documents par mois).' },
     button: 'Renouveler Pro',
+    trial: {
+      j1: { subject: 'Ton essai Margokit Pro se termine demain', body: 'Ton essai Pro de 7 jours se termine le {date}. Choisis une offre (dès 5 $/mois) pour garder les factures illimitées sans filigrane, les relances automatiques et les factures récurrentes.' },
+      expired: { subject: 'Ton essai Margokit Pro est terminé', body: 'Ton essai Pro s’est terminé le {date}. Tes documents sont conservés ; tu es sur le plan gratuit (3 documents par mois). Pro est à partir de 5 $/mois.' },
+      button: 'Choisir une offre',
+    },
     footer: 'Tu reçois cet e-mail car tu as un compte Margokit.',
   },
 } as const;
 
-export function planEmail(kind: 'j7' | 'j1' | 'expired', locale: string | null | undefined, to: string, date: Date, url: string): Email {
+export function planEmail(kind: 'j7' | 'j1' | 'expired', locale: string | null | undefined, to: string, date: Date, url: string, trial = false): Email {
   const lang = langOf(locale);
   const c = planCopy[lang];
-  const body = c[kind].body.replace('{date}', new Intl.DateTimeFormat(lang === 'ar' ? 'ar-u-nu-latn' : lang, { dateStyle: 'long' }).format(date));
-  return { to, subject: c[kind].subject, html: layout(c[kind].subject, body, { label: c.button, url }, c.footer, lang), text: `${body}\n\n${url}` };
+  // The trial has its own wording ("choose a plan", not "renew"); it never gets the 7-day email
+  const k = trial && kind !== 'j7' ? c.trial[kind] : c[kind];
+  const button = trial ? c.trial.button : c.button;
+  const body = k.body.replace('{date}', new Intl.DateTimeFormat(lang === 'ar' ? 'ar-u-nu-latn' : lang, { dateStyle: 'long' }).format(date));
+  return { to, subject: k.subject, html: layout(k.subject, body, { label: button, url }, c.footer, lang), text: `${body}\n\n${url}` };
 }
 
 const reviewCopy = {

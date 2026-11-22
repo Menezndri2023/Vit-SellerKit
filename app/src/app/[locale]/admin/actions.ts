@@ -4,6 +4,7 @@ import { ObjectId } from 'mongodb';
 import { refresh } from 'next/cache';
 import { z } from 'zod';
 import { generateCode } from '@/lib/billing/codes';
+import { endTrial } from '@/lib/billing/trial';
 import { hmac } from '@/lib/crypto';
 import { connectDb, mongoClient } from '@/lib/db';
 import { actionAdmin } from '@/lib/session';
@@ -38,6 +39,7 @@ export async function grantPro(userId: string, days: number | null) {
   } else {
     await Subscription.create({ userId, plan: 'manual', provider: 'manual', status: 'active', expiresAt });
   }
+  await endTrial(userId, now);
   await audit({ userId, actorId: admin.id, action: 'admin.grant', targetType: 'user', targetId: userId, details: { days } });
   refresh();
 }

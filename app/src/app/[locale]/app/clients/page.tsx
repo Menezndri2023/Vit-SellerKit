@@ -12,6 +12,7 @@ export default async function ClientsPage({ params, searchParams }: PageProps<'/
   setRequestLocale(locale);
   const user = await requireUser(locale);
   const t = await getTranslations('clients');
+  const ti = await getTranslations('clientsImport');
   const { q } = await searchParams;
   const query = typeof q === 'string' ? q.trim().slice(0, 100) : '';
 
@@ -22,9 +23,30 @@ export default async function ClientsPage({ params, searchParams }: PageProps<'/
 
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-6">
-      <PageHeader title={t('title')} subtitle={total ? t('countLabel', { count: total }) : undefined} action={total ? <NewButton href="/app/clients/new" label={t('new')} /> : undefined} />
+      <PageHeader
+        title={t('title')}
+        subtitle={total ? t('countLabel', { count: total }) : undefined}
+        action={
+          total ? (
+            <div className="flex gap-2">
+              <Link href="/app/clients/import" className="grid h-11 place-items-center rounded-xl border border-line bg-surface px-4 font-semibold hover:bg-bg">
+                {ti('button')}
+              </Link>
+              <NewButton href="/app/clients/new" label={t('new')} />
+            </div>
+          ) : undefined
+        }
+      />
       {total === 0 ? (
-        <EmptyState title={t('emptyTitle')} text={t('emptyText')} cta={t('new')} href="/app/clients/new" />
+        <>
+          <EmptyState title={t('emptyTitle')} text={t('emptyText')} cta={t('new')} href="/app/clients/new" />
+          <p className="text-center text-sm text-muted">
+            {ti('emptyHint')}{' '}
+            <Link href="/app/clients/import" className="font-semibold text-primary-ink hover:underline">
+              {ti('button')}
+            </Link>
+          </p>
+        </>
       ) : (
         <>
           <SearchBox placeholder={t('title')} defaultValue={query} />

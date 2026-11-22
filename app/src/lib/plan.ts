@@ -4,6 +4,7 @@ import { nextSeq } from '@/models/Counter';
 import { Document } from '@/models/Document';
 import { Subscription, type SubscriptionDoc } from '@/models/Subscription';
 import { recheckSubscription } from './billing/activate';
+import { trialAvailable } from './billing/trial';
 
 export const FREE_MONTHLY_LIMIT = 3;
 const DAY = 86_400_000;
@@ -16,6 +17,10 @@ export type PlanInfo = {
   limit: number | null;
   expiresAt: Date | null;
   expiringSoon: boolean;
+  /** Pro through the 7-day trial */
+  trial: boolean;
+  /** Free account that never had Pro: the trial can be started */
+  trialAvailable: boolean;
 };
 
 const monthStart = () => {
@@ -37,11 +42,13 @@ export async function getPlan(userId: string): Promise<PlanInfo> {
   }
   const fresh = subs.length ? await Subscription.find({ userId, status: { $in: ['active', 'cancelled'] } }).lean() : [];
   const active = fresh.filter((s) => grantsAccess(s));
-  // Prefer no end date (lifetime/renewing), then the latest end date
-  active.sort((a, b) => (a.expiresAt ? new Date(a.expiresAt).getTime() : Infinity) - (b.expiresAt ? new Date(b.expiresAt).getTime() : Infinity)).reverse();
+  // Prefer no end date (lifetime/renewing), then the latest end date; a paid plan beats the trial
+  const rank = (s: (typeof active)[number]) => (s.provider === 'trial' ? -1 : s.expiresAt ? new Date(s.expiresAt).getTime() : Infinity);
+  active.sort((a, b) => rank(b) - rank(a));
   const best = active[0] ?? null;
   const used = await Document.countDocuments({ userId, issuedAt: { $gte: monthStart() } });
   const expiresAt = best?.expiresAt ? new Date(best.expiresAt) : null;
+  const trial = best?.provider === 'trial';
   return {
     plan: best ? 'pro' : 'free',
     subscription: best,
@@ -49,6 +56,8 @@ export async function getPlan(userId: string): Promise<PlanInfo> {
     limit: best ? null : FREE_MONTHLY_LIMIT,
     expiresAt,
     expiringSoon: Boolean(expiresAt && expiresAt.getTime() - Date.now() < 7 * DAY),
+    trial,
+    trialAvailable: best ? false : await trialAvailable(userId),
   };
 }
 

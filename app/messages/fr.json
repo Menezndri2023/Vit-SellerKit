@@ -97,7 +97,8 @@
     "switchLocale": "en",
     "home": "Accueil",
     "plan": "Abonnement",
-    "guides": "Guides"
+    "guides": "Guides",
+    "revenue": "Revenus"
   },
   "landing": {
     "title": "Découvre combien tu gagnes VRAIMENT sur chaque vente",
@@ -133,7 +134,7 @@
   },
   "pricing": {
     "title": "Des prix simples",
-    "subtitle": "Commence gratuitement. Passe à Pro quand tu en as besoin.",
+    "subtitle": "Commence gratuitement. Essaie Pro 7 jours sans carte, puis passe à Pro quand tu en as besoin.",
     "popular": "Le plus choisi",
     "freeName": "Gratuit",
     "freePrice": "0 $",
@@ -166,7 +167,7 @@
   "faq": {
     "title": "Questions",
     "q1": "Margokit est vraiment gratuit ?",
-    "a1": "Oui. Le calculateur est gratuit pour toujours, et tu peux créer 3 devis ou factures par mois gratuitement. Pro enlève la limite et le filigrane.",
+    "a1": "Oui. Le calculateur est gratuit pour toujours, et tu peux créer 3 devis ou factures par mois gratuitement. Tu peux aussi essayer Pro 7 jours sans carte bancaire, en un clic depuis ton compte. Pro enlève la limite et le filigrane.",
     "q2": "Pour quels pays ça marche ?",
     "a2": "Margokit fonctionne partout : toutes les devises, plusieurs taux de TVA, libellés d’identifiants et mentions légales adaptés à ton pays (France, Belgique, Maroc et d’autres), documents en français ou en anglais.",
     "q3": "Margokit est-il prêt pour la facture électronique en France ?",
@@ -660,7 +661,8 @@
     "exclTax": "HT",
     "seeAll": "Tout voir",
     "reviewPrompt": "Margokit Pro te fait gagner du temps ? Ton avis aide d’autres indépendants à choisir.",
-    "reviewLink": "Donner mon avis →"
+    "reviewLink": "Donner mon avis →",
+    "revenueLink": "Voir mes revenus"
   },
   "docShare": {
     "title": "Partager",
@@ -724,7 +726,13 @@
     "backToApp": "Retour à l’app",
     "annual": "Pro annuel — renouvelé automatiquement",
     "annualCancelled": "Pro annuel — annulé, accès jusqu’au {date}",
-    "buyAnnual": "Pro annuel"
+    "buyAnnual": "Pro annuel",
+    "trial": "Essai Pro — jusqu’au {date}",
+    "trialStart": "Essayer Pro gratuitement 7 jours",
+    "trialBanner": "Essai Pro en cours : tout est débloqué jusqu’au {date}.",
+    "trialChoose": "Choisir une offre",
+    "trialTitle": "Essaie Pro gratuitement pendant 7 jours",
+    "trialText": "Documents illimités sans filigrane, relances automatiques et factures récurrentes. Sans carte bancaire : à la fin de l’essai, tu repasses simplement au plan gratuit."
   },
   "admin": {
     "title": "Admin",
@@ -1037,5 +1045,80 @@
     "updated": "Mis à jour le {date}",
     "sources": "Sources",
     "ctaTitle": "Margokit calcule tout pour toi : totaux, TVA, mentions et marge."
+  },
+  "revenue": {
+    "title": "Revenus",
+    "subtitle": "Ce que tu factures et ce que tu encaisses, mois par mois.",
+    "filters": "Année et devise",
+    "invoiced": "Facturé en {year}",
+    "exclTax": "HT, avoirs déduits",
+    "vsLastYear": "{change} par rapport à la même période l’an dernier",
+    "collected": "Encaissé en {year}",
+    "collectedHint": "Paiements enregistrés sur tes factures",
+    "outstanding": "Reste à encaisser",
+    "outstandingHint": "Factures émises non réglées",
+    "overdueHint": "Dont {amount} en retard",
+    "average": "Facture moyenne",
+    "invoiceCount": "{count, plural, =0 {Aucune facture} one {# facture} other {# factures}}",
+    "daysToPay": "Payée en {days, plural, one {# jour} other {# jours}} en moyenne",
+    "byMonth": "Mois par mois",
+    "legendInvoiced": "Facturé HT",
+    "legendCollected": "Encaissé",
+    "table": "Voir les chiffres",
+    "month": "Mois",
+    "topClients": "Meilleurs clients en {year}",
+    "noClients": "Aucune facture cette année.",
+    "note": "Les montants de devises différentes ne sont jamais additionnés. Encaissé = paiements que tu as enregistrés, TTC.",
+    "emptyTitle": "Pas encore de revenus à afficher",
+    "emptyText": "Dès ta première facture émise, tu verras ici ton chiffre d’affaires mois par mois, ce qui est encaissé et tes meilleurs clients.",
+    "emptyCta": "Créer une facture"
+  },
+  "clientsImport": {
+    "button": "Importer (CSV)",
+    "emptyHint": "Tu as déjà une liste de clients dans Excel ou un autre logiciel ?",
+    "back": "Clients",
+    "title": "Importer des clients",
+    "subtitle": "Ajoute toute ta liste en une fois depuis un fichier CSV (Excel, Google Sheets, autre logiciel).",
+    "howTitle": "Comment faire",
+    "how1": "Dans Excel ou Google Sheets : Fichier → Enregistrer sous / Télécharger → CSV.",
+    "how2": "Choisis le fichier ci-dessous et clique sur « Vérifier » : rien n’est enregistré à cette étape.",
+    "how3": "Corrige les lignes signalées si besoin, puis importe.",
+    "columns": "Colonnes reconnues : Nom (obligatoire), Type (entreprise ou particulier), Contact, E-mail, Téléphone, Adresse, Code postal, Ville, Pays, ICE, TVA, SIREN, Devise, Langue, Notes. L’adresse et la ville sont obligatoires, comme dans le formulaire client. Sans colonne Pays, le pays de ton entreprise est utilisé.",
+    "template": "Télécharger le modèle CSV",
+    "fileLabel": "Fichier CSV",
+    "fileHint": "1 Mo et 2 000 clients maximum. Séparateur virgule ou point-virgule.",
+    "check": "Vérifier le fichier",
+    "recheck": "Vérifier à nouveau",
+    "checking": "Vérification…",
+    "summary": "{total, plural, one {# ligne lue} other {# lignes lues}} : {ready, plural, =0 {aucun client à importer} one {# client prêt à importer} other {# clients prêts à importer}}.",
+    "duplicates": "{count, plural, one {# client existe déjà et sera ignoré} other {# clients existent déjà et seront ignorés}}.",
+    "ignored": "Colonnes ignorées : {columns}.",
+    "invalid": "{count, plural, one {# ligne à corriger} other {# lignes à corriger}} (non importées) :",
+    "line": "Ligne {line}",
+    "import": "{count, plural, one {Importer # client} other {Importer # clients}}",
+    "done": "{count, plural, =0 {Aucun client importé.} one {# client importé.} other {# clients importés.}}",
+    "seeClients": "Voir mes clients",
+    "fields": {
+      "name": "nom",
+      "email": "e-mail invalide",
+      "phone": "téléphone",
+      "contact": "contact",
+      "notes": "notes",
+      "address": "adresse",
+      "city": "ville",
+      "country": "pays inconnu",
+      "postalCode": "code postal",
+      "region": "région",
+      "currency": "devise inconnue",
+      "language": "langue"
+    },
+    "errors": {
+      "noFile": "Choisis un fichier CSV.",
+      "tooBig": "Fichier trop lourd (1 Mo maximum).",
+      "empty": "Le fichier ne contient aucune ligne de client.",
+      "noName": "Colonne « Nom » introuvable. Vérifie la première ligne du fichier (en-têtes).",
+      "tooMany": "2 000 clients maximum par fichier : découpe-le en plusieurs fichiers.",
+      "rateLimited": "Trop d’essais. Réessaie dans une heure."
+    }
   }
 }

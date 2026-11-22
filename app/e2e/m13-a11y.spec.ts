@@ -29,7 +29,7 @@ test('signed-in pages have no automatically detectable WCAG A/AA violations', as
   await expect(page.getByRole('link', { name: /Remplir/ })).toHaveCount(0);
   await expect(page.getByRole('link', { name: /Créer la facture/ })).toBeVisible();
   const problems: string[] = [];
-  for (const url of ['/fr/app', '/fr/app/documents', '/fr/app/documents/new', '/fr/app/clients', '/fr/app/products/new', '/fr/app/settings', '/fr/activate', '/ar/app']) {
+  for (const url of ['/fr/app', '/fr/app/documents', '/fr/app/documents/new', '/fr/app/clients', '/fr/app/products/new', '/fr/app/settings', '/fr/activate', '/fr/app/revenue', '/fr/app/clients/import', '/ar/app', '/ar/app/revenue']) {
     problems.push(...(await scan(page, url)));
   }
   expect(problems, problems.join('\n')).toEqual([]);

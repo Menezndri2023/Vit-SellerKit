@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Logo from '@/components/Logo';
 import ActivateForm from '@/components/plan/ActivateForm';
+import TrialButton from '@/components/plan/TrialButton';
 import { planLabel } from '@/components/plan/planLabel';
 import { Link } from '@/i18n/navigation';
 import { connectDb } from '@/lib/db';
@@ -43,6 +44,14 @@ export default async function ActivatePage({ params }: PageProps<'/[locale]/acti
           <p className="mt-1 font-display text-2xl font-extrabold">{t(label.key as 'free', label.values)}</p>
           {plan.plan === 'free' && <p className="mt-2 text-muted">{t('freeUsage', { used: plan.used, limit: plan.limit ?? 0 })}</p>}
         </section>
+
+        {plan.trialAvailable && (
+          <section className="rounded-2xl border border-primary-ink bg-primary-soft p-6">
+            <h2 className="font-display text-xl font-bold">{t('trialTitle')}</h2>
+            <p className="mb-4 mt-2">{t('trialText')}</p>
+            <TrialButton label={t('trialStart')} className="h-12 rounded-xl bg-primary px-5 font-semibold text-on-primary hover:brightness-95" />
+          </section>
+        )}
 
         <section className="rounded-2xl border border-line bg-surface p-6">
           <h1 className="font-display text-2xl font-bold">{t('activateTitle')}</h1>

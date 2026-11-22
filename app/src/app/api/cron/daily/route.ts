@@ -28,11 +28,13 @@ export async function GET(req: Request) {
 
   const users = mongoClient().db().collection('user');
   const url = `${await siteUrl()}/en/activate`;
-  const notify = async (userId: string, kind: 'j7' | 'j1' | 'expired', date: Date) => {
+  const notify = async (userId: string, kind: 'j7' | 'j1' | 'expired', date: Date, trial = false) => {
+    // No "trial ends" email to someone who already has a paid plan
+    if (trial && (await Subscription.exists({ userId, provider: { $ne: 'trial' }, status: { $in: ['active', 'cancelled'] }, $or: [{ expiresAt: null }, { expiresAt: { $gt: now } }] }))) return;
     const u = await users.findOne({ _id: ObjectId.isValid(userId) ? new ObjectId(userId) : userId } as never);
     if (!u?.email) return;
     const locale = (u.uiLocale as string) ?? 'en';
-    await sendEmail(planEmail(kind, locale, u.email as string, date, url.replace('/en/', `/${locale === 'fr' || locale === 'ar' ? locale : 'en'}/`)));
+    await sendEmail(planEmail(kind, locale, u.email as string, date, url.replace('/en/', `/${locale === 'fr' || locale === 'ar' ? locale : 'en'}/`), trial));
     report.reminders++;
   };
 
@@ -43,7 +45,7 @@ export async function GET(req: Request) {
     await s.save();
     report.expired++;
     if (!s.remindersSent.includes('expired')) {
-      await notify(s.userId, 'expired', s.expiresAt!).catch(() => undefined);
+      await notify(s.userId, 'expired', s.expiresAt!, s.provider === 'trial').catch(() => undefined);
       s.remindersSent.push('expired');
       await s.save();
     }
@@ -54,7 +56,7 @@ export async function GET(req: Request) {
   for (const s of soon) {
     const kind = s.expiresAt!.getTime() - now.getTime() <= DAY ? 'j1' : 'j7';
     if (s.remindersSent.includes(kind)) continue;
-    await notify(s.userId, kind, s.expiresAt!).catch(() => undefined);
+    await notify(s.userId, kind, s.expiresAt!, s.provider === 'trial').catch(() => undefined);
     s.remindersSent.push(kind);
     await s.save();
   }
