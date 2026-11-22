@@ -25,7 +25,7 @@ jobs:
             echo "::error::Set the MONGODB_BACKUP_URI and BACKUP_PASSPHRASE (32+ characters) repository secrets"; exit 1
           fi
       - name: Dump (mongodump, gzip archive)
-        run: docker run --rm -e MONGODB_URI mongo:8.0 sh -c 'mongodump --uri="$MONGODB_URI" --archive --gzip --quiet' > dump.archive.gz
+        run: docker run --rm -e MONGODB_URI mongo:8.0 sh -c 'mongodump --uri="$MONGODB_URI" --archive --gzip' > dump.archive.gz
       - name: Encrypt and verify
         run: |
           test -s dump.archive.gz
