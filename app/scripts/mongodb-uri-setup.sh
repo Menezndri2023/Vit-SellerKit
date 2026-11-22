@@ -17,11 +17,23 @@ ENC=$(PASS="$PASS" python3 -c 'import os,urllib.parse;print(urllib.parse.quote(o
 URI="mongodb+srv://$DBUSER:$ENC@$HOST/margokit?retryWrites=true&w=majority&appName=margokit"
 
 echo "Testing the user against the live cluster…"
-MONGODB_URI="$URI" node --input-type=module -e '
+HOST="$HOST" DBUSER="$DBUSER" ENC="$ENC" node --input-type=module -e '
 import { MongoClient } from "mongodb";
-const c = new MongoClient(process.env.MONGODB_URI, { serverSelectionTimeoutMS: 15000 });
+// Some home routers drop DNS TXT queries and block public DNS: resolve the cluster over HTTPS
+// (Cloudflare DoH) and connect with the equivalent seed list. Only for this local test —
+// Vercel keeps the standard mongodb+srv URI.
+const doh = async (name, type) => {
+  const r = await fetch(`https://cloudflare-dns.com/dns-query?name=${name}&type=${type}`, { headers: { accept: "application/dns-json" } });
+  return ((await r.json()).Answer ?? []).map((a) => a.data);
+};
+const { HOST, DBUSER, ENC } = process.env;
+const srv = (await doh(`_mongodb._tcp.${HOST}`, "SRV")).map((d) => d.split(" ")).map(([, , port, target]) => `${target.replace(/\.$/, "")}:${port}`);
+const txt = (await doh(HOST, "TXT")).map((d) => d.replace(/"/g, "")).join("&");
+if (!srv.length) { console.log("✗ Cluster not found: check the cluster address. Nothing was saved."); process.exit(1); }
+const seed = `mongodb://${DBUSER}:${ENC}@${srv.join(",")}/margokit?tls=true&${txt}&retryWrites=true&w=majority`;
+const c = new MongoClient(seed, { serverSelectionTimeoutMS: 15000 });
 const fail = (m) => { console.log("✗ " + m + ". Nothing was saved."); process.exit(1); };
-try { await c.connect(); } catch (e) { fail("Connection refused: " + (e.codeName || e.message).slice(0, 120)); }
+try { await c.connect(); } catch (e) { fail(/AtlasError|bad auth|Authentication failed/i.test(`${e.codeName} ${e.message}`) ? "Atlas refused the user/password (wrong password, or user created less than a minute ago)" : "Connection refused: " + (e.codeName || e.message).slice(0, 120)); }
 const db = c.db();
 if (db.databaseName !== "margokit") fail("The URI must point to the margokit database");
 const users = await db.collection("user").countDocuments().catch((e) => fail("Cannot read margokit: " + e.codeName));
