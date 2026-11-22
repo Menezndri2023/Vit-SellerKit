@@ -1,17 +1,20 @@
 #!/usr/bin/env bash
 # Replaces the production MONGODB_URI on Vercel with a least-privilege user, after testing it:
 # it must read and write the "margokit" database and be refused everywhere else.
-# The URI is typed hidden and never printed. Usage (from app/): bash scripts/mongodb-uri-setup.sh
+# The password is typed hidden and the URI is never printed. Usage (from app/): bash scripts/mongodb-uri-setup.sh
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-read -rsp "New MONGODB_URI (hidden): " URI; echo
-URI=$(printf '%s' "$URI" | tr -d '[:space:]')
-if [[ ! "$URI" =~ ^mongodb\+srv://[^:/@]+:[^@]+@[^/]+/margokit(\?.*)?$ ]]; then
-  echo "✗ Expected mongodb+srv://USER:PASSWORD@cluster…mongodb.net/margokit?retryWrites=true&w=majority"
-  echo "  (check that /margokit is right before the ?). Nothing was saved."
-  exit 1
-fi
+# The URI is built here from 3 answers (no manual assembly). The password is typed hidden.
+read -rp "1/3 Cluster address (e.g. cluster0.ab1cd.mongodb.net): " HOST
+HOST=$(printf '%s' "$HOST" | tr -d '[:space:]' | sed -E 's#^mongodb(\+srv)?://##; s#^[^@]*@##; s#[/?].*$##')
+[[ "$HOST" =~ ^[a-z0-9.-]+\.mongodb\.net$ ]] || { echo "✗ The cluster address must end with .mongodb.net (Atlas → Connect → Drivers). Nothing was saved."; exit 1; }
+read -rp "2/3 Database user [margokit-app]: " DBUSER
+DBUSER=${DBUSER:-margokit-app}
+read -rsp "3/3 Password of $DBUSER (hidden): " PASS; echo
+[ -n "$PASS" ] || { echo "✗ Empty password. Nothing was saved."; exit 1; }
+ENC=$(PASS="$PASS" python3 -c 'import os,urllib.parse;print(urllib.parse.quote(os.environ["PASS"],safe=""))')
+URI="mongodb+srv://$DBUSER:$ENC@$HOST/margokit?retryWrites=true&w=majority&appName=margokit"
 
 echo "Testing the user against the live cluster…"
 MONGODB_URI="$URI" node --input-type=module -e '
