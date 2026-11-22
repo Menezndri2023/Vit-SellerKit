@@ -6,7 +6,10 @@ import DocumentView from '@/components/documents/DocumentView';
 import EInvoicePanel from '@/components/documents/EInvoicePanel';
 import { einvoicingProvider } from '@/lib/einvoice/providers';
 import PaymentsPanel from '@/components/documents/PaymentsPanel';
+import RecurringPanel from '@/components/documents/RecurringPanel';
 import RemindersPanel from '@/components/documents/RemindersPanel';
+import { nextOccurrence } from '@/lib/recurring-schedule';
+import { Recurrence } from '@/models/Recurrence';
 import { hasActivePro } from '@/lib/plan';
 import { upcomingReminder } from '@/lib/reminders-schedule';
 import SharePanel from '@/components/documents/SharePanel';
@@ -32,6 +35,7 @@ export default async function DocumentPage({ params }: PageProps<'/[locale]/app/
   const doc = await findOwned(user.id, id);
   if (!doc) notFound();
   const t = await getTranslations('documents');
+  const tRec = await getTranslations('recurring');
   const today = todayIn((user as { timeZone?: string }).timeZone);
   const isDraft = doc.status === 'draft';
 
@@ -80,7 +84,7 @@ export default async function DocumentPage({ params }: PageProps<'/[locale]/app/
 
       {isDraft ? (
         <>
-          <p className="rounded-xl bg-primary-soft px-4 py-3 text-sm text-primary-ink">{t('view.draftNotice')}</p>
+          <p className="rounded-xl bg-primary-soft px-4 py-3 text-sm text-primary-ink">{doc.recurrenceId ? tRec('fromRecurring') : t('view.draftNotice')}</p>
           <DocumentEditor initial={docToEditor(doc.toObject(), locale)} {...await editorData(user.id, await guessCountry(locale))} />
           <DocumentView doc={view} />
         </>
@@ -89,6 +93,16 @@ export default async function DocumentPage({ params }: PageProps<'/[locale]/app/
           <p className="text-sm text-muted">{t('view.locked')}</p>
           {platform && ['invoice', 'credit_note', 'deposit_invoice'].includes(doc.type) && (
             <EInvoicePanel id={id} provider={platform.name} lifecycle={plain(doc.einvoice?.lifecycle ?? [])} />
+          )}
+          {payable && (
+            <RecurringPanel
+              id={id}
+              isPro={await hasActivePro(user.id)}
+              active={await Recurrence.findOne({ userId: user.id, sourceId: id, active: true })
+                .lean()
+                .then((r) => (r ? { id: String(r._id), frequency: r.frequency, nextDate: new Date(r.nextDate).toISOString(), createdCount: r.createdCount ?? 0 } : null))}
+              defaultStart={isoDay(nextOccurrence(doc.issueDate > today ? doc.issueDate : today, 'monthly'))}
+            />
           )}
           {payable && (
             <RemindersPanel

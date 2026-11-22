@@ -210,3 +210,19 @@ export function reminderEmail(
     replyTo: v.sellerEmail,
   };
 }
+
+// ── Recurring invoices: a new draft is ready (to the user) ───────────────────────────────────
+
+const recurringCopy = {
+  fr: { subject: 'Ta facture récurrente est prête à émettre', body: 'Margokit a préparé le brouillon de ta facture récurrente{client}. Vérifie-le (lignes, dates, montants), puis émets-le et envoie-le à ton client.', button: 'Voir le brouillon', footer: 'Tu reçois cet e-mail car tu as programmé une facture récurrente dans Margokit.' },
+  en: { subject: 'Your recurring invoice is ready to issue', body: 'Margokit prepared the draft of your recurring invoice{client}. Check it (lines, dates, amounts), then issue it and send it to your client.', button: 'Open the draft', footer: 'You receive this email because you scheduled a recurring invoice in Margokit.' },
+  ar: { subject: 'فاتورتك المتكررة جاهزة للإصدار', body: 'أعدّ Margokit مسودة فاتورتك المتكررة{client}. تحقق منها (الأسطر والتواريخ والمبالغ)، ثم أصدرها وأرسلها إلى عميلك.', button: 'عرض المسودة', footer: 'تصلك هذه الرسالة لأنك برمجت فاتورة متكررة في Margokit.' },
+} as const;
+
+export function recurringReadyEmail(locale: string | null | undefined, to: string, clientName: string, url: string): Email {
+  const lang = langOf(locale);
+  const c = recurringCopy[lang];
+  const client = clientName ? (lang === 'fr' ? ` pour ${clientName}` : lang === 'ar' ? ` لـ ${clientName}` : ` for ${clientName}`) : '';
+  const body = c.body.replace('{client}', client);
+  return { to, subject: c.subject, html: layout(c.subject, body, { label: c.button, url }, c.footer, lang), text: `${body}\n\n${url}` };
+}

@@ -3,6 +3,7 @@ import { recheckSubscription } from '@/lib/billing/activate';
 import { safeEqual } from '@/lib/crypto';
 import { planEmail, sendEmail } from '@/lib/email';
 import { runOnboarding } from '@/lib/onboarding';
+import { runRecurring } from '@/lib/recurring';
 import { runReminders } from '@/lib/reminders';
 import { siteUrl } from '@/lib/site-url';
 import { Subscription } from '@/models/Subscription';
@@ -18,7 +19,7 @@ export async function GET(req: Request) {
 
   await connectDb();
   const now = new Date();
-  const report = { rechecked: 0, expired: 0, reminders: 0, reminders_sent: 0, onboarding: 0 };
+  const report = { rechecked: 0, expired: 0, reminders: 0, reminders_sent: 0, recurring_drafts: 0, onboarding: 0 };
 
   const stale = await Subscription.find({ provider: 'gumroad', plan: 'monthly', status: { $in: ['active', 'cancelled'] }, $or: [{ lastCheckedAt: { $lt: new Date(now.getTime() - DAY) } }, { lastCheckedAt: null }] }).sort({ lastCheckedAt: 1 }).limit(50).lean(); // oldest checks first, so every subscription gets its turn
   for (const s of stale) {
@@ -61,6 +62,12 @@ export async function GET(req: Request) {
   // Overdue invoice reminders to the users' clients (Pro, opt-in)
   report.reminders_sent = await runReminders(now).catch((e) => {
     console.error('[cron] reminders failed:', (e as Error).message);
+    return 0;
+  });
+
+  // Recurring invoices: drafts ready for the user (Pro)
+  report.recurring_drafts = await runRecurring(await siteUrl(), now).catch((e) => {
+    console.error('[cron] recurring failed:', (e as Error).message);
     return 0;
   });
 

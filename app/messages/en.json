@@ -153,7 +153,7 @@
     "lifetimeF2": "All future updates included",
     "lifetimeCta": "Buy once",
     "note": "Card payment through Gumroad. Card declined? Pay locally via WhatsApp.",
-    "proF4": "Automatic reminders for overdue invoices"
+    "proF4": "Automatic reminders and recurring invoices"
   },
   "faq": {
     "title": "Questions",
@@ -988,6 +988,30 @@
       "pro": "Automatic reminders are part of Margokit Pro.",
       "profile": "Fill in your business details first.",
       "email": "Add your business email in your business details: your clients will reply to it."
+    }
+  },
+  "recurring": {
+    "title": "Recurring invoice",
+    "intro": "Repeat this invoice: on each date, Margokit prepares an identical draft and emails you. You check it, then issue it.",
+    "frequency": "Frequency",
+    "start": "First draft on",
+    "create": "Schedule",
+    "stop": "Stop repeating",
+    "next": "next draft on {date}",
+    "created": "{count, plural, =0 {no draft yet} one {# draft created} other {# drafts created}}",
+    "every": {
+      "monthly": "Every month",
+      "quarterly": "Every quarter",
+      "yearly": "Every year"
+    },
+    "proOnly": "Pro feature.",
+    "goPro": "Upgrade to Pro",
+    "fromRecurring": "Draft prepared by a recurring invoice: check it, then issue it.",
+    "errors": {
+      "pro": "Recurring invoices are part of Margokit Pro.",
+      "notFound": "Only an issued invoice can be repeated.",
+      "date": "Pick a future date (within the next 13 months).",
+      "exists": "This invoice is already repeated."
     }
   }
 }

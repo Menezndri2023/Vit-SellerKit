@@ -19,7 +19,9 @@ import { formatMinor, parseAmount } from '@/lib/money';
 import { pdfFileName, renderDocumentPdf } from '@/lib/pdf/render';
 import { refreshLifecycle, reportCashed, transmitDocument } from '@/lib/einvoice/transmit';
 import { rateLimit } from '@/lib/rate-limit';
-import { checkIssueAllowed, enforceFreeQuota } from '@/lib/plan';
+import { checkIssueAllowed, enforceFreeQuota, hasActivePro } from '@/lib/plan';
+import { FREQUENCIES, type Frequency } from '@/lib/recurring-schedule';
+import { Recurrence } from '@/models/Recurrence';
 import { actionUser } from '@/lib/session';
 import { audit } from '@/models/AuditLog';
 import { BusinessProfile } from '@/models/BusinessProfile';
@@ -349,5 +351,38 @@ export async function setDocumentReminders(id: string, disabled: boolean) {
   await connectDb();
   const res = await Document.updateOne({ _id: id, userId: user.id, type: { $in: ['invoice', 'deposit_invoice'] } }, { $set: { 'reminders.disabled': Boolean(disabled) } });
   if (res.matchedCount) await audit({ userId: user.id, actorId: user.id, action: disabled ? 'document.reminders.off' : 'document.reminders.on', targetType: 'document', targetId: id });
+  refresh();
+}
+
+// ── Recurring invoices (Pro) ─────────────────────────────────────────────
+
+export type RecurrenceState = { error?: 'pro' | 'notFound' | 'date' | 'exists'; ok?: boolean };
+
+/** Repeats an issued invoice: a draft copy is prepared on each date (nothing is issued automatically). */
+export async function createRecurrence(id: string, _prev: RecurrenceState, form: FormData): Promise<RecurrenceState> {
+  const user = await actionUser();
+  const frequency = String(form.get('frequency'));
+  const start = String(form.get('start') ?? '');
+  if (!FREQUENCIES.includes(frequency as Frequency) || !/^\d{4}-\d{2}-\d{2}$/.test(start)) return { error: 'date' };
+  const startDate = new Date(`${start}T00:00:00Z`);
+  const today = todayIn((user as { timeZone?: string }).timeZone);
+  if (Number.isNaN(startDate.getTime()) || startDate <= today || startDate.getTime() - today.getTime() > 400 * 86_400_000) return { error: 'date' };
+  await connectDb();
+  if (!(await hasActivePro(user.id))) return { error: 'pro' };
+  const src = await findOwned(user.id, id);
+  if (!src || !['invoice', 'deposit_invoice'].includes(src.type) || src.status === 'draft') return { error: 'notFound' };
+  if (await Recurrence.exists({ userId: user.id, sourceId: id, active: true })) return { error: 'exists' };
+  const r = await Recurrence.create({ userId: user.id, sourceId: id, frequency: frequency as Frequency, nextDate: startDate });
+  await audit({ userId: user.id, actorId: user.id, action: 'recurrence.create', targetType: 'document', targetId: id, details: { recurrenceId: String(r._id), frequency } });
+  refresh();
+  return { ok: true };
+}
+
+export async function stopRecurrence(recurrenceId: string) {
+  const user = await actionUser();
+  if (!isValidObjectId(recurrenceId)) return;
+  await connectDb();
+  const res = await Recurrence.updateOne({ _id: recurrenceId, userId: user.id }, { $set: { active: false } });
+  if (res.matchedCount) await audit({ userId: user.id, actorId: user.id, action: 'recurrence.stop', targetType: 'recurrence', targetId: recurrenceId });
   refresh();
 }

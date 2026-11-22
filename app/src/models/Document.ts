@@ -96,6 +96,8 @@ const schema = new Schema(
     buyer: { type: BuyerSchema },
     precedingInvoice: { id: String, number: String, issueDate: Date },
     convertedFromId: { type: String },
+    /** Draft created by a recurring invoice */
+    recurrenceId: { type: String },
     watermark: { type: Boolean, default: false },
     /** Public share link: SHA-256 for lookup + AES-GCM encrypted token so the owner can copy the same link again */
     publicTokenHash: { type: String, index: { unique: true, sparse: true } },
