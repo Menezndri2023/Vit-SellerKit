@@ -101,6 +101,8 @@ const schema = new Schema(
     publicTokenHash: { type: String, index: { unique: true, sparse: true } },
     publicTokenEnc: { type: String, select: false },
     einvoice: { format: String, xmlHash: String, provider: String, providerId: String, lifecycle: [{ _id: false, status: String, at: Date, reason: String }] },
+    /** Automatic overdue reminders: per-invoice opt-out and history (step = days after the due date) */
+    reminders: { disabled: { type: Boolean, default: false }, sent: [{ _id: false, step: Number, at: Date, to: String }] },
     issuedAt: { type: Date },
     sentAt: { type: Date },
   },

@@ -65,7 +65,12 @@ export async function enforceFreeQuota(userId: string, session: ClientSession, n
   if (used >= FREE_MONTHLY_LIMIT) throw new Error('PLAN_LIMIT');
 }
 
-export type PlanCheck ={ allowed: boolean; watermark: boolean; used: number; limit: number | null };
+/** Active Pro right now (no network call: for cron jobs and lists). */
+export async function hasActivePro(userId: string, now = new Date()): Promise<boolean> {
+  return Boolean(await Subscription.exists({ userId, status: { $in: ['active', 'cancelled'] }, $or: [{ expiresAt: null }, { expiresAt: { $gt: now } }] }));
+}
+
+export type PlanCheck = { allowed: boolean; watermark: boolean; used: number; limit: number | null };
 
 /** Free plan: 3 issued documents per month, with the "Made with Margokit" watermark. */
 export async function checkIssueAllowed(userId: string): Promise<PlanCheck> {

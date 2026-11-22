@@ -152,7 +152,8 @@
     "lifetimeF1": "Everything in Pro, forever",
     "lifetimeF2": "All future updates included",
     "lifetimeCta": "Buy once",
-    "note": "Card payment through Gumroad. Card declined? Pay locally via WhatsApp."
+    "note": "Card payment through Gumroad. Card declined? Pay locally via WhatsApp.",
+    "proF4": "Automatic reminders for overdue invoices"
   },
   "faq": {
     "title": "Questions",
@@ -958,5 +959,35 @@
     "generate": "Generate",
     "disable": "Turn off",
     "disableAdminWarning": "Without two-factor authentication you will lose access to the admin area."
+  },
+  "reminders": {
+    "title": "Automatic reminders",
+    "intro": "Margokit emails your clients whose invoice is overdue, for you.",
+    "schedule": "3 reminders: 1, 7 and 15 days after the due date, as long as the invoice is unpaid.",
+    "replyTo": "Emails are sent in your name; your client replies straight to your business email.",
+    "perInvoice": "You can turn reminders off for a specific invoice from its page.",
+    "on": "On",
+    "off": "Off",
+    "turnOn": "Turn reminders on",
+    "turnOff": "Turn off",
+    "proOnly": "Pro feature.",
+    "goPro": "Upgrade to Pro",
+    "accountOff": "Reminders are off for your account.",
+    "openSettings": "Turn them on in Settings",
+    "noClientEmail": "No reminder possible: this client has no email address.",
+    "invoiceOff": "Reminders are off for this invoice.",
+    "closed": "Invoice paid or closed: no more reminders.",
+    "nextOn": "Next reminder on {date} if still unpaid.",
+    "allSent": "All reminders have been sent.",
+    "enableForInvoice": "Turn back on for this invoice",
+    "disableForInvoice": "Don’t remind for this invoice",
+    "step1": "1st reminder",
+    "step7": "2nd reminder",
+    "step15": "Final reminder",
+    "errors": {
+      "pro": "Automatic reminders are part of Margokit Pro.",
+      "profile": "Fill in your business details first.",
+      "email": "Add your business email in your business details: your clients will reply to it."
+    }
   }
 }

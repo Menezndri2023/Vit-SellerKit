@@ -341,3 +341,13 @@ export async function refreshPlatformStatus(id: string) {
   await refreshLifecycle(user.id, id).catch(() => undefined);
   refresh();
 }
+
+/** Per-invoice switch for automatic overdue reminders. */
+export async function setDocumentReminders(id: string, disabled: boolean) {
+  const user = await actionUser();
+  if (!isValidObjectId(id)) return;
+  await connectDb();
+  const res = await Document.updateOne({ _id: id, userId: user.id, type: { $in: ['invoice', 'deposit_invoice'] } }, { $set: { 'reminders.disabled': Boolean(disabled) } });
+  if (res.matchedCount) await audit({ userId: user.id, actorId: user.id, action: disabled ? 'document.reminders.off' : 'document.reminders.on', targetType: 'document', targetId: id });
+  refresh();
+}

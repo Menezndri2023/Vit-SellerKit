@@ -6,6 +6,9 @@ import DocumentView from '@/components/documents/DocumentView';
 import EInvoicePanel from '@/components/documents/EInvoicePanel';
 import { einvoicingProvider } from '@/lib/einvoice/providers';
 import PaymentsPanel from '@/components/documents/PaymentsPanel';
+import RemindersPanel from '@/components/documents/RemindersPanel';
+import { hasActivePro } from '@/lib/plan';
+import { upcomingReminder } from '@/lib/reminders-schedule';
 import SharePanel from '@/components/documents/SharePanel';
 import { formatMinor } from '@/lib/money';
 import StatusBadge from '@/components/documents/StatusBadge';
@@ -86,6 +89,18 @@ export default async function DocumentPage({ params }: PageProps<'/[locale]/app/
           <p className="text-sm text-muted">{t('view.locked')}</p>
           {platform && ['invoice', 'credit_note', 'deposit_invoice'].includes(doc.type) && (
             <EInvoicePanel id={id} provider={platform.name} lifecycle={plain(doc.einvoice?.lifecycle ?? [])} />
+          )}
+          {payable && (
+            <RemindersPanel
+              id={id}
+              isPro={await hasActivePro(user.id)}
+              accountEnabled={Boolean((await BusinessProfile.findOne({ userId: user.id }).select('reminders').lean())?.reminders?.enabled)}
+              disabled={Boolean(doc.reminders?.disabled)}
+              hasClientEmail={Boolean(doc.buyer?.email)}
+              open={['issued', 'sent'].includes(doc.status) && (doc.amountDue ?? 0) > 0}
+              sent={plain(doc.reminders?.sent ?? []) as { step: number; at: string; to: string }[]}
+              next={upcomingReminder(doc.dueDate, (doc.reminders?.sent ?? []).map((s) => s.step ?? 0))?.toISOString() ?? null}
+            />
           )}
           {payable && (
             <PaymentsPanel

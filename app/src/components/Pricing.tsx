@@ -17,7 +17,7 @@ export default async function Pricing() {
 
   const plans = [
     { name: t('freeName'), price: t('freePrice'), period: t('freePeriod'), features: [t('freeF1'), t('freeF2'), t('freeF3'), t('freeF4')], cta: t('freeCta'), href: '/signup', external: false, highlight: false },
-    { name: t('monthlyName'), price: t('monthlyPrice'), period: t('monthlyPeriod'), features: [t('proF1'), t('proF2'), t('proF3')], cta: t('monthlyCta'), href: monthly ?? '/signup', external: Boolean(monthly), highlight: true },
+    { name: t('monthlyName'), price: t('monthlyPrice'), period: t('monthlyPeriod'), features: [t('proF1'), t('proF2'), t('proF4'), t('proF3')], cta: t('monthlyCta'), href: monthly ?? '/signup', external: Boolean(monthly), highlight: true },
     { name: t('lifetimeName'), price: t('lifetimePrice'), period: t('lifetimePeriod'), features: [t('lifetimeF1'), t('lifetimeF2'), t('proF2'), t('proF3')], cta: t('lifetimeCta'), href: lifetime ?? '/signup', external: Boolean(lifetime), highlight: false },
   ];
 

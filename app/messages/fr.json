@@ -152,7 +152,8 @@
     "lifetimeF1": "Tout Pro, pour toujours",
     "lifetimeF2": "Toutes les mises à jour incluses",
     "lifetimeCta": "Payer une fois",
-    "note": "Paiement par carte via Gumroad. Carte refusée ? Paie localement via WhatsApp."
+    "note": "Paiement par carte via Gumroad. Carte refusée ? Paie localement via WhatsApp.",
+    "proF4": "Relances automatiques des factures en retard"
   },
   "faq": {
     "title": "Questions",
@@ -958,5 +959,35 @@
     "generate": "Générer",
     "disable": "Désactiver",
     "disableAdminWarning": "Sans double authentification, tu n’auras plus accès à l’espace administrateur."
+  },
+  "reminders": {
+    "title": "Relances automatiques",
+    "intro": "Margokit relance par e-mail tes clients dont la facture est en retard, à ta place.",
+    "schedule": "3 relances : 1 jour, 7 jours et 15 jours après l’échéance, tant que la facture n’est pas payée.",
+    "replyTo": "Les e-mails partent à ton nom ; ton client te répond directement, sur ton adresse e-mail professionnelle.",
+    "perInvoice": "Tu peux couper les relances pour une facture précise depuis sa page.",
+    "on": "Activées",
+    "off": "Désactivées",
+    "turnOn": "Activer les relances",
+    "turnOff": "Désactiver",
+    "proOnly": "Fonction Pro.",
+    "goPro": "Passer à Pro",
+    "accountOff": "Relances désactivées pour ton compte.",
+    "openSettings": "Les activer dans Paramètres",
+    "noClientEmail": "Pas de relance possible : ce client n’a pas d’adresse e-mail.",
+    "invoiceOff": "Relances coupées pour cette facture.",
+    "closed": "Facture réglée ou close : plus de relance.",
+    "nextOn": "Prochaine relance le {date} si elle n’est pas payée.",
+    "allSent": "Toutes les relances ont été envoyées.",
+    "enableForInvoice": "Réactiver pour cette facture",
+    "disableForInvoice": "Ne pas relancer cette facture",
+    "step1": "1re relance",
+    "step7": "2e relance",
+    "step15": "Dernière relance",
+    "errors": {
+      "pro": "Les relances automatiques sont réservées à Margokit Pro.",
+      "profile": "Renseigne d’abord les informations de ton entreprise.",
+      "email": "Ajoute ton adresse e-mail professionnelle dans les informations de ton entreprise : tes clients te répondront dessus."
+    }
   }
 }

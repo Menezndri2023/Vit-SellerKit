@@ -1,7 +1,9 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { PageHeader } from '@/components/form/fields';
 import AccountSection from '@/components/settings/AccountSection';
+import RemindersSection from '@/components/settings/RemindersSection';
 import TwoFactorSection from '@/components/settings/TwoFactorSection';
+import { hasActivePro } from '@/lib/plan';
 import LogoForm from '@/components/settings/LogoForm';
 import ProfileForm, { type ProfileValues } from '@/components/settings/ProfileForm';
 import { ObjectId } from 'mongodb';
@@ -30,6 +32,7 @@ export default async function SettingsPage({ params, searchParams }: PageProps<'
       <PageHeader title={t('title')} subtitle={t('subtitle')} />
       <LogoForm logoKey={values.logo?.key} disabled={!profile} />
       <ProfileForm initial={values} isNew={!profile} defaultCountry={await guessCountry(locale)} />
+      <RemindersSection enabled={Boolean(profile?.reminders?.enabled)} isPro={await hasActivePro(user.id)} />
       <TwoFactorSection enabled={Boolean(user.twoFactorEnabled)} hasPassword={hasPassword} isAdmin={user.role === 'admin'} required={twofa === 'required'} />
       <AccountSection email={user.email} />
     </div>

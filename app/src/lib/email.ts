@@ -131,21 +131,21 @@ const onboardingCopy = {
   fr: {
     first: { subject: 'Ta première facture en 2 minutes', title: 'Ta première facture en 2 minutes', body: 'Ton compte Margokit est prêt. Renseigne une fois ton entreprise, ajoute un client, puis crée ta facture : les totaux, la TVA et les mentions légales sont calculés pour toi. Le plan gratuit comprend 3 documents par mois.', button: 'Créer ma première facture', path: '/app' },
     share: { subject: 'Fais-toi payer plus vite', title: 'Fais-toi payer plus vite', body: 'Ajoute ton RIB et tes liens de paiement (Stripe, PayPal, Wise…) dans Paramètres : ils apparaissent sur chaque facture, avec un QR code de virement pour les factures en euros. Ensuite, envoie la facture par lien, e-mail ou WhatsApp, et suis ce qui est payé ou en retard.', button: 'Ajouter mes moyens de paiement', path: '/app/settings' },
-    pro: { subject: 'Ce que Margokit Pro débloque', title: 'Ce que Margokit Pro débloque', body: 'Avec Pro, tu émets autant de devis, factures et avoirs que tu veux, sans la mention « Réalisé avec Margokit ». 5 $ par mois, sans engagement, ou 39 $ une fois pour toujours. Paiement par carte, ou localement via WhatsApp.', button: 'Voir les offres Pro', path: '/activate' },
+    pro: { subject: 'Ce que Margokit Pro débloque', title: 'Ce que Margokit Pro débloque', body: 'Avec Pro, tu émets autant de devis, factures et avoirs que tu veux, sans la mention « Réalisé avec Margokit », et Margokit relance automatiquement tes clients en retard de paiement. 5 $ par mois, sans engagement, ou 39 $ une fois pour toujours. Paiement par carte, ou localement via WhatsApp.', button: 'Voir les offres Pro', path: '/activate' },
     footer: 'Tu reçois ces conseils de prise en main car tu as créé un compte Margokit.',
     unsubscribe: 'Ne plus recevoir ces conseils',
   },
   en: {
     first: { subject: 'Your first invoice in 2 minutes', title: 'Your first invoice in 2 minutes', body: 'Your Margokit account is ready. Fill in your business once, add a client, then create your invoice: totals, VAT and legal mentions are calculated for you. The free plan includes 3 documents per month.', button: 'Create my first invoice', path: '/app' },
     share: { subject: 'Get paid faster', title: 'Get paid faster', body: 'Add your bank details and payment links (Stripe, PayPal, Wise…) in Settings: they appear on every invoice, with a transfer QR code on euro invoices. Then send the invoice by link, email or WhatsApp, and track what is paid or overdue.', button: 'Add my payment methods', path: '/app/settings' },
-    pro: { subject: 'What Margokit Pro unlocks', title: 'What Margokit Pro unlocks', body: 'With Pro, you issue as many quotes, invoices and credit notes as you want, without the “Made with Margokit” mention. $5 a month, cancel anytime, or $39 once, forever. Pay by card, or locally through WhatsApp.', button: 'See Pro plans', path: '/activate' },
+    pro: { subject: 'What Margokit Pro unlocks', title: 'What Margokit Pro unlocks', body: 'With Pro, you issue as many quotes, invoices and credit notes as you want, without the “Made with Margokit” mention, and Margokit automatically reminds clients who pay late. $5 a month, cancel anytime, or $39 once, forever. Pay by card, or locally through WhatsApp.', button: 'See Pro plans', path: '/activate' },
     footer: 'You receive these getting-started tips because you created a Margokit account.',
     unsubscribe: 'Stop these tips',
   },
   ar: {
     first: { subject: 'فاتورتك الأولى في دقيقتين', title: 'فاتورتك الأولى في دقيقتين', body: 'حسابك في Margokit جاهز. املأ معلومات نشاطك مرة واحدة، أضف عميلًا، ثم أنشئ فاتورتك: المجاميع والضريبة والبيانات القانونية تُحسب لك. الخطة المجانية تشمل 3 مستندات شهريًا.', button: 'أنشئ فاتورتي الأولى', path: '/app' },
     share: { subject: 'احصل على أموالك أسرع', title: 'احصل على أموالك أسرع', body: 'أضف معلوماتك البنكية وروابط الدفع (Stripe وPayPal وWise…) في الإعدادات: تظهر في كل فاتورة، مع رمز QR للتحويل في الفواتير باليورو. ثم أرسل الفاتورة عبر رابط أو بريد إلكتروني أو واتساب، وتابع المدفوع والمتأخر.', button: 'أضف وسائل الدفع', path: '/app/settings' },
-    pro: { subject: 'ما يتيحه لك Margokit Pro', title: 'ما يتيحه لك Margokit Pro', body: 'مع Pro، تصدر عددًا غير محدود من عروض الأسعار والفواتير والإشعارات الدائنة، بدون عبارة «Made with Margokit». 5 دولارات شهريًا بدون التزام، أو 39 دولارًا مرة واحدة للأبد. الدفع بالبطاقة أو محليًا عبر واتساب.', button: 'اطّلع على عروض Pro', path: '/activate' },
+    pro: { subject: 'ما يتيحه لك Margokit Pro', title: 'ما يتيحه لك Margokit Pro', body: 'مع Pro، تصدر عددًا غير محدود من عروض الأسعار والفواتير والإشعارات الدائنة، بدون عبارة «Made with Margokit»، ويذكّر Margokit تلقائيًا عملاءك المتأخرين في الدفع. 5 دولارات شهريًا بدون التزام، أو 39 دولارًا مرة واحدة للأبد. الدفع بالبطاقة أو محليًا عبر واتساب.', button: 'اطّلع على عروض Pro', path: '/activate' },
     footer: 'تصلك نصائح البدء هذه لأنك أنشأت حسابًا في Margokit.',
     unsubscribe: 'إيقاف هذه النصائح',
   },
@@ -163,5 +163,50 @@ export function onboardingEmail(kind: OnboardingKind, locale: string | null | un
     text: `${k.title}\n\n${k.body}\n\n${url}\n\n${c.footer}\n${c.unsubscribe}: ${unsubscribeUrl}`,
     // One-click unsubscribe (RFC 8058), required by Gmail/Yahoo for bulk senders
     headers: { 'List-Unsubscribe': `<${unsubscribeUrl}>`, 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' },
+  };
+}
+
+// ── Overdue invoice reminders (sent to the user's client, on behalf of the user) ─────────────
+
+const reminderCopy = {
+  fr: {
+    subject: { 1: 'Rappel : facture {number} — {seller}', 7: 'Deuxième rappel : facture {number} — {seller}', 15: 'Dernier rappel : facture {number} — {seller}' },
+    lead: { 1: 'Bonjour,', 7: 'Bonjour,', 15: 'Bonjour,' },
+    body: {
+      1: 'Sauf erreur de notre part, la facture {number} de {seller}, arrivée à échéance le {due}, n’est pas encore réglée. Reste à payer : {amount}. Vous pouvez la consulter et la régler en suivant le lien ci-dessous. Si le paiement a déjà été effectué, merci de ne pas tenir compte de ce message.',
+      7: 'Nous revenons vers vous au sujet de la facture {number} de {seller}, échue depuis le {due}. Reste à payer : {amount}. Vous trouverez la facture et les moyens de paiement en suivant le lien ci-dessous. Si le paiement a déjà été effectué, merci de ne pas tenir compte de ce message.',
+      15: 'Malgré nos précédents rappels, la facture {number} de {seller}, échue depuis le {due}, reste impayée. Reste à payer : {amount}. Merci de procéder au règlement ou de répondre à cet e-mail si vous rencontrez une difficulté.',
+    },
+    button: 'Voir la facture',
+    footer: 'Message envoyé par Margokit pour le compte de {seller}. Pour toute question, répondez simplement à cet e-mail.',
+  },
+  en: {
+    subject: { 1: 'Reminder: invoice {number} — {seller}', 7: 'Second reminder: invoice {number} — {seller}', 15: 'Final reminder: invoice {number} — {seller}' },
+    lead: { 1: 'Hello,', 7: 'Hello,', 15: 'Hello,' },
+    body: {
+      1: 'Unless we are mistaken, invoice {number} from {seller}, due on {due}, has not been paid yet. Amount due: {amount}. You can view and pay it from the link below. If you have already paid, please disregard this message.',
+      7: 'We are following up on invoice {number} from {seller}, due since {due}. Amount due: {amount}. The invoice and the payment options are available from the link below. If you have already paid, please disregard this message.',
+      15: 'Despite our previous reminders, invoice {number} from {seller}, due since {due}, remains unpaid. Amount due: {amount}. Please settle it, or reply to this email if anything prevents you from doing so.',
+    },
+    button: 'View the invoice',
+    footer: 'Message sent by Margokit on behalf of {seller}. For any question, simply reply to this email.',
+  },
+} as const;
+
+export function reminderEmail(
+  step: 1 | 7 | 15,
+  lang: string,
+  v: { to: string; seller: string; sellerEmail?: string; number: string; amount: string; due: string; url: string },
+): Email {
+  const c = reminderCopy[lang === 'fr' ? 'fr' : 'en'];
+  const fill = (s: string) => s.replaceAll('{number}', v.number).replaceAll('{seller}', v.seller).replaceAll('{amount}', v.amount).replaceAll('{due}', v.due);
+  const subject = fill(c.subject[step]);
+  const body = `${c.lead[step]} ${fill(c.body[step])}`;
+  return {
+    to: v.to,
+    subject,
+    html: layout(subject, body, { label: c.button, url: v.url }, fill(c.footer), lang === 'fr' ? 'fr' : 'en'),
+    text: `${body}\n\n${v.url}\n\n${fill(c.footer)}`,
+    replyTo: v.sellerEmail,
   };
 }
