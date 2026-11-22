@@ -9,8 +9,9 @@ import { isRtl } from '@/lib/intl';
 import '../globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
-const jakarta = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-jakarta', weight: ['600', '700', '800'] });
-const arabic = IBM_Plex_Sans_Arabic({ subsets: ['arabic'], variable: '--font-arabic', weight: ['400', '600', '700'] });
+const jakarta = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-jakarta', weight: ['700', '800'] }); // headings use bold and extrabold only
+// Not preloaded: only Arabic pages use it, so French/English pages don't download it at high priority
+const arabic = IBM_Plex_Sans_Arabic({ subsets: ['arabic'], variable: '--font-arabic', weight: ['400', '600', '700'], preload: false });
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

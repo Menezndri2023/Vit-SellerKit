@@ -10,7 +10,8 @@
     "test": "vitest run",
     "e2e": "playwright test",
     "db": "node scripts/dev-db.mjs",
-    "schematron:setup": "bash scripts/schematron-setup.sh"
+    "schematron:setup": "bash scripts/schematron-setup.sh",
+    "verapdf:setup": "bash scripts/verapdf-setup.sh"
   },
   "dependencies": {
     "@fontsource/inter": "^5.3.0",

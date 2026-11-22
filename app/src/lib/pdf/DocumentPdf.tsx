@@ -28,6 +28,8 @@ const s = StyleSheet.create({
   td: { paddingVertical: 6 },
   num: { textAlign: 'right' },
   footer: { position: 'absolute', bottom: 24, left: 40, right: 40, fontSize: 7, color: MUTED, textAlign: 'center' },
+  // Positioned from the top (A4 = 841.89 pt): with `bottom`, react-pdf mis-places this dynamic text on some pages
+  pageNumber: { position: 'absolute', top: 822, left: 40, right: 40, fontSize: 7, color: MUTED, textAlign: 'center' },
   watermark: { position: 'absolute', top: 330, left: 0, right: 0, textAlign: 'center', fontSize: 90, fontWeight: 700, color: '#0F172A', opacity: 0.05, transform: 'rotate(-30deg)' },
 });
 
@@ -273,8 +275,10 @@ export function DocumentPdf({ doc, extras }: { doc: DocView; extras: PdfExtras }
         <View style={s.footer} fixed>
           {seller?.footer && <Multiline text={seller.footer} />}
           {doc.watermark && <Text style={s.semibold}>{t('madeWith')}</Text>}
-          <Text render={({ pageNumber, totalPages }) => (totalPages > 1 ? `${title} — ${pageNumber}/${totalPages}` : '')} />
         </View>
+        {/* Page number as its own fixed element: nested in the footer View, react-pdf placed it
+            billions of points off the page on some pages (invisible + not PDF/A: integer overflow) */}
+        <Text style={s.pageNumber} fixed render={({ pageNumber, totalPages }) => (totalPages > 1 ? `${title} — ${pageNumber}/${totalPages}` : '')} />
       </Page>
     </PdfDocument>
   );

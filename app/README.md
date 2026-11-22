@@ -164,7 +164,7 @@ Tu peux aussi attribuer du Pro directement à un compte : **Admin → Utilisateu
 - UBL : `EndpointID` Peppol déduit des identifiants (BCE, SIRET/SIREN, KvK, TVA DE/LU) ; validé contre les XSD OASIS UBL 2.1 pendant le développement.
 - **Règles officielles (Schematron)** : `npm run schematron:setup` (Java requis) télécharge les artefacts CEN EN 16931 1.3.17 et Peppol BIS 3.0.22 ; `npm test` valide alors les exports CII et UBL de cas représentatifs (B2B deux taux + remise, franchise 293 B, autoliquidation, livraison intracommunautaire, export, hors champ, avoir, acompte, paiement partiel). Les données que ces règles refusent (n° de TVA vendeur ou client manquant, hors champ mélangé à d'autres taux) sont bloquées avant l'export avec un message clair (`src/lib/einvoice/rules.ts`).
 - Le fichier UBL n'est déclaré **Peppol BIS 3.0** que si le vendeur et le client ont une adresse électronique Peppol ; sinon c'est un UBL EN 16931 standard.
-- **Pas encore fait** : contrôle PDF/A-3 du Factur-X par veraPDF.
+- **PDF/A-3b** : `npm run verapdf:setup` installe veraPDF (validateur de référence) ; `npm test` vérifie alors de vrais Factur-X (français, anglais, avoir, 6 pages, arabe et autres écritures dans le texte saisi).
 
 ### Envoi via une plateforme agréée (PA) ou Peppol
 

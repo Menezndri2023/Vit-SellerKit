@@ -47,3 +47,4 @@ next-env.d.ts
 
 # Schematron validation artefacts (downloaded by npm run schematron:setup)
 /.schematron
+/.verapdf
