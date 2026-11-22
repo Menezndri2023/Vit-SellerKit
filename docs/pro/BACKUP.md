@@ -28,6 +28,8 @@ mongorestore --uri="mongodb://127.0.0.1:27018/?replicaSet=rs0" --archive=dump.ar
 # 3. En production seulement après vérification, avec --drop sur les collections concernées.
 ```
 
+Restauration testée le 22/11/2026 (sauvegarde du jour : déchiffrement, `mongorestore` dans une base locale séparée, comptes identiques à la production, base de test supprimée ensuite). Sans Docker, `mongorestore` s'obtient avec les [MongoDB Database Tools](https://www.mongodb.com/try/download/database-tools).
+
 Une sauvegarde n'existe vraiment qu'une fois sa restauration testée : faire l'essai local une fois par trimestre.
 
 Pour aller plus loin : un cluster Atlas avec sauvegardes gérées (snapshots + restauration à un instant donné) remplace ce workflow.
