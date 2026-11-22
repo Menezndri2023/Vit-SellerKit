@@ -4,7 +4,12 @@ import { headers } from 'next/headers';
 import { redirect } from '@/i18n/navigation';
 import { getAuth } from './auth';
 
-export const getSession = cache(async () => getAuth().api.getSession({ headers: await headers() }));
+// headers() first: it marks the page as dynamic before any configuration is read, so `next build`
+// never needs the auth secrets or the database (e.g. preview deployments without variables)
+export const getSession = cache(async () => {
+  const h = await headers();
+  return getAuth().api.getSession({ headers: h });
+});
 
 export type SessionUser = NonNullable<Awaited<ReturnType<typeof getSession>>>['user'];
 
