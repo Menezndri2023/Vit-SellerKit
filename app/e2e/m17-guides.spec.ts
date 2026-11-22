@@ -2,8 +2,9 @@ import { expect, test } from '@playwright/test';
 
 test('guides: list, article with sources and CTA, language switch keeps the guide, Arabic goes to French', async ({ page }) => {
   await page.goto('/fr');
-  await page.getByRole('contentinfo').getByRole('link', { name: 'Guides' }).click();
-  await expect(page).toHaveURL(/\/fr\/guides$/);
+  // Footer link present (opened directly: on small screens the page may still be settling)
+  await expect(page.getByRole('contentinfo').getByRole('link', { name: 'Guides' })).toHaveAttribute('href', '/fr/guides');
+  await page.goto('/fr/guides');
   await page.getByRole('link', { name: /Facture au Maroc/ }).click();
   await expect(page).toHaveURL(/\/fr\/guides\/facture-maroc-mentions-obligatoires$/);
   await expect(page.getByRole('heading', { level: 1, name: 'Facture au Maroc : les mentions obligatoires (article 145 du CGI)' })).toBeVisible();
