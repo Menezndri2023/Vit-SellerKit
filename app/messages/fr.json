@@ -220,7 +220,19 @@
     "setupTitle": "Configure ton entreprise en 2 minutes",
     "setupText": "Ajoute une fois le nom de ton entreprise, ton logo et tes infos fiscales — ils apparaîtront sur chaque devis et facture.",
     "setupCta": "Configurer mon entreprise",
-    "comingSoon": "Arrive dans la prochaine mise à jour."
+    "comingSoon": "Arrive dans la prochaine mise à jour.",
+    "checklistTitle": "Ta première facture en 3 étapes",
+    "checklistText": "Compte environ 2 minutes. Tes informations sont enregistrées une fois pour toutes.",
+    "step1Title": "Ton entreprise",
+    "step1Text": "Nom, adresse et identifiants fiscaux : ils apparaîtront sur chaque document.",
+    "step1Cta": "Remplir",
+    "step2Title": "Ton premier client",
+    "step2Text": "La personne ou l’entreprise à qui tu factures.",
+    "step2Cta": "Ajouter un client",
+    "step3Title": "Ta première facture",
+    "step3Text": "Ajoute une ligne, vérifie les totaux et émets-la : PDF prêt à envoyer.",
+    "step3Cta": "Créer la facture",
+    "stepDone": "fait"
   },
   "footer": {
     "tagline": "Sache ce que tu gardes vraiment.",

@@ -38,6 +38,7 @@ const SCENARIOS: Record<string, DocView> = {
     totals: { totalExclTax: 54000, totalTax: 10800, totalInclTax: 64800, taxBreakdown: [{ category: 'S', rate: 20, base: 54000, amount: 10800 }] },
     amountDue: 64800,
   }),
+  'free-plan-watermark-and-links': sampleDoc({ watermark: true, seller: { ...sampleDoc().seller!, footer: 'Atlas Studio SAS — RCS Paris 552 032 534', paymentLinks: [{ label: 'Stripe', url: 'https://buy.stripe.com/test_123' }] } }),
   'arabic-and-other-scripts-in-user-text': sampleDoc({
     buyer: { ...sampleDoc().buyer!, name: 'شركة الأطلس — Atlas' },
     lines: [{ ...sampleDoc().lines[0], description: 'تصميم الهوية البصرية / Identité visuelle ✓ 日本' }],

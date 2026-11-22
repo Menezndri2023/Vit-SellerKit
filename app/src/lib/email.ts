@@ -2,10 +2,10 @@ import 'server-only';
 import { publisherLine } from './brand';
 import { env } from './env';
 
-type Email = { to: string; subject: string; html: string; text: string; replyTo?: string; attachments?: { filename: string; content: Buffer }[] };
+type Email = { to: string; subject: string; html: string; text: string; replyTo?: string; attachments?: { filename: string; content: Buffer }[]; headers?: Record<string, string> };
 
 /** Sends through Resend's HTTP API. Without RESEND_API_KEY (local dev), prints the email instead. */
-export async function sendEmail({ to, subject, html, text, replyTo, attachments }: Email) {
+export async function sendEmail({ to, subject, html, text, replyTo, attachments, headers }: Email) {
   const { RESEND_API_KEY, EMAIL_FROM } = env();
   if (!RESEND_API_KEY) {
     console.info(`\n[email] to=${to}\nsubject=${subject}\n${text}\n${attachments?.length ? `attachments=${attachments.map((a) => a.filename).join(', ')}\n` : ''}`);
@@ -22,6 +22,7 @@ export async function sendEmail({ to, subject, html, text, replyTo, attachments 
       text,
       reply_to: replyTo,
       attachments: attachments?.map((a) => ({ filename: a.filename, content: a.content.toString('base64') })),
+      headers,
     }),
   });
   if (!res.ok) throw new Error(`Resend error ${res.status}: ${await res.text()}`);
@@ -31,7 +32,7 @@ export async function sendEmail({ to, subject, html, text, replyTo, attachments 
 const escapeHtml = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 
 /** Minimal branded layout: one message, one button. */
-export function layout(title: string, body: string, button: { label: string; url: string }, footer: string, lang = 'en') {
+export function layout(title: string, body: string, button: { label: string; url: string }, footer: string, lang = 'en', unsubscribe?: { label: string; url: string }) {
   const dir = lang === 'ar' ? 'rtl' : 'ltr';
   return `<!doctype html><html lang="${lang}" dir="${dir}"><body dir="${dir}" style="margin:0;background:#f8fafc;font-family:Arial,Helvetica,sans-serif;color:#0f172a">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:32px 16px">
@@ -41,7 +42,7 @@ export function layout(title: string, body: string, button: { label: string; url
 <h1 style="font-size:22px;margin:28px 0 12px">${escapeHtml(title)}</h1>
 <p style="font-size:15px;line-height:1.6;color:#475569;margin:0 0 24px">${escapeHtml(body)}</p>
 <a href="${escapeHtml(button.url)}" style="display:inline-block;background:#a3e635;color:#0f172a;font-weight:700;text-decoration:none;padding:12px 22px;border-radius:12px">${escapeHtml(button.label)}</a>
-<p style="font-size:12px;color:#94a3b8;margin:28px 0 0">${escapeHtml(footer)}</p>
+<p style="font-size:12px;color:#94a3b8;margin:28px 0 0">${escapeHtml(footer)}${unsubscribe ? ` <a href="${escapeHtml(unsubscribe.url)}" style="color:#64748b">${escapeHtml(unsubscribe.label)}</a>` : ''}</p>
 </td></tr></table>
 <p style="font-size:11px;color:#94a3b8;margin:16px 0 0">${escapeHtml(publisherLine(lang))}</p>
 </td></tr></table></body></html>`;
@@ -120,4 +121,47 @@ export function reviewConfirmEmail(locale: string | null | undefined, to: string
   const c = reviewCopy[langOf(locale)];
   const body = c.body.replace('{kit}', kitName);
   return { to, subject: c.subject, html: layout(c.title, body, { label: c.button, url }, c.footer, langOf(locale)), text: `${c.title}\n\n${body}\n\n${url}\n\n${c.footer}` };
+}
+
+// ── Onboarding series (sent by the daily cron; one-click unsubscribe) ──────────────────────
+
+export type OnboardingKind = 'first' | 'share' | 'pro';
+
+const onboardingCopy = {
+  fr: {
+    first: { subject: 'Ta première facture en 2 minutes', title: 'Ta première facture en 2 minutes', body: 'Ton compte Margokit est prêt. Renseigne une fois ton entreprise, ajoute un client, puis crée ta facture : les totaux, la TVA et les mentions légales sont calculés pour toi. Le plan gratuit comprend 3 documents par mois.', button: 'Créer ma première facture', path: '/app' },
+    share: { subject: 'Fais-toi payer plus vite', title: 'Fais-toi payer plus vite', body: 'Ajoute ton RIB et tes liens de paiement (Stripe, PayPal, Wise…) dans Paramètres : ils apparaissent sur chaque facture, avec un QR code de virement pour les factures en euros. Ensuite, envoie la facture par lien, e-mail ou WhatsApp, et suis ce qui est payé ou en retard.', button: 'Ajouter mes moyens de paiement', path: '/app/settings' },
+    pro: { subject: 'Ce que Margokit Pro débloque', title: 'Ce que Margokit Pro débloque', body: 'Avec Pro, tu émets autant de devis, factures et avoirs que tu veux, sans la mention « Réalisé avec Margokit ». 5 $ par mois, sans engagement, ou 39 $ une fois pour toujours. Paiement par carte, ou localement via WhatsApp.', button: 'Voir les offres Pro', path: '/activate' },
+    footer: 'Tu reçois ces conseils de prise en main car tu as créé un compte Margokit.',
+    unsubscribe: 'Ne plus recevoir ces conseils',
+  },
+  en: {
+    first: { subject: 'Your first invoice in 2 minutes', title: 'Your first invoice in 2 minutes', body: 'Your Margokit account is ready. Fill in your business once, add a client, then create your invoice: totals, VAT and legal mentions are calculated for you. The free plan includes 3 documents per month.', button: 'Create my first invoice', path: '/app' },
+    share: { subject: 'Get paid faster', title: 'Get paid faster', body: 'Add your bank details and payment links (Stripe, PayPal, Wise…) in Settings: they appear on every invoice, with a transfer QR code on euro invoices. Then send the invoice by link, email or WhatsApp, and track what is paid or overdue.', button: 'Add my payment methods', path: '/app/settings' },
+    pro: { subject: 'What Margokit Pro unlocks', title: 'What Margokit Pro unlocks', body: 'With Pro, you issue as many quotes, invoices and credit notes as you want, without the “Made with Margokit” mention. $5 a month, cancel anytime, or $39 once, forever. Pay by card, or locally through WhatsApp.', button: 'See Pro plans', path: '/activate' },
+    footer: 'You receive these getting-started tips because you created a Margokit account.',
+    unsubscribe: 'Stop these tips',
+  },
+  ar: {
+    first: { subject: 'فاتورتك الأولى في دقيقتين', title: 'فاتورتك الأولى في دقيقتين', body: 'حسابك في Margokit جاهز. املأ معلومات نشاطك مرة واحدة، أضف عميلًا، ثم أنشئ فاتورتك: المجاميع والضريبة والبيانات القانونية تُحسب لك. الخطة المجانية تشمل 3 مستندات شهريًا.', button: 'أنشئ فاتورتي الأولى', path: '/app' },
+    share: { subject: 'احصل على أموالك أسرع', title: 'احصل على أموالك أسرع', body: 'أضف معلوماتك البنكية وروابط الدفع (Stripe وPayPal وWise…) في الإعدادات: تظهر في كل فاتورة، مع رمز QR للتحويل في الفواتير باليورو. ثم أرسل الفاتورة عبر رابط أو بريد إلكتروني أو واتساب، وتابع المدفوع والمتأخر.', button: 'أضف وسائل الدفع', path: '/app/settings' },
+    pro: { subject: 'ما يتيحه لك Margokit Pro', title: 'ما يتيحه لك Margokit Pro', body: 'مع Pro، تصدر عددًا غير محدود من عروض الأسعار والفواتير والإشعارات الدائنة، بدون عبارة «Made with Margokit». 5 دولارات شهريًا بدون التزام، أو 39 دولارًا مرة واحدة للأبد. الدفع بالبطاقة أو محليًا عبر واتساب.', button: 'اطّلع على عروض Pro', path: '/activate' },
+    footer: 'تصلك نصائح البدء هذه لأنك أنشأت حسابًا في Margokit.',
+    unsubscribe: 'إيقاف هذه النصائح',
+  },
+} as const;
+
+export function onboardingEmail(kind: OnboardingKind, locale: string | null | undefined, to: string, site: string, unsubscribeUrl: string): Email {
+  const lang = langOf(locale);
+  const c = onboardingCopy[lang];
+  const k = c[kind];
+  const url = `${site}/${lang}${k.path}?utm_source=email&utm_medium=onboarding&utm_campaign=${kind}`;
+  return {
+    to,
+    subject: k.subject,
+    html: layout(k.title, k.body, { label: k.button, url }, c.footer, lang, { label: c.unsubscribe, url: unsubscribeUrl }),
+    text: `${k.title}\n\n${k.body}\n\n${url}\n\n${c.footer}\n${c.unsubscribe}: ${unsubscribeUrl}`,
+    // One-click unsubscribe (RFC 8058), required by Gmail/Yahoo for bulk senders
+    headers: { 'List-Unsubscribe': `<${unsubscribeUrl}>`, 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' },
+  };
 }

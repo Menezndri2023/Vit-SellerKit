@@ -2,6 +2,7 @@ import { connectDb, mongoClient } from '@/lib/db';
 import { recheckSubscription } from '@/lib/billing/activate';
 import { safeEqual } from '@/lib/crypto';
 import { planEmail, sendEmail } from '@/lib/email';
+import { runOnboarding } from '@/lib/onboarding';
 import { siteUrl } from '@/lib/site-url';
 import { Subscription } from '@/models/Subscription';
 import { ObjectId } from 'mongodb';
@@ -16,7 +17,7 @@ export async function GET(req: Request) {
 
   await connectDb();
   const now = new Date();
-  const report = { rechecked: 0, expired: 0, reminders: 0 };
+  const report = { rechecked: 0, expired: 0, reminders: 0, onboarding: 0 };
 
   const stale = await Subscription.find({ provider: 'gumroad', plan: 'monthly', status: { $in: ['active', 'cancelled'] }, $or: [{ lastCheckedAt: { $lt: new Date(now.getTime() - DAY) } }, { lastCheckedAt: null }] }).sort({ lastCheckedAt: 1 }).limit(50).lean(); // oldest checks first, so every subscription gets its turn
   for (const s of stale) {
@@ -55,6 +56,12 @@ export async function GET(req: Request) {
     s.remindersSent.push(kind);
     await s.save();
   }
+
+  // Getting-started emails (day 1, 4, 8 after sign-up); never blocks the billing work above
+  report.onboarding = await runOnboarding(await siteUrl()).catch((e) => {
+    console.error('[cron] onboarding failed:', (e as Error).message);
+    return 0;
+  });
 
   return Response.json(report);
 }

@@ -7,6 +7,7 @@ import { displayStatus } from '@/lib/documents/status';
 import { formatMinor } from '@/lib/money';
 import { requireUser } from '@/lib/session';
 import { BusinessProfile } from '@/models/BusinessProfile';
+import { Client } from '@/models/Client';
 import { Document } from '@/models/Document';
 
 const ISSUED = ['issued', 'sent', 'paid', 'accepted'];
@@ -27,8 +28,10 @@ export default async function Dashboard({ params }: PageProps<'/[locale]/app'>) 
 
   const today = todayIn((user as { timeZone?: string }).timeZone);
   const monthStart = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1));
-  const [hasProfile, invoiced, unpaid, overdueCount, recent] = await Promise.all([
+  const [hasProfile, hasClient, hasIssued, invoiced, unpaid, overdueCount, recent] = await Promise.all([
     BusinessProfile.exists({ userId: user.id }),
+    Client.exists({ userId: user.id }),
+    Document.exists({ userId: user.id, issuedAt: { $exists: true } }),
     Document.aggregate<{ _id: string; total: number }>([
       { $match: { userId: user.id, type: { $in: ['invoice', 'deposit_invoice', 'credit_note'] }, status: { $in: [...ISSUED, 'cancelled'] }, issueDate: { $gte: monthStart } } },
       { $group: { _id: '$currency', total: { $sum: { $cond: [{ $eq: ['$type', 'credit_note'] }, { $multiply: ['$totals.totalExclTax', -1] }, '$totals.totalExclTax'] } } } },
@@ -41,6 +44,11 @@ export default async function Dashboard({ params }: PageProps<'/[locale]/app'>) 
     Document.find({ userId: user.id }).sort({ updatedAt: -1 }).limit(5).lean(),
   ]);
 
+  const steps = [
+    { key: 'step1', done: Boolean(hasProfile), href: '/app/settings' },
+    { key: 'step2', done: Boolean(hasClient), href: '/app/clients/new' },
+    { key: 'step3', done: Boolean(hasIssued), href: '/app/documents/new?type=invoice' },
+  ] as const;
   const invoicedTexts = byCurrency(invoiced, locale);
   const unpaidTexts = byCurrency(unpaid, locale);
   const tiles = [
@@ -66,13 +74,32 @@ export default async function Dashboard({ params }: PageProps<'/[locale]/app'>) 
         </div>
       </div>
 
-      {!hasProfile && (
-        <section className="rounded-2xl border border-dashed border-line bg-surface p-6 sm:p-8">
-          <h2 className="font-display text-xl font-bold">{t('setupTitle')}</h2>
-          <p className="mt-2 max-w-xl text-muted">{t('setupText')}</p>
-          <Link href="/app/settings" className="mt-5 inline-grid h-12 place-items-center rounded-xl bg-primary px-6 font-semibold text-on-primary hover:brightness-95">
-            {t('setupCta')}
-          </Link>
+      {!hasIssued && (
+        // Getting started: the 3 steps to a first issued document, ticked from real data
+        <section className="rounded-2xl border border-dashed border-line bg-surface p-6 sm:p-8" aria-labelledby="getting-started">
+          <h2 id="getting-started" className="font-display text-xl font-bold">
+            {t('checklistTitle')}
+          </h2>
+          <p className="mt-2 max-w-xl text-muted">{t('checklistText')}</p>
+          <ol className="mt-5 grid gap-3 sm:grid-cols-3">
+            {steps.map((step, i) => (
+              <li key={step.key} className={`flex flex-col rounded-xl border p-4 ${step.done ? 'border-line bg-bg' : 'border-primary-ink'}`}>
+                <span className="flex items-center gap-2 text-sm font-semibold">
+                  <span aria-hidden className={`grid size-6 place-items-center rounded-full text-xs ${step.done ? 'bg-profit text-surface' : 'bg-primary text-on-primary'}`}>
+                    {step.done ? '✓' : i + 1}
+                  </span>
+                  {t(`${step.key}Title`)}
+                  {step.done && <span className="sr-only"> — {t('stepDone')}</span>}
+                </span>
+                <span className="mt-1 flex-1 text-sm text-muted">{t(`${step.key}Text`)}</span>
+                {!step.done && (
+                  <Link href={step.href} className="mt-3 text-sm font-semibold text-primary-ink hover:underline">
+                    {t(`${step.key}Cta`)} →
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ol>
         </section>
       )}
 

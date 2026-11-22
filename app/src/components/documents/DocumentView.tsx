@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import type { DocView } from '@/lib/documents/view-model';
+import { watermarkUrl } from '@/lib/brand';
 import { formatMinor } from '@/lib/money';
 
 type AddressValue = { line1?: string; line2?: string; postalCode?: string; city?: string; region?: string; country?: string };
@@ -241,7 +242,13 @@ export default async function DocumentView({ doc }: { doc: DocView }) {
         </footer>
       )}
       {s?.footer && <p className="mt-2 text-center text-[11px] text-slate-500">{s.footer}</p>}
-      {doc.watermark && <p className="mt-4 text-center text-[11px] font-semibold text-slate-400">{t('madeWith')}</p>}
+      {doc.watermark && (
+        <p className="mt-4 text-center text-[11px] font-semibold">
+          <a href={watermarkUrl(doc.lang)} className="text-slate-500 hover:text-slate-700 hover:underline">
+            {t('madeWith')}
+          </a>
+        </p>
+      )}
     </article>
   );
 }

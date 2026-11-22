@@ -18,3 +18,9 @@ export function publisherLine(lang: string): string {
   if (lang === 'ar') return `${PRODUCT_NAME}، حل من ${PUBLISHER_NAME}`;
   return `${PRODUCT_NAME}, a ${PUBLISHER_NAME} product`;
 }
+
+/** Link behind the free plan's "Made with Margokit" mention (documents, shared pages): every free document advertises Margokit. */
+export function watermarkUrl(lang: string): string {
+  const site = (process.env.NEXT_PUBLIC_SITE_URL || 'https://margokit.com').replace(/\/$/, '');
+  return `${site}/${lang === 'fr' ? 'fr' : 'en'}?utm_source=document&utm_medium=watermark`;
+}

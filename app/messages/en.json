@@ -220,7 +220,19 @@
     "setupTitle": "Set up your business in 2 minutes",
     "setupText": "Add your business name, logo and tax details once — they'll appear on every quote and invoice.",
     "setupCta": "Set up my business",
-    "comingSoon": "Coming in the next update."
+    "comingSoon": "Coming in the next update.",
+    "checklistTitle": "Your first invoice in 3 steps",
+    "checklistText": "Takes about 2 minutes. Your details are saved once and for all.",
+    "step1Title": "Your business",
+    "step1Text": "Name, address and tax IDs: they appear on every document.",
+    "step1Cta": "Fill in",
+    "step2Title": "Your first client",
+    "step2Text": "The person or company you invoice.",
+    "step2Cta": "Add a client",
+    "step3Title": "Your first invoice",
+    "step3Text": "Add a line, check the totals and issue it: the PDF is ready to send.",
+    "step3Cta": "Create the invoice",
+    "stepDone": "done"
   },
   "footer": {
     "tagline": "Know what you really keep.",

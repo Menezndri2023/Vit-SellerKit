@@ -4,6 +4,7 @@ import en from '../../../messages/en.json';
 import fr from '../../../messages/fr.json';
 import type { DocView } from '../documents/view-model';
 import { formatMinor } from '../money';
+import { watermarkUrl } from '../brand';
 import { PDF_FONT_FAMILY } from './fonts';
 
 const INK = '#0F172A';
@@ -274,7 +275,11 @@ export function DocumentPdf({ doc, extras }: { doc: DocView; extras: PdfExtras }
 
         <View style={s.footer} fixed>
           {seller?.footer && <Multiline text={seller.footer} />}
-          {doc.watermark && <Text style={s.semibold}>{t('madeWith')}</Text>}
+          {doc.watermark && (
+            <Link src={watermarkUrl(doc.lang)} style={{ color: MUTED, textDecoration: 'none' }}>
+              <Text style={s.semibold}>{t('madeWith')}</Text>
+            </Link>
+          )}
         </View>
         {/* Page number as its own fixed element: nested in the footer View, react-pdf placed it
             billions of points off the page on some pages (invisible + not PDF/A: integer overflow) */}

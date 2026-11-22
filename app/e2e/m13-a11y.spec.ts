@@ -20,7 +20,14 @@ test('public pages have no automatically detectable WCAG A/AA violations', async
 
 test('signed-in pages have no automatically detectable WCAG A/AA violations', async ({ page }) => {
   await signUpAndLogin(page);
+  // Getting-started checklist: shown to a new account, ticks real progress
+  await page.goto('/fr/app');
+  await expect(page.getByRole('heading', { name: 'Ta première facture en 3 étapes' })).toBeVisible();
+  await expect(page.getByRole('link', { name: /Remplir/ })).toBeVisible();
   await setupBusiness(page);
+  await page.goto('/fr/app');
+  await expect(page.getByRole('link', { name: /Remplir/ })).toHaveCount(0);
+  await expect(page.getByRole('link', { name: /Créer la facture/ })).toBeVisible();
   const problems: string[] = [];
   for (const url of ['/fr/app', '/fr/app/documents', '/fr/app/documents/new', '/fr/app/clients', '/fr/app/products/new', '/fr/app/settings', '/fr/activate', '/ar/app']) {
     problems.push(...(await scan(page, url)));
