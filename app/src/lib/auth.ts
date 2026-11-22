@@ -2,7 +2,9 @@ import 'server-only';
 import { betterAuth } from 'better-auth';
 import { mongodbAdapter } from 'better-auth/adapters/mongodb';
 import { nextCookies } from 'better-auth/next-js';
-import { admin } from 'better-auth/plugins';
+import { admin, twoFactor } from 'better-auth/plugins';
+import { ObjectId } from 'mongodb';
+import { blocksSocialSignIn } from './two-factor-policy';
 import { mongoClient } from './db';
 import { authEmail, sendEmail } from './email';
 import { env, googleEnabled } from './env';
@@ -62,7 +64,20 @@ function createAuth() {
       },
     },
 
-    plugins: [admin({ defaultRole: 'user', adminRoles: ['admin'] }), nextCookies()],
+    // Two-factor authentication (authenticator app + backup codes). Required for admins (see session.ts).
+    // Better Auth only asks the second factor on email/password sign-in, so admins can't sign in with Google.
+    plugins: [admin({ defaultRole: 'user', adminRoles: ['admin'] }), twoFactor({ issuer: 'Margokit' }), nextCookies()],
+    databaseHooks: {
+      session: {
+        create: {
+          before: async (session, ctx) => {
+            if (!ctx?.path?.startsWith('/callback') || !ObjectId.isValid(String(session.userId))) return;
+            const u = await client.db().collection('user').findOne({ _id: new ObjectId(String(session.userId)) }, { projection: { role: 1 } });
+            if (blocksSocialSignIn(u?.role as string | undefined, ctx.path)) return false;
+          },
+        },
+      },
+    },
   });
 }
 

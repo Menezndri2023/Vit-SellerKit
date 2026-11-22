@@ -2,7 +2,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { expect, test } from '@playwright/test';
 import { MongoClient } from 'mongodb';
 import { E2E_DB } from '../playwright.config';
-import { signUpAndLogin } from './helpers';
+import { enableTwoFactor, signUpAndLogin } from './helpers';
 
 const sha256 = (s: string) => createHash('sha256').update(s).digest('hex');
 
@@ -59,8 +59,9 @@ test('anonymous review: email confirmation, verified purchase, moderation, publi
   await expect(page.getByRole('heading', { name: 'Lien invalide ou expiré' })).toBeVisible();
 
   // Admin moderation
-  const { email: adminEmail } = await signUpAndLogin(page, 'Admin Avis');
+  const { email: adminEmail, password: adminPassword } = await signUpAndLogin(page, 'Admin Avis');
   await db((c) => c.db().collection('user').updateOne({ email: adminEmail }, { $set: { role: 'admin' } }));
+  await enableTwoFactor(page, adminPassword); // mandatory for the admin area
   await page.goto('/fr/admin/reviews');
   const item = page.locator('li', { hasText: comment });
   await expect(item.getByText('Achat vérifié')).toBeVisible();

@@ -211,8 +211,23 @@
       "INVALID_EMAIL": "Entre une adresse e-mail valide.",
       "INVALID_TOKEN": "Ce lien est invalide ou a expiré.",
       "TOO_MANY_REQUESTS": "Trop de tentatives. Attends une minute et réessaie.",
-      "generic": "Un problème est survenu. Réessaie."
-    }
+      "generic": "Un problème est survenu. Réessaie.",
+      "INVALID_CODE": "Code incorrect. Vérifie l’heure de ton téléphone et réessaie.",
+      "INVALID_BACKUP_CODE": "Code de secours incorrect ou déjà utilisé.",
+      "INVALID_TWO_FACTOR_COOKIE": "La vérification a expiré. Reconnecte-toi.",
+      "ACCOUNT_TEMPORARILY_LOCKED": "Trop de codes incorrects : compte bloqué 15 minutes.",
+      "INVALID_PASSWORD": "Mot de passe incorrect.",
+      "TOTP_ALREADY_ENABLED": "La double authentification est déjà activée."
+    },
+    "twoFactorHint": "Ouvre ton application d’authentification et entre le code à 6 chiffres affiché pour Margokit.",
+    "twoFactorLabel": "Code de vérification",
+    "twoFactorBackupHint": "Entre l’un de tes codes de secours (chacun ne sert qu’une fois).",
+    "twoFactorBackupLabel": "Code de secours",
+    "twoFactorTrust": "Faire confiance à cet appareil pendant 30 jours",
+    "twoFactorSubmit": "Vérifier",
+    "twoFactorUseBackup": "Utiliser un code de secours",
+    "twoFactorUseApp": "Utiliser l’application d’authentification",
+    "googleFailed": "La connexion avec Google n’a pas abouti. Les comptes administrateurs se connectent avec leur e-mail, leur mot de passe et leur code de vérification."
   },
   "app": {
     "welcome": "Salut {name} 👋",
@@ -917,5 +932,31 @@
     "required": "Coche les deux cases pour continuer.",
     "why": "La loi marocaine 09-08 demande ton accord exprès pour l’hébergement de tes données à l’étranger. Ton accord est enregistré avec sa date.",
     "signOut": "Se déconnecter"
+  },
+  "twoFactor": {
+    "title": "Double authentification",
+    "intro": "Protège ton compte avec un code à 6 chiffres généré par une application (Google Authenticator, Microsoft Authenticator, 1Password…), demandé à chaque connexion par mot de passe.",
+    "enabledText": "Activée : un code de ton application est demandé à chaque connexion par mot de passe.",
+    "adminNote": "Obligatoire pour l’espace administrateur. La connexion avec Google n’est pas possible pour un compte administrateur.",
+    "requiredForAdmin": "Active la double authentification pour accéder à l’espace administrateur.",
+    "needsPassword": "Ton compte utilise la connexion avec Google : la double authentification se règle dans ton compte Google.",
+    "enable": "Activer la double authentification",
+    "password": "Ton mot de passe Margokit",
+    "continue": "Continuer",
+    "cancel": "Annuler",
+    "scanStep1": "Dans ton application d’authentification, ajoute un compte en scannant ce QR code.",
+    "scanStep2": "Entre le code à 6 chiffres qu’elle affiche pour confirmer.",
+    "qrAlt": "QR code à scanner avec l’application d’authentification",
+    "manualKey": "Ou saisis cette clé :",
+    "code": "Code à 6 chiffres",
+    "confirm": "Confirmer",
+    "backupIntro": "Double authentification activée. Garde ces codes de secours en lieu sûr : chacun permet une connexion si tu perds ton téléphone.",
+    "copy": "Copier les codes",
+    "done": "J’ai enregistré mes codes",
+    "on": "Activée",
+    "newCodes": "Générer de nouveaux codes de secours",
+    "generate": "Générer",
+    "disable": "Désactiver",
+    "disableAdminWarning": "Sans double authentification, tu n’auras plus accès à l’espace administrateur."
   }
 }

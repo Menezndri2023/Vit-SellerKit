@@ -5,15 +5,16 @@ import { redirect } from '@/i18n/navigation';
 import { googleEnabled } from '@/lib/env';
 import { getSession } from '@/lib/session';
 
-export default async function LoginPage({ params }: PageProps<'/[locale]/login'>) {
+export default async function LoginPage({ params, searchParams }: PageProps<'/[locale]/login'>) {
   const { locale } = await params;
+  const { error } = await searchParams;
   setRequestLocale(locale);
   if (await getSession()) redirect({ href: '/app', locale });
   const t = await getTranslations('auth');
   return (
     <>
       <AuthHeading title={t('loginTitle')} subtitle={t('loginSubtitle')} />
-      <LoginForm google={googleEnabled()} />
+      <LoginForm google={googleEnabled()} googleError={error === 'google'} />
     </>
   );
 }

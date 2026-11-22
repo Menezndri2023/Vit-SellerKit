@@ -62,7 +62,7 @@ export default function SignupForm({ google }: { google: boolean }) {
     <div className="flex flex-col gap-5">
       {google && (
         <>
-          <GoogleButton label={t('google')} onClick={() => authClient.signIn.social({ provider: 'google', callbackURL })} />
+          <GoogleButton label={t('google')} onClick={() => authClient.signIn.social({ provider: 'google', callbackURL, errorCallbackURL: `/${locale}/login?error=google` })} />
           <div className="flex items-center gap-3 text-xs uppercase text-muted">
             <span className="h-px flex-1 bg-line" />
             {t('or')}

@@ -41,6 +41,7 @@ export async function deleteAccount(_prev: DeleteState, form: FormData): Promise
     db.collection('session').deleteMany({ userId: { $in: [userId, oid].filter(Boolean) } }),
     db.collection('account').deleteMany({ userId: { $in: [userId, oid].filter(Boolean) } }),
     db.collection('verification').deleteMany({ identifier: user.email }),
+    db.collection('twoFactor').deleteMany({ userId: { $in: [userId, oid].filter(Boolean) } }),
   ]);
   if (oid) await db.collection('user').deleteOne({ _id: oid });
   redirect({ href: '/', locale });

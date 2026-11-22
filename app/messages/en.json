@@ -211,8 +211,23 @@
       "INVALID_EMAIL": "Enter a valid email address.",
       "INVALID_TOKEN": "This link is invalid or has expired.",
       "TOO_MANY_REQUESTS": "Too many attempts. Wait a minute and try again.",
-      "generic": "Something went wrong. Please try again."
-    }
+      "generic": "Something went wrong. Please try again.",
+      "INVALID_CODE": "Wrong code. Check your phone’s time and try again.",
+      "INVALID_BACKUP_CODE": "Wrong or already used backup code.",
+      "INVALID_TWO_FACTOR_COOKIE": "Verification expired. Sign in again.",
+      "ACCOUNT_TEMPORARILY_LOCKED": "Too many wrong codes: account locked for 15 minutes.",
+      "INVALID_PASSWORD": "Wrong password.",
+      "TOTP_ALREADY_ENABLED": "Two-factor authentication is already on."
+    },
+    "twoFactorHint": "Open your authenticator app and enter the 6-digit code shown for Margokit.",
+    "twoFactorLabel": "Verification code",
+    "twoFactorBackupHint": "Enter one of your backup codes (each works once).",
+    "twoFactorBackupLabel": "Backup code",
+    "twoFactorTrust": "Trust this device for 30 days",
+    "twoFactorSubmit": "Verify",
+    "twoFactorUseBackup": "Use a backup code",
+    "twoFactorUseApp": "Use the authenticator app",
+    "googleFailed": "Sign in with Google didn’t complete. Admin accounts sign in with their email, password and verification code."
   },
   "app": {
     "welcome": "Hi {name} 👋",
@@ -917,5 +932,31 @@
     "required": "Tick both boxes to continue.",
     "why": "Moroccan law 09-08 requires your express agreement for hosting your data abroad. Your agreement is recorded with its date.",
     "signOut": "Sign out"
+  },
+  "twoFactor": {
+    "title": "Two-factor authentication",
+    "intro": "Protect your account with a 6-digit code from an app (Google Authenticator, Microsoft Authenticator, 1Password…), asked at every password sign-in.",
+    "enabledText": "On: a code from your app is asked at every password sign-in.",
+    "adminNote": "Required for the admin area. Admin accounts can’t sign in with Google.",
+    "requiredForAdmin": "Turn on two-factor authentication to access the admin area.",
+    "needsPassword": "Your account uses Sign in with Google: two-factor authentication is set in your Google account.",
+    "enable": "Turn on two-factor authentication",
+    "password": "Your Margokit password",
+    "continue": "Continue",
+    "cancel": "Cancel",
+    "scanStep1": "In your authenticator app, add an account by scanning this QR code.",
+    "scanStep2": "Enter the 6-digit code it shows to confirm.",
+    "qrAlt": "QR code to scan with the authenticator app",
+    "manualKey": "Or type this key:",
+    "code": "6-digit code",
+    "confirm": "Confirm",
+    "backupIntro": "Two-factor authentication is on. Keep these backup codes somewhere safe: each lets you sign in once if you lose your phone.",
+    "copy": "Copy the codes",
+    "done": "I saved my codes",
+    "on": "On",
+    "newCodes": "Generate new backup codes",
+    "generate": "Generate",
+    "disable": "Turn off",
+    "disableAdminWarning": "Without two-factor authentication you will lose access to the admin area."
   }
 }

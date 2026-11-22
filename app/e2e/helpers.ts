@@ -60,3 +60,31 @@ export async function createAndIssueQuote(page: Page, description: string) {
   await expect(page).toHaveURL(/\/fr\/app\/documents\/[0-9a-f]{24}$/);
   await page.getByRole('button', { name: /Émettre/ }).click();
 }
+
+/** RFC 6238 TOTP (SHA-1, 6 digits, 30 s) from a base32 secret, like authenticator apps. */
+export function totp(secretBase32: string, at = Date.now()): string {
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  let bits = '';
+  for (const ch of secretBase32.replace(/=+$/, '').toUpperCase()) bits += alphabet.indexOf(ch).toString(2).padStart(5, '0');
+  const key = Buffer.from(bits.match(/.{8}/g)!.map((b) => parseInt(b, 2)));
+  const counter = Buffer.alloc(8);
+  counter.writeBigUInt64BE(BigInt(Math.floor(at / 1000 / 30)));
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const h = require('node:crypto').createHmac('sha1', key).update(counter).digest() as Buffer;
+  const o = h[h.length - 1] & 0xf;
+  return String((h.readUInt32BE(o) & 0x7fffffff) % 1_000_000).padStart(6, '0');
+}
+
+/** Turns on two-factor authentication from Settings (required for admins). Returns the TOTP secret. */
+export async function enableTwoFactor(page: Page, password: string): Promise<string> {
+  await page.goto('/fr/app/settings');
+  await page.getByRole('button', { name: 'Activer la double authentification' }).click();
+  await page.getByLabel('Ton mot de passe Margokit').fill(password);
+  await page.getByRole('button', { name: 'Continuer' }).click();
+  const secret = (await page.getByTestId('totp-secret').innerText()).trim();
+  await page.getByLabel('Code à 6 chiffres').fill(totp(secret));
+  await page.getByRole('button', { name: 'Confirmer' }).click();
+  await page.getByRole('button', { name: 'J’ai enregistré mes codes' }).click();
+  await expect(page.getByText('✓ Activée')).toBeVisible();
+  return secret;
+}
