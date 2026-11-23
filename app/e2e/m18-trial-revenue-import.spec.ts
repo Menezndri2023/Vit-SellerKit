@@ -69,3 +69,35 @@ test('revenue page: empty, then figures from issued invoices', async ({ page }) 
   await expect(page.getByText('Payée en 10 jours en moyenne')).toBeVisible();
   await expect(page.getByRole('heading', { name: `Meilleurs clients en ${year}` })).toBeVisible();
 });
+
+test('Moroccan invoice without IF: warnings shown before issuing, then "Issue anyway"', async ({ page }) => {
+  page.on('dialog', (d) => d.accept());
+  await signUpAndLogin(page);
+  await page.goto('/fr/app/settings');
+  await page.locator('[name="legalName"]').fill('Studio Test');
+  await page.locator('[name="address.line1"]').fill('1 bd Anfa');
+  await page.locator('[name="address.city"]').fill('Casablanca');
+  await page.locator('[name="address.country"]').selectOption('MA');
+  await page.locator('[name="ids.ICE"]').fill('001234567000089');
+  await page.getByRole('button', { name: 'Enregistrer' }).click();
+  await expect(page.getByText('Enregistré ✓')).toBeVisible();
+  await page.goto('/fr/app/clients/new');
+  await page.locator('[name="name"]').fill('Client MA SARL');
+  await page.locator('[name="address.line1"]').fill('2 rue X');
+  await page.locator('[name="address.city"]').fill('Rabat');
+  await page.locator('[name="address.country"]').selectOption('MA');
+  await page.locator('[name="ids.ICE"]').fill('002211334000071');
+  await page.getByRole('button', { name: 'Enregistrer' }).click();
+  await expect(page).toHaveURL(/\/fr\/app\/clients$/);
+  await page.goto('/fr/app/documents/new?type=invoice');
+  await page.getByLabel('Client', { exact: true }).selectOption({ label: 'Client MA SARL' });
+  await page.getByLabel('Description', { exact: true }).fill('Prestation');
+  await page.getByLabel('Prix unitaire', { exact: true }).fill('1000');
+  await page.getByRole('button', { name: 'Enregistrer le brouillon' }).click();
+  await expect(page).toHaveURL(/\/fr\/app\/documents\/[0-9a-f]{24}$/);
+  await page.getByRole('button', { name: /^Émettre/ }).click();
+  await expect(page.getByText(/Ajoute ton identifiant fiscal \(IF\)/)).toBeVisible();
+  await expect(page.getByText('Brouillon', { exact: true }).first()).toBeVisible(); // nothing issued yet
+  await page.getByRole('button', { name: 'Émettre quand même' }).click();
+  await expect(page.getByText('Ce document est émis', { exact: false })).toBeVisible();
+});

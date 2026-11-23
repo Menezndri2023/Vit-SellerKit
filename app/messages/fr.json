@@ -561,7 +561,8 @@
       "checksTitle": "Avant d’émettre, corrige ces points",
       "warningsTitle": "À vérifier",
       "convertedFrom": "Créée à partir d’un devis",
-      "creditFor": "Avoir sur {number}"
+      "creditFor": "Avoir sur {number}",
+      "issueAnyway": "Émettre quand même"
     },
     "compliance": {
       "noProfile": "Renseigne d’abord les informations de ton entreprise dans Paramètres.",

@@ -561,7 +561,8 @@
       "checksTitle": "قبل الإصدار، صحّح هذه النقاط",
       "warningsTitle": "يستحق التحقق",
       "convertedFrom": "أُنشئت من عرض سعر",
-      "creditFor": "إشعار دائن للفاتورة {number}"
+      "creditFor": "إشعار دائن للفاتورة {number}",
+      "issueAnyway": "إصدار على أي حال"
     },
     "compliance": {
       "noProfile": "أكمل معلومات نشاطك في الإعدادات أولًا.",

@@ -561,7 +561,8 @@
       "checksTitle": "Before issuing, fix these points",
       "warningsTitle": "Worth checking",
       "convertedFrom": "Created from a quote",
-      "creditFor": "Credit note for {number}"
+      "creditFor": "Credit note for {number}",
+      "issueAnyway": "Issue anyway"
     },
     "compliance": {
       "noProfile": "Fill in your business details in Settings first.",

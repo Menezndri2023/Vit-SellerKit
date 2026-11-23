@@ -80,13 +80,14 @@ export async function saveDraft(_prev: FormState, form: FormData): Promise<FormS
   return { ok: true, id };
 }
 
-export type IssueResult = { issues?: Issue[]; error?: string };
+/** `confirm`: only warnings were found — nothing issued yet, the user must confirm to go ahead. */
+export type IssueResult = { issues?: Issue[]; error?: string; confirm?: boolean };
 
 /**
  * Issue a draft: compliance checks, then — in one transaction — take the next number,
  * freeze seller and buyer details, and lock the document.
  */
-export async function issueDocument(id: string, locale: string): Promise<IssueResult> {
+export async function issueDocument(id: string, locale: string, acknowledgeWarnings = false): Promise<IssueResult> {
   const user = await actionUser();
   await connectDb();
   const doc = await findOwned(user.id, id);
@@ -108,6 +109,9 @@ export async function issueDocument(id: string, locale: string): Promise<IssueRe
     totalInclTax: doc.totals?.totalInclTax ?? 0,
   });
   if (issues.some((i) => i.severity === 'error')) return { issues };
+  // Warnings (e.g. Moroccan IF / business tax number missing) are shown before anything is issued:
+  // issuing redirects, so a warning returned with a successful issue would never be seen
+  if (!acknowledgeWarnings && issues.some((i) => i.severity === 'warning')) return { issues, confirm: true };
 
   const plan = await checkIssueAllowed(user.id);
   if (!plan.allowed) return { error: 'planLimit' };

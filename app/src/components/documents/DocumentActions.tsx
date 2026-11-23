@@ -102,6 +102,11 @@ export default function DocumentActions({ id, type, status, typeLabel }: Props) 
               <li key={i.code}>{tc(i.code as 'noLines')}</li>
             ))}
           </ul>
+          {result?.confirm && status === 'draft' && (
+            <button type="button" disabled={pending} className={`${secondary} mt-3`} onClick={() => start(async () => setResult(await issueDocument(id, locale, true)))}>
+              {t('issueAnyway')}
+            </button>
+          )}
         </div>
       )}
     </div>
