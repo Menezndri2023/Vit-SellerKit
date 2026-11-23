@@ -15,13 +15,17 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build } from './data.mjs';
-import { BRAND, page, LOGO_SVG, browser, sheetsApp, PACK_TABS, dashboard, ordersGrid, adsGrid, pricingView } from './templates.mjs';
-import { VIDEOS, SAY, SUB } from '../campagne-pro/videos.mjs';
+import { BRAND, page, LOGO_SVG, browser, sheetsApp, PACK_TABS, TRACKER_TABS, dashboard, ordersGrid, adsGrid, pricingView, productsGrid, customersGrid, contentGrid, budgetView } from './templates.mjs';
+
+// CAMPAIGN=kits → marketing/campagne-kits ; default → marketing/campagne-pro
+const CAMPAIGN_DIR = process.env.CAMPAIGN === 'kits' ? 'campagne-kits' : 'campagne-pro';
+const { VIDEOS, SAY, SUB } = await import(`../${CAMPAIGN_DIR}/videos.mjs`);
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..');
-const CAP = join(ROOT, 'marketing', 'campagne-pro', 'captures');
-const OUT = join(ROOT, 'marketing', 'campagne-pro', 'rendu');
+const CAP = join(ROOT, 'marketing', CAMPAIGN_DIR, 'captures');
+const CAP_PRO = join(ROOT, 'marketing', 'campagne-pro', 'captures');
+const OUT = join(ROOT, 'marketing', CAMPAIGN_DIR, 'rendu');
 const WORK = join(OUT, '_travail');
 const PY = join(process.env.HOME, '.venvs', 'kokoro', 'bin', 'python');
 const FPS = 30;
@@ -43,9 +47,15 @@ const run = (cmd, args) => {
 };
 const duration = (f) => Number(run('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', f]).trim());
 const dataUri = (f) => `data:image/png;base64,${readFileSync(f).toString('base64')}`;
+/** Capture file; `pro:name` reads the Margokit Pro captures, other names fall back to them. */
 const capture = (name, variant) => {
-  const f = join(CAP, `${name}-${variant}.png`);
-  return existsSync(f) ? f : null;
+  const [dir, base] = name.startsWith('pro:') ? [CAP_PRO, name.slice(4)] : [CAP, name];
+  for (const d of [dir, CAP_PRO]) {
+    const f = join(d, `${base}-${variant}.png`);
+    if (existsSync(f)) return f;
+    if (existsSync(join(d, `${base}.png`)) && base.endsWith(variant)) return join(d, `${base}.png`);
+  }
+  return null;
 };
 
 // ---------------------------------------------------------------------------
@@ -73,7 +83,17 @@ const MA = build('ma');
 const packApp = (active, body) => sheetsApp({ title: MA.t.packFile, tabs: PACK_TABS.map((k) => [k, MA.t.sheets[k]]), active, body });
 const zoom = (html, z) => `<div style="zoom:${z}">${html}</div>`;
 const sheet = (html, w, h) => `<div class="sheetwrap">${browser(html, { width: w, height: h })}</div>`;
+const trackerApp = (active, body) => sheetsApp({ title: MA.t.file, tabs: TRACKER_TABS.map((k) => [k, MA.t.sheets[k]]), active, body });
 const PACK = {
+  trackerTabs: () => sheet(trackerApp('orders', zoom(ordersGrid(MA, { pick: [1, 2, 6, 10], rowH: 34, fill: 8 }), 1.1)), 900, 760),
+  trackerDashboard: () => sheet(trackerApp('dashboard', zoom(dashboard(MA, { chartRows: 1 }), 0.8)), 900, 760),
+  trackerDashboardTall: () => sheet(trackerApp('dashboard', zoom(dashboard(MA, { chartRows: 1 }), 1.05)), 900, 900),
+  trackerOrders: () => sheet(trackerApp('orders', zoom(ordersGrid(MA, { pick: [1, 2, 6, 10, 18], rowH: 40, fill: 4, highlightProfit: true }), 1.3)), 900, 640),
+  trackerProducts: () => sheet(trackerApp('products', zoom(productsGrid(MA, { pick: [1, 3, 5, 6, 7, 9], rowH: 40, fill: 3 }), 1.25)), 900, 640),
+  trackerCustomers: () => sheet(trackerApp('customers', zoom(customersGrid(MA, { pick: [1, 4, 6, 7, 11], focusTags: true, rowH: 40, fill: 4 }), 1.4)), 900, 640),
+  adsVerdict: () => sheet(packApp('ads', zoom(adsGrid(MA, { pick: [2, 4, 9, 11, 12], rowH: 48, fill: 2, hlVerdict: true }), 1.4)), 900, 640),
+  content: () => sheet(packApp('content', zoom(contentGrid(MA, { pick: [0, 1, 3, 5, 7], rowH: 40, fill: 4 }), 1.25)), 900, 640),
+  budget: () => sheet(packApp('budget', zoom(budgetView(MA, { scale: 1 }), 0.9)), 900, 760),
   dashboard: () => sheet(packApp('dashboard', zoom(dashboard(MA, { pack: true, chartRows: 1 }), 0.8)), 900, 760),
   dashboardTall: () => sheet(packApp('dashboard', zoom(dashboard(MA, { pack: true, chartRows: 1 }), 1.05)), 900, 900),
   orders: () => sheet(packApp('orders', zoom(ordersGrid(MA, { pick: [1, 2, 6, 10, 18], rowH: 40, fill: 4, highlightProfit: true }), 1.3)), 900, 640),
@@ -192,9 +212,9 @@ function visual(scene, fmt, box) {
       <div class="steps">${['J+1', 'J+7', 'J+15'].map((s) => `<span style="font-size:${px(40)};padding:${px(14)} ${px(34)}">${s}</span>`).join('')}</div>
       <div class="mail"><div class="h" style="padding:${px(28)} ${px(36)};font-size:${px(28)}"><div style="color:#64748B">De : Studio Atlas</div><div style="font-weight:700;font-size:${px(32)};margin-top:${px(8)}">Rappel : facture INV-2026-016 — Studio Atlas</div></div>
       <div style="padding:${px(32)} ${px(36)};font-size:${px(29)};line-height:1.5;color:#334155">Bonjour,<br><br>Sauf erreur de notre part, la facture INV-2026-016 de Studio Atlas, arrivée à échéance le 20 nov. 2026, n’est pas encore réglée. Reste à payer : 5 520,00 MAD. Vous pouvez la consulter et la régler en suivant le lien ci-dessous.<br><br><span class="btn" style="padding:${px(18)} ${px(30)}">Voir la facture</span></div></div></div>`;
-  if (k === 'pack') {
+  if (k === 'pack' || k === 'sheet') {
     const html = PACK[scene.view]();
-    const nat = scene.view === 'dashboardTall' || scene.view === 'dashboard' || scene.view === 'pricing' ? [900, scene.view === 'dashboardTall' ? 900 : 760] : [900, 640];
+    const nat = [900, /Tall$/.test(scene.view) ? 900 : /^(dashboard|pricing|budget|trackerDashboard|trackerTabs)$/.test(scene.view) ? 760 : 640];
     const z = Math.min(W / nat[0], H / nat[1]);
     return `<div style="zoom:${z.toFixed(3)}">${html}</div>`;
   }
@@ -204,7 +224,7 @@ function visual(scene, fmt, box) {
   }
   if (k === 'end')
     return `<div class="end" style="gap:${px(40)}">${LOGO_SVG(Math.round(170 * u))}
-      <div class="slog" style="font-size:${px(78)}">Facture. Encaisse. <em>Respire.</em></div>
+      <div class="slog" style="font-size:${px(78)}">${scene.slogan ?? 'Facture. Encaisse. <em>Respire.</em>'}</div>
       <div class="cta" style="font-size:${px(44)};padding:${px(26)} ${px(46)}">${esc(scene.cta)}</div>
       <div class="url" style="font-size:${px(52)}">${esc(scene.url ?? 'margokit.com')}</div>
       <div class="vit" style="font-size:${px(26)}">Margokit · un produit VIT GLOBAL</div></div>`;
