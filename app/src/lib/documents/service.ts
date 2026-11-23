@@ -112,8 +112,8 @@ export async function applyCreditNote(
 export const isLocked =(d: Pick<DocumentDoc, 'status'>) => d.status !== 'draft';
 
 /** Today at 00:00 UTC in the user's time zone, as a Date (documents store calendar days at UTC midnight). */
-export function todayIn(timeZone: string | undefined): Date {
-  const fmt = (tz: string) => new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+export function todayIn(timeZone: string | undefined, now = new Date()): Date {
+  const fmt = (tz: string) => new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
   let iso: string;
   try {
     iso = fmt(timeZone || 'UTC');

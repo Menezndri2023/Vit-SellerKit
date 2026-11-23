@@ -27,7 +27,7 @@ export async function runReminders(now = new Date()): Promise<number> {
     if (sent >= PER_RUN) break;
     if (!(await hasActivePro(profile.userId, now))) continue;
     const u = ObjectId.isValid(profile.userId) ? await users.findOne({ _id: new ObjectId(profile.userId) }, { projection: { timeZone: 1 } }) : null;
-    const today = todayIn(u?.timeZone as string | undefined);
+    const today = todayIn(u?.timeZone as string | undefined, now);
     const docs = await Document.find({
       userId: profile.userId,
       type: { $in: ['invoice', 'deposit_invoice'] },
