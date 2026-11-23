@@ -91,6 +91,7 @@ for (const [date, time, net, id, fmt] of sorted) {
   for (const f of assets(id, fmt)) copy(f, join(dir, f.split('/').pop()));
 }
 copy(join(HERE, '04-prospection.md'), join(DEST, '07-Prospection', 'Prospection-et-reponses.md'));
+copy(join(HERE, '06-etat-publication.md'), join(DEST, 'ETAT-PUBLICATION.md'));
 copy(join(HERE, '05-ancienne-campagne-a-retirer.md'), join(DEST, 'A-FAIRE-avant-le-30-nov — posts a retirer.md'));
 writeFileSync(
   join(DEST, 'LISEZ-MOI.md'),
